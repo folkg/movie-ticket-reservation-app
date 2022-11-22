@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="2N_GCbCmKh1ujZVoxK0M" name="Page-1">
-        <mxGraphModel dx="708" dy="532" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="855" dy="643" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -19,7 +19,7 @@
                 <mxCell id="6" value="Register&lt;br&gt;View" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
                     <mxGeometry x="230" y="80" width="70" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="Server&lt;br&gt;Controller" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
+                <mxCell id="7" value="Register&lt;br&gt;Controller" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
                     <mxGeometry x="440" y="80" width="70" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="8" value="Database" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
@@ -86,7 +86,7 @@
                         <mxPoint x="260" y="275.5" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="24" value="User" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
+                <mxCell id="24" value="Registered User" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
                     <mxGeometry x="310" y="407" width="70" height="32" as="geometry"/>
                 </mxCell>
                 <mxCell id="29" value="1. Select Register Option" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="26">
