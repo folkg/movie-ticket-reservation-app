@@ -7,10 +7,7 @@
                 <mxCell id="101" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=default;fillColor=none;" vertex="1" parent="1">
                     <mxGeometry x="10" y="243" width="730" height="130" as="geometry"/>
                 </mxCell>
-                <mxCell id="4" value="User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="44" y="100" width="30" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="5" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;" edge="1" parent="1">
+                <mxCell id="5" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="103">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="59" y="520" as="sourcePoint"/>
                         <mxPoint x="59" y="180" as="targetPoint"/>
@@ -19,7 +16,7 @@
                 <mxCell id="6" value="Register&lt;br&gt;View" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
                     <mxGeometry x="230" y="80" width="70" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="Register&lt;br&gt;Controller" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
+                <mxCell id="7" value="Server&lt;br&gt;Controller" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
                     <mxGeometry x="440" y="80" width="70" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="8" value="Database" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
@@ -159,6 +156,9 @@
                         </Array>
                         <mxPoint as="offset"/>
                     </mxGeometry>
+                </mxCell>
+                <mxCell id="103" value="User" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" vertex="1" parent="1">
+                    <mxGeometry x="25" y="80" width="70" height="40" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
