@@ -1,65 +1,136 @@
 @startuml relationships
 
-class RegisteredUser <<entity>> {
-    - email : String
-    - password : String
-    - creditCard : String
-    - firstName : String
-    - lastName : String
-    - address : String
-    - annualFeeExpiryDate : String
-    - tickets : ArrayList<Ticket>
-    - ticketRefunds : ArrayList<TicketRefund>
+package Data {
+    class Movie <<entity>> {
+        - title : String
+        - showTimes : ArrayList<ShowTime>
+        + addShowTime(st : ShowTime)
+    }
+
+    class Theatre <<entity>> {
+        - name : String
+        - address : String
+        - showTimes : ArrayList<ShowTime>
+        + addShowTime(st : ShowTime)
+    }
+
+    class ShowTime <<entity>> {
+        - time : String
+        - movie : Movie
+        - theatre : Theatre
+        - seat : ArrayList<Seats>
+        - ticket : ArrayList<Ticket>
+    }
+
+    class Seat <<entity>> {
+        - number : int
+        - isOccupied : boolean
+    }
+
+    class Ticket <<entity>> {
+        - id : int
+        - movie : String
+        - theatre : String
+        - time : String
+        - seatNum : int
+        - cost : double
+        - isRefunded : boolean
+    }
+
+    class User {
+
+    }
+
+    class RegisteredUser <<entity>> {
+        - emailAddress : String
+        - password : String
+        - creditCard : String
+        - firstName : String
+        - lastName : String
+        - address : String
+        - annualFeeExpiryDate : String
+        - tickets : ArrayList<Ticket>
+        + addTicket(t : Ticket)
+    }
 }
 
-class Movie <<entity>> {
-    - title : String
+package Client {
+    class RegisterViewController <<boundary>> {
+
+    }
+    class LoginViewController <<boundary>> {
+
+    }
+    class AccountViewController <<boundary>> {
+
+    }
+    class TicketBuyingViewController <<boundary>> {
+
+    }
+    class MovieViewController <<boundary>> {
+
+    }
+    class TheatreViewController <<boundary>> {
+
+    }
+    class ShowTimeViewController <<boundary>> {
+
+    }
+    class SeatViewController <<boundary>> {
+
+    }
+    class PaymentViewController <<boundary>> {
+
+    }
+    class ReceiptViewController <<boundary>> {
+
+    }
+
+    class APIContextController {
+        ' add getters and setters
+        - getters()
+        - setters()
+    }
 }
 
-class Theatre <<entity>> {
-    - name : String
+package Server {
+    class ServerController <<control>> {
+        ' add getters and setters
+        - getters()
+        - setters()
+        ' add to do database
+        - readDB()
+        - writeDB()
+        - emailReceipt(ticket : Ticket, emailAddress : String)
+        - emailNews(user : RegisteredUser, news : String)
+    }
 }
 
-class ShowTime <<entity>> {
-    - time : String
-}
-class Seat {
-    - number : int
-    - isOccupied : boolean
-}
+TicketBuyingViewController *-- MovieViewController
+TicketBuyingViewController *-- TheatreViewController
+TicketBuyingViewController *-- ShowTimeViewController
+TicketBuyingViewController *-- SeatViewController
+TicketBuyingViewController *-- PaymentViewController
+TicketBuyingViewController *-- ReceiptViewController
 
-class Payment <<entity>> {
-    - isCompleted : boolean
-}
+RegisterViewController --> APIContextController
+LoginViewController --> APIContextController
+AccountViewController --> APIContextController
+TicketBuyingViewController --> APIContextController
+MovieViewController --> APIContextController
+TheatreViewController --> APIContextController
+ShowTimeViewController --> APIContextController
+SeatViewController --> APIContextController
+PaymentViewController --> APIContextController
+ReceiptViewController --> APIContextController
 
-class Ticket <<entity>> {
-    - id : int
-    - movie : Movie
-    - theatre : Theatre
-    - time : ShowTime
-    - seat : Seat
-    - cost : double
-    - isCancelled : boolean
-}
+Movie -- ShowTime
+Theatre -- ShowTime
+ServerController *-- ShowTime
+ShowTime *-- Seat
+ShowTime *-- Ticket
+RegisteredUser --> Ticket
 
-class TicketRefund <<entity>> {
-    - ticketId : int
-    - credit : double
-    - isRedeemed : boolean
-}
-
-class email {}
-
-class RegisterView <<boundary>>
-class LoginView <<boundary>>
-class AccountView <<boundary>>
-class MovieView <<boundary>>
-class TheatreView <<boundary>>
-class ShowTimeView <<boundary>>
-class SeatView <<boundary>>
-class PaymentView <<boundary>>
-class ReceiptView <<boundary>>
-
-class ServerController <<control>>
+APIContextController -- ServerController : API communication
 
 @enduml
