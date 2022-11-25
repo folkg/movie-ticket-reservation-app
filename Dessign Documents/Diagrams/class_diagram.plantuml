@@ -1,6 +1,6 @@
 @startuml relationships
 
-package Data {
+package Database-MySQL {
     class Movie <<entity>> {
         - title : String
         - showTimes : ArrayList<ShowTime>
@@ -24,17 +24,17 @@ package Data {
 
     class Seat <<entity>> {
         - number : int
-        - isOccupied : boolean
+        - ticket : Ticket
     }
 
     class Ticket <<entity>> {
         - id : int
-        - movie : String
-        - theatre : String
-        - time : String
-        - seatNum : int
+        - movie : Movie
+        - theatre : Theatre
+        - showTime : ShowTime
+        - seat : Seat
         - cost : double
-        - isRefunded : boolean
+        - isCredited : boolean
     }
 
     class User {
@@ -54,7 +54,7 @@ package Data {
     }
 }
 
-package Client {
+package Frontend-React {
     class RegisterViewController <<boundary>> {
 
     }
@@ -93,7 +93,7 @@ package Client {
     }
 }
 
-package Server {
+package Backend-Express {
     class ServerController <<control>> {
         ' add getters and setters
         - getters()
@@ -127,8 +127,11 @@ ReceiptViewController --> APIContextController
 Movie -- ShowTime
 Theatre -- ShowTime
 ServerController *-- ShowTime
-ShowTime *-- Seat
-ShowTime *-- Ticket
+ShowTime *-r- Seat
+Ticket o-- Movie
+Ticket o-- Theatre
+Ticket o-- ShowTime
+Ticket --- Seat
 RegisteredUser --> Ticket
 
 APIContextController -- ServerController : API communication
