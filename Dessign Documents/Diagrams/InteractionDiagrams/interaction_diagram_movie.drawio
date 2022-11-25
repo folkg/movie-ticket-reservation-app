@@ -1,0 +1,407 @@
+<mxfile host="65bd71144e">
+    <diagram id="HQVxqp-asWu2-7wyOobS" name="Page-1">
+        <mxGraphModel dx="952" dy="733" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#FFFFFF" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="47" value="11. Get Theatres" style="endArrow=classic;html=1;rounded=0;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry x="-0.4545" y="3" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="440" y="383" as="sourcePoint"/>
+                        <mxPoint x="660" y="383" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="86" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="59" y="850" as="sourcePoint"/>
+                        <mxPoint x="59" y="180" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="Movie&lt;br&gt;View" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="190" y="80" width="70" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Server&lt;br&gt;Controller" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="80" width="70" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Database" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="631" y="80" width="70" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;startArrow=none;" parent="1" source="13" target="4" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="225" y="570" as="sourcePoint"/>
+                        <mxPoint x="225" y="180" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;startArrow=none;" parent="1" source="15" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="434.5" y="570" as="sourcePoint"/>
+                        <mxPoint x="435" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;startArrow=none;" parent="1" source="17" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="665.5" y="570" as="sourcePoint"/>
+                        <mxPoint x="666" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="5. Get Movies" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="228" as="sourcePoint"/>
+                        <mxPoint x="420" y="228" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="218" width="10" height="62" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="13" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="225" y="850" as="sourcePoint"/>
+                        <mxPoint x="225" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="6. get movies from database" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="660" y="240" as="targetPoint"/>
+                        <mxPoint x="435" y="240" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="228" width="10" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;startArrow=none;" parent="1" source="37" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="434.5" y="604" as="sourcePoint"/>
+                        <mxPoint x="435" y="270" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="88" value="Return movies" style="edgeStyle=none;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="666" y="256" as="sourcePoint"/>
+                        <mxPoint x="440" y="256" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="661" y="238" width="10" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;startArrow=none;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="45" target="17" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="665.5" y="604" as="sourcePoint"/>
+                        <mxPoint x="666" y="294" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="23" value="4. Browse Movies" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="60" y="225" as="sourcePoint"/>
+                        <mxPoint x="220" y="225" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" value="7. Display Movies" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" edge="1">
+                    <mxGeometry y="30" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="292" as="sourcePoint"/>
+                        <mxPoint x="230" y="312" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="260" y="292"/>
+                            <mxPoint x="260" y="312"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="312" width="10" height="108" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="8. Select Movie" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="60" y="331" as="sourcePoint"/>
+                        <mxPoint x="220" y="331" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="28" value="Ticket" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="184" width="70" height="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="2. Create ticket" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" target="32" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230.0000000000001" y="189.0000000000001" as="sourcePoint"/>
+                        <mxPoint x="420" y="189.0000000000001" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="30" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="179" width="10" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="3." style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;dashed=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="520" y="201" as="targetPoint"/>
+                        <mxPoint x="435" y="201" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="32" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="184" width="10" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="1. Start movie selection&amp;nbsp;" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="60.000000000000114" y="186" as="sourcePoint"/>
+                        <mxPoint x="220.0000000000001" y="186" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="&amp;lt;&amp;lt;create&amp;gt;&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="174" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;startArrow=none;" parent="1" source="40" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="555" y="570" as="sourcePoint"/>
+                        <mxPoint x="555.0349397590362" y="216" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="38" value="9. Get Theatres for Selected Movie" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="342" as="sourcePoint"/>
+                        <mxPoint x="430" y="341.9999999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="338" width="10" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" edge="1" target="40">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="554.55" y="978" as="sourcePoint"/>
+                        <mxPoint x="554.55" y="918" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="42" value="10. Add Movie" style="endArrow=classic;html=1;rounded=0;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=-0.789;entryY=0.026;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="446" y="357" as="sourcePoint"/>
+                        <mxPoint x="548.1100000000001" y="356.99199999999996" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="44" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" edge="1" source="71">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="434.5" y="616" as="sourcePoint"/>
+                        <mxPoint x="434.97004608294924" y="412" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="45" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="661" y="379" width="10" height="27" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" target="45" edge="1" source="74">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="666" y="624" as="sourcePoint"/>
+                        <mxPoint x="665.98" y="412" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="48" value="12. Display Theaters" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" edge="1">
+                    <mxGeometry y="30" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="433" as="sourcePoint"/>
+                        <mxPoint x="230" y="453" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="260" y="433"/>
+                            <mxPoint x="260" y="453"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="49" value="16. Get Showtimes" style="endArrow=classic;html=1;rounded=0;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry x="-0.5455" y="2" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="440" y="521.9999999999999" as="sourcePoint"/>
+                        <mxPoint x="660" y="521.9999999999999" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="50" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="451" width="10" height="119" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="13. Select Theatre" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="60" y="470.0000000000001" as="sourcePoint"/>
+                        <mxPoint x="220" y="470.0000000000001" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="52" value="14. Get Showtimes for Selected Theatre" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1">
+                    <mxGeometry y="14" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="481" as="sourcePoint"/>
+                        <mxPoint x="430" y="480.9999999999998" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="53" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="477" width="10" height="83" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="15. Add Theatre" style="endArrow=classic;html=1;rounded=0;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=-0.789;entryY=0.026;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="446" y="496" as="sourcePoint"/>
+                        <mxPoint x="548.1100000000001" y="495.99199999999996" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="56" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="661" y="522" width="10" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="17. Display Theaters" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" edge="1">
+                    <mxGeometry y="30" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="615" as="sourcePoint"/>
+                        <mxPoint x="230" y="635" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="260" y="615"/>
+                            <mxPoint x="260" y="635"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="67" value="21. Get Seats" style="endArrow=classic;html=1;rounded=0;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;dashed=1;" parent="1" edge="1">
+                    <mxGeometry x="-0.4545" y="4" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="440" y="704" as="sourcePoint"/>
+                        <mxPoint x="660" y="704" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="68" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="633" width="10" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="18. Select Showtime" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="60" y="652" as="sourcePoint"/>
+                        <mxPoint x="220" y="652" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="70" value="19. Get Seats for Specific Showtime" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1">
+                    <mxGeometry y="14" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="663" as="sourcePoint"/>
+                        <mxPoint x="430" y="662.9999999999998" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="71" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="659" width="10" height="81" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;startArrow=none;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" target="81" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="435" y="740" as="sourcePoint"/>
+                        <mxPoint x="434.98493975903625" y="603" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="73" value="20. Add Showtime" style="endArrow=classic;html=1;rounded=0;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=-0.789;entryY=0.026;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
+                    <mxGeometry x="0.0577" y="8" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="446" y="678" as="sourcePoint"/>
+                        <mxPoint x="548.1100000000001" y="677.992" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="74" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="661" y="704" width="10" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="22. Display Seats" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" edge="1">
+                    <mxGeometry y="30" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="801" as="sourcePoint"/>
+                        <mxPoint x="230" y="821" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="260" y="801"/>
+                            <mxPoint x="260" y="821"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="78" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="819" width="10" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="23. Select Seat(s)" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="60" y="838" as="sourcePoint"/>
+                        <mxPoint x="220" y="838" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="80" value="24. Add Seat(s)" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1">
+                    <mxGeometry y="14" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="849" as="sourcePoint"/>
+                        <mxPoint x="430" y="848.9999999999998" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="81" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="845" width="10" height="57" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;startArrow=none;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="435" y="900" as="sourcePoint"/>
+                        <mxPoint x="435" y="980" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="83" value="25. Add Seat(s)" style="endArrow=classic;html=1;rounded=0;labelBackgroundColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;entryX=-0.789;entryY=0.026;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
+                    <mxGeometry x="-0.1382" y="-10" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="446" y="864" as="sourcePoint"/>
+                        <mxPoint x="548.1100000000001" y="863.992" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="85" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" edge="1" target="74">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="665.55" y="945" as="sourcePoint"/>
+                        <mxPoint x="665.55" y="721" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="40" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="352" width="10" height="538" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="User" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;strokeColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="25" y="80" width="70" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="Return movies" style="edgeStyle=none;html=1;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="430" y="260" as="sourcePoint"/>
+                        <mxPoint x="230" y="260" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="94" value="Display Movies" style="edgeStyle=none;html=1;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="220" y="270" as="sourcePoint"/>
+                        <mxPoint x="60" y="270" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="95" value="Return Theatres" style="edgeStyle=none;html=1;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" parent="1" edge="1">
+                    <mxGeometry x="0.457" y="2" relative="1" as="geometry">
+                        <mxPoint x="661" y="398" as="sourcePoint"/>
+                        <mxPoint x="440" y="398" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="97" value="Return Theatres" style="edgeStyle=none;html=1;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" parent="1" edge="1">
+                    <mxGeometry x="0.1" relative="1" as="geometry">
+                        <mxPoint x="430" y="406" as="sourcePoint"/>
+                        <mxPoint x="230" y="406" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="99" value="Return Showtimes" style="edgeStyle=none;html=1;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" parent="1" edge="1">
+                    <mxGeometry x="0.457" y="2" relative="1" as="geometry">
+                        <mxPoint x="661" y="546" as="sourcePoint"/>
+                        <mxPoint x="440" y="546" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="100" value="Return Showtimes" style="edgeStyle=none;html=1;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" parent="1" edge="1">
+                    <mxGeometry x="0.1" relative="1" as="geometry">
+                        <mxPoint x="430" y="554" as="sourcePoint"/>
+                        <mxPoint x="230" y="554" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="102" value="Return Seats" style="edgeStyle=none;html=1;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" edge="1" parent="1">
+                    <mxGeometry x="0.457" y="2" relative="1" as="geometry">
+                        <mxPoint x="661" y="726" as="sourcePoint"/>
+                        <mxPoint x="440" y="726" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="103" value="Return Seats" style="edgeStyle=none;html=1;strokeColor=#000000;dashed=1;labelBackgroundColor=#FFFFFF;fontColor=#000000;" edge="1" parent="1">
+                    <mxGeometry x="0.1" relative="1" as="geometry">
+                        <mxPoint x="430" y="730" as="sourcePoint"/>
+                        <mxPoint x="230" y="730" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="105" value="" style="endArrow=none;dashed=1;html=1;fontColor=#000000;strokeColor=#000000;startArrow=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="225" y="904" as="sourcePoint"/>
+                        <mxPoint x="225" y="984" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
