@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS registeredusers (
-    id int NOT NULL AUTO_INCREMENT,
+    id varchar(255) NOT NULL,
     first_name varchar(255),
     last_name varchar(255),
     email_address varchar(255) NOT NULL UNIQUE,
