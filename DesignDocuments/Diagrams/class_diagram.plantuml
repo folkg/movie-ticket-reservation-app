@@ -3,6 +3,7 @@
 package Database-MySQL {
     class Movie <<entity>> {
         - title : String
+        - isPresale : boolean
         - showTimes : ArrayList<ShowTime>
         + addShowTime(st : ShowTime)
     }
