@@ -77,7 +77,9 @@ serviceMethods.deleteUser = (id) => {
       [id],
       (err, results) => {
         if (err) return reject(err);
-        return resolve(results);
+        // return null if nothing was deleted
+        if (results.affectedRows === 1) return resolve(results);
+        return resolve(null);
       }
     );
   });
@@ -87,7 +89,7 @@ serviceMethods.getUserByEmail = (body) => {
   const { email } = body;
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT password FROM registeredusers WHERE email_address = ? `,
+      `SELECT * FROM registeredusers WHERE email_address = ? `,
       [email],
       (err, results) => {
         if (err) return reject(err);

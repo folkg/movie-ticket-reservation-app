@@ -22,9 +22,16 @@ controllerMethods.getAllUsers = async (req, res) => {
 controllerMethods.getOneUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    let results = await userService.getOneUser(userId);
-    if (results) res.json({ success: true, data: results });
-    else res.json({ success: false, message: "No user found." });
+    if (req.userId !== userId) {
+      res.status(401).json({
+        success: false,
+        message: "Current user is not authorized to get this information.",
+      });
+    } else {
+      let results = await userService.getOneUser(userId);
+      if (results) res.json({ success: true, data: results });
+      else res.json({ success: false, message: "No user found." });
+    }
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
@@ -89,13 +96,20 @@ controllerMethods.updateUser = async (req, res) => {
         success: false,
         message: "Not all required properties have been provided.",
       });
-    // encrypt password
-    const salt = genSaltSync(10);
-    body.password = hashSync(body.password, salt);
+    else if (req.userId !== userId) {
+      res.status(401).json({
+        success: false,
+        message: "Current user is not authorized to make update.",
+      });
+    } else {
+      // encrypt password
+      const salt = genSaltSync(10);
+      body.password = hashSync(body.password, salt);
 
-    let results = await userService.updateUser(body, userId);
-    if (results) res.json({ success: true, data: results });
-    else res.json({ success: false, data: "No user found." });
+      let results = await userService.updateUser(body, userId);
+      if (results) res.json({ success: true, data: results });
+      else res.json({ success: false, data: "No user found." });
+    }
   } catch (e) {
     //check the error code coming back from MySQL
     if (e.code === "ER_DUP_ENTRY")
@@ -116,9 +130,18 @@ controllerMethods.updateUser = async (req, res) => {
 controllerMethods.deleteUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    let results = await userService.deleteUser(userId);
-    if (results) res.json({ success: true, message: "Delete successful." });
-    else res.json({ success: false, data: "No user found." });
+    if (req.userId !== userId) {
+      res.status(401).json({
+        success: false,
+        message: "Current user is not authorized to make delete.",
+      });
+    } else {
+      let results = await userService.deleteUser(userId);
+      if (results) res.json({ success: true, message: "Delete successful." });
+      else {
+        res.json({ success: false, data: "No user found." });
+      }
+    }
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
@@ -133,19 +156,19 @@ controllerMethods.login = async (req, res) => {
     const { body } = req;
     let results = await userService.getUserByEmail(body);
     if (!results)
-      res.json({ success: false, data: "Invalid email or password." });
+      res.status(404).json({ success: false, data: "No user found." });
     else {
       const result = compareSync(body.password, results.password);
       if (result) {
         results.password = undefined; // don't pass user password in
-        const jsontoken = sign({ result: results }, process.env.JWT_KEY);
+        const jsontoken = sign({ userId: results.id }, process.env.JWT_KEY);
         res.json({
           success: true,
-          message: "login successful.",
+          message: "Login successful.",
           token: jsontoken,
         });
       } else {
-        res.json({
+        res.status(401).json({
           success: false,
           message: "Invalid email or password.",
         });
