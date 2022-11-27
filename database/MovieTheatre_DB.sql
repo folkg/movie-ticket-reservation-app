@@ -1,23 +1,28 @@
-DROP DATABASE IF EXISTS MOVIETHEATRE;
-CREATE DATABASE MOVIETHEATRE; 
-USE MOVIETHEATRE;
+DROP DATABASE IF EXISTS MOVIEAPP;
+CREATE DATABASE MOVIEAPP; 
+USE MOVIEAPP;
 
 DROP TABLE IF EXISTS REGISTERED_USER;
 CREATE TABLE REGISTERED_USER (
-	user_id					varchar(30)	not null,
-    user_name				varchar(30)	not null,
+	id					    varchar(30)	not null,
+    first_name              varchar(30),
+    last_name               varchar(30),
+    email_address			varchar(30)	not null unique,
+    password				varchar(30),
     address					varchar(60)	not null,
-    credit_credentials		varchar(20) not null,
-    debit_credentials		varchar(20) not null,
-	primary key (user_id)
+    credit_card		        varchar(20) not null,
+    -- debit_credentials		varchar(20) not null,
+    annual_fee_expiry_date  varchar(20) not null,
+	primary key (id)
 );
 
-INSERT INTO REGISTERED_USER (user_id, user_name, address, credit_credentials, debit_credentials)
+INSERT INTO REGISTERED_USER (id, first_name, last_name, email_address, password ,address, credit_card, annual_fee_expiry_date)
 VALUES
-('U_0001','Bob_The_Guy','123 Streetname NW, Calgary, AB','1234 9876 0192 8374', '1002 0030 0400 5006'),
-('U_0002','Real Person','8900 RealPlace NE, Calgary, AB','1046 2894 9101 3949', '5380 2918 2947 9088'),
-('U_0003','WhyOhWhyat','9031 RiverHouse SE, Calgary, AB','9374 0129 0932 5674', '0198 7352 0149 0284'),
-('U_0004', 'WendyThomas', '257 East Broad Street SW, Calgary, AB', '1359 5656 6565 1598', '1526 6248 2587');
+('U_0001','Bob', 'The_Guy','btg@ucalgary.ca', '1234', '123 Streetname NW, Calgary, AB','1234 9876 0192 8374', '1002 0030 0400 5006'),
+('U_0002','Real', 'Person','rperson@ucalgary.ca', '12345','8900 RealPlace NE, Calgary, AB','1046 2894 9101 3949', '5380 2918 2947 9088'),
+('U_0003','Why', 'OhWhyat', 'wow@ucalgary.ca', '1346', '9031 RiverHouse SE, Calgary, AB','9374 0129 0932 5674', '0198 7352 0149 0284'),
+('U_0004', 'Wendy', 'Thomas', 'wthomas@ucalgary.ca', 'burgers','257 East Broad Street SW, Calgary, AB', '1359 5656 6565 1598', '1526 6248 2587');
+
 
 DROP TABLE IF EXISTS MOVIE;
 CREATE TABLE MOVIE (
@@ -245,8 +250,7 @@ CREATE TABLE TICKET(
     isCredited				boolean not null,
 	primary key (ticket_id),
     foreign key (seat_id) references SEATS(seat_id),
-    foreign key (user_id) references REGISTERED_USER(user_id)
-    
+    foreign key (user_id) references REGISTERED_USER(id)
 
 );
 
