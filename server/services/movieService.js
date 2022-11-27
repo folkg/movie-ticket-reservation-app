@@ -38,7 +38,6 @@ serviceMethods.getOneMovie = (movie_id, isRegisteredUser) => {
             }
           );
         } else {
-          console.log("test");
           return resolve(null);
         }
       }

@@ -10,21 +10,7 @@ const router = express.Router();
 // {"success":true,"data":[{"theatre_id":"T_001","theatre_name":"MovieTown NE"},{"theatre_id":"T_002","theatre_name":"Cineplex SW"},{"theatre_id":"T_003","theatre_name":"Landmark NE"}]}
 router.get("/", theatreController.getAllTheatres);
 
-// {"success":true,"data":{"theatre_id":"T_001","theatre_name":"MovieTown NE"}}
-router.get("/:theatre_id", theatreController.getOneTheatre);
-
-// {"success":true,"data":[{"movie_id":"M_001","movie_name":"Citizen Kane","isPresale":0,"showing_id":"ST_001","theatre_id":"T_001","show_time":"2022-11-26T16:00:00.000Z","theatre_name":"MovieTown NE"},{"movie_id":"M_005","movie_name":"Citizen Kane 2","isPresale":1,"showing_id":"ST_006","theatre_id":"T_001","show_time":"2022-12-13T16:00:00.000Z","theatre_name":"MovieTown NE"}]}
-router.get(
-  "/:theatre_id/movie",
-  checkUserId,
-  theatreController.getMovieForTheatre
-);
-
-// {"success":true,"data":[{"showing_id":"ST_001","theatre_id":"T_001","movie_id":"M_001","show_time":"2022-11-26T16:00:00.000Z","movie_name":"Citizen Kane","isPresale":0,"theatre_name":"MovieTown NE"},{"showing_id":"ST_006","theatre_id":"T_001","movie_id":"M_005","show_time":"2022-12-13T16:00:00.000Z","movie_name":"Citizen Kane 2","isPresale":1,"theatre_name":"MovieTown NE"}]}
-router.get(
-  "/:theatre_id/showing",
-  checkUserId,
-  theatreController.getShowingForTheatre
-);
+// {"success":true,"data":{"theatre_id":"T_001","theatre_name":"MovieTown NE","showings":[{"showing_id":"ST_001","show_time":"2022-11-26T16:00:00.000Z","movie_id":"M_001","movie_name":"Citizen Kane"},{"showing_id":"ST_006","show_time":"2022-12-13T16:00:00.000Z","movie_id":"M_005","movie_name":"Citizen Kane 2"}]}}
+router.get("/:theatre_id", checkUserId, theatreController.getOneTheatre);
 
 module.exports = router;
