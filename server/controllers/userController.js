@@ -7,9 +7,8 @@ const controllerMethods = {};
 controllerMethods.getAllUsers = async (req, res) => {
   try {
     let results = await userService.getAllUsers();
-    if (results) {
-      res.json({ success: true, data: results });
-    } else res.json({ success: false, message: "No users found." });
+    if (results.length > 0) res.json({ success: true, data: results });
+    else res.json({ success: false, message: "No users found." });
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
