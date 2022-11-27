@@ -16,12 +16,13 @@ CREATE TABLE REGISTERED_USER (
 	primary key (id)
 );
 
+-- user passwords have been hashed. All users have password '1234'
 INSERT INTO REGISTERED_USER (id, first_name, last_name, email_address, password ,address, credit_card, annual_fee_expiry_date)
 VALUES
-('U_0001','Bob', 'The_Guy','btg@ucalgary.ca', '1234', '123 Streetname NW, Calgary, AB','1234 9876 0192 8374', '2023-11-26 09:00:00'),
-('U_0002','Real', 'Person','rperson@ucalgary.ca', '12345','8900 RealPlace NE, Calgary, AB','1046 2894 9101 3949', '2023-11-26 09:00:00'),
-('U_0003','Why', 'OhWhyat', 'wow@ucalgary.ca', '1346', '9031 RiverHouse SE, Calgary, AB','9374 0129 0932 5674', '2023-11-26 09:00:00'),
-('U_0004', 'Wendy', 'Thomas', 'wthomas@ucalgary.ca', '1346', 'burgers','257 East Broad Street SW, Calgary, AB', '2023-11-26 09:00:00');
+('U_0001','Bob', 'The_Guy','btg@ucalgary.ca', '$2b$10$wfKMECuJ2EsloQPATbwsOO/rTU/eI3zUfwD8UwNui7nX4dSnk7xAa', '123 Streetname NW, Calgary, AB','1234 9876 0192 8374', '2023-11-26 09:00:00'),
+('U_0002','Real', 'Person','rperson@ucalgary.ca', '$2b$10$wfKMECuJ2EsloQPATbwsOO/rTU/eI3zUfwD8UwNui7nX4dSnk7xAa','8900 RealPlace NE, Calgary, AB','1046 2894 9101 3949', '2023-11-26 09:00:00'),
+('U_0003','Why', 'OhWhyat', 'wow@ucalgary.ca', '$2b$10$wfKMECuJ2EsloQPATbwsOO/rTU/eI3zUfwD8UwNui7nX4dSnk7xAa', '9031 RiverHouse SE, Calgary, AB','9374 0129 0932 5674', '2023-11-26 09:00:00'),
+('U_0004', 'Wendy', 'Thomas', 'wthomas@ucalgary.ca', '$2b$10$wfKMECuJ2EsloQPATbwsOO/rTU/eI3zUfwD8UwNui7nX4dSnk7xAa', 'burgers','257 East Broad Street SW, Calgary, AB', '2023-11-26 09:00:00');
 
 
 DROP TABLE IF EXISTS MOVIE;

@@ -45,23 +45,25 @@ controllerMethods.createUser = async (req, res) => {
   try {
     const { body } = req;
     if (
-      !body.firstName ||
-      !body.lastName ||
-      !body.email ||
+      !body.first_name ||
+      !body.last_name ||
+      !body.email_address ||
       !body.password ||
       !body.address ||
-      !body.creditCard
+      !body.credit_card
     )
       res.status(400).json({
         success: false,
         message: "Not all required properties have been provided.",
       });
-    // encrypt password
-    const salt = genSaltSync(10);
-    body.password = hashSync(body.password, salt);
+    else {
+      // encrypt password
+      const salt = genSaltSync(10);
+      body.password = hashSync(body.password, salt);
 
-    let results = await userService.createUser(body);
-    res.status(201).json({ success: true, data: results });
+      let results = await userService.createUser(body);
+      res.status(201).json({ success: true, data: results });
+    }
   } catch (e) {
     //check the error code coming back from MySQL
     if (e.code === "ER_DUP_ENTRY")
@@ -84,12 +86,12 @@ controllerMethods.updateUser = async (req, res) => {
     const { body } = req;
     const { userId } = req.params;
     if (
-      !body.firstName ||
-      !body.lastName ||
-      !body.email ||
+      !body.first_name ||
+      !body.last_name ||
+      !body.email_address ||
       !body.password ||
       !body.address ||
-      !body.creditCard ||
+      !body.credit_card ||
       !userId
     )
       res.status(400).json({

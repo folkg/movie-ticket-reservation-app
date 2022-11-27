@@ -5,7 +5,7 @@ const serviceMethods = {};
 
 serviceMethods.getAllUsers = () => {
   return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM registeredusers`, [], (err, results) => {
+    connection.query(`SELECT * FROM REGISTERED_USER`, [], (err, results) => {
       if (err) return reject(err);
       return resolve(results);
     });
@@ -15,7 +15,7 @@ serviceMethods.getAllUsers = () => {
 serviceMethods.getOneUser = (id) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT * FROM registeredusers WHERE id = ?`,
+      `SELECT * FROM REGISTERED_USER WHERE id = ?`,
       [id],
       (err, results) => {
         if (err) return reject(err);
@@ -27,16 +27,23 @@ serviceMethods.getOneUser = (id) => {
 
 serviceMethods.createUser = (body) => {
   return new Promise((resolve, reject) => {
-    const { firstName, lastName, email, password, address, creditCard } = body;
+    const {
+      first_name,
+      last_name,
+      email_address,
+      password,
+      address,
+      credit_card,
+    } = body;
     const id = uuid();
     connection.query(
-      `INSERT INTO registeredusers(id, first_name, last_name, email_address, password, address, credit_card) values (?,?,?,?,?,?,?)`,
-      [id, firstName, lastName, email, password, address, creditCard],
+      `INSERT INTO REGISTERED_USER (first_name, last_name, email_address, password, address, credit_card) values (?,?,?,?,?,?)`,
+      [first_name, last_name, email_address, password, address, credit_card],
       async (err, results) => {
         if (err) return reject(err);
         // return the new user object
         connection.query(
-          `SELECT * FROM registeredusers WHERE id = ?`,
+          `SELECT * FROM REGISTERED_USER WHERE id = ?`,
           [id],
           (err, results) => {
             if (err) return reject(err);
@@ -50,15 +57,30 @@ serviceMethods.createUser = (body) => {
 
 serviceMethods.updateUser = (body, id) => {
   return new Promise((resolve, reject) => {
-    const { firstName, lastName, email, password, address, creditCard } = body;
+    const {
+      first_name,
+      last_name,
+      email_address,
+      password,
+      address,
+      credit_card,
+    } = body;
     connection.query(
-      `UPDATE registeredusers SET first_name = ?, last_name = ?, email_address = ?, password = ?, address = ?, credit_card = ? WHERE id = ?`,
-      [firstName, lastName, email, password, address, creditCard, id],
+      `UPDATE REGISTERED_USER SET first_name = ?, last_name = ?, email_address = ?, password = ?, address = ?, credit_card = ? WHERE id = ?`,
+      [
+        first_name,
+        last_name,
+        email_address,
+        password,
+        address,
+        credit_card,
+        id,
+      ],
       (err, results) => {
         if (err) return reject(err);
         // return the new user object
         connection.query(
-          `SELECT * FROM registeredusers WHERE id = ?`,
+          `SELECT * FROM REGISTERED_USER WHERE id = ?`,
           [id],
           (err, results) => {
             if (err) return reject(err);
@@ -73,7 +95,7 @@ serviceMethods.updateUser = (body, id) => {
 serviceMethods.deleteUser = (id) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `DELETE FROM registeredusers WHERE id = ?`,
+      `DELETE FROM REGISTERED_USER WHERE id = ?`,
       [id],
       (err, results) => {
         if (err) return reject(err);
@@ -86,11 +108,11 @@ serviceMethods.deleteUser = (id) => {
 };
 
 serviceMethods.getUserByEmail = (body) => {
-  const { email } = body;
+  const { email_address } = body;
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT * FROM registeredusers WHERE email_address = ? `,
-      [email],
+      `SELECT * FROM REGISTERED_USER WHERE email_address = ? `,
+      [email_address],
       (err, results) => {
         if (err) return reject(err);
         return resolve(results[0]);
