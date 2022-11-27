@@ -15,23 +15,7 @@ const cache = apicache.middleware;
 router.get("/", checkUserId, cache("2 minutes"), movieController.getAllMovies);
 
 // Returns:
-// {"success":true,"data":{"movie_id":"M_005","movie_name":"Citizen Kane 2","isPresale":1}}
+// {"success":true,"data":{"movie_id":"M_002","movie_name":"Titanic","isPresale":0,"showings":[{"showing_id":"ST_002","show_time":"2022-11-26T18:00:00.000Z","theatre_id":"T_002","theatre_name":"Cineplex SW"},{"showing_id":"ST_003","show_time":"2022-11-26T20:00:00.000Z","theatre_id":"T_003","theatre_name":"Landmark NE"}]}}
 router.get("/:movie_id", checkUserId, movieController.getOneMovie);
-
-// Returns:
-// {"success":true,"data":[{"theatre_id":"T_001","theatre_name":"MovieTown NE","showing_id":"ST_006","movie_id":"M_005","show_time":"2022-12-13T16:00:00.000Z","movie_name":"Citizen Kane 2","isPresale":1}]}
-router.get(
-  "/:movie_id/theatre",
-  checkUserId,
-  movieController.getTheatreForMovie
-);
-
-// Returns:
-// {"success":true,"data":[{"showing_id":"ST_006","theatre_id":"T_001","movie_id":"M_005","show_time":"2022-12-13T16:00:00.000Z","theatre_name":"MovieTown NE","movie_name":"Citizen Kane 2","isPresale":1}]}
-router.get(
-  "/:movie_id/showing",
-  checkUserId,
-  movieController.getShowingForMovie
-);
 
 module.exports = router;
