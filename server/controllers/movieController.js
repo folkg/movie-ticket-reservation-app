@@ -8,7 +8,9 @@ controllerMethods.getAllMovies = async (req, res) => {
     let results = await movieService.getAllMovies(isRegisteredUser);
     if (results.length > 0) {
       res.json({ success: true, data: results });
-    } else res.json({ success: false, message: "No movies found." });
+    } else {
+      es.json({ success: false, message: "No movies found." });
+    }
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
@@ -25,7 +27,9 @@ controllerMethods.getOneMovie = async (req, res) => {
     let results = await movieService.getOneMovie(movie_id, isRegisteredUser);
     if (results) {
       res.json({ success: true, data: results });
-    } else res.json({ success: false, message: "Movie not found." });
+    } else {
+      res.json({ success: false, message: "Movie not found." });
+    }
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
@@ -45,7 +49,9 @@ controllerMethods.getTheatreForMovie = async (req, res) => {
     );
     if (results.length > 0) {
       res.json({ success: true, data: results });
-    } else res.json({ success: false, message: "Movie not found." });
+    } else {
+      res.json({ success: false, message: "Movie not found." });
+    }
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
@@ -65,7 +71,9 @@ controllerMethods.getShowingForMovie = async (req, res) => {
     );
     if (results.length > 0) {
       res.json({ success: true, data: results });
-    } else res.json({ success: false, message: "Movie not found." });
+    } else {
+      res.json({ success: false, message: "Movie not found." });
+    }
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
