@@ -167,6 +167,7 @@ controllerMethods.login = async (req, res) => {
         res.json({
           success: true,
           message: "Login successful.",
+          user_id: results.id,
           token: jsontoken,
         });
       } else {
