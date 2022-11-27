@@ -45,9 +45,7 @@ CREATE TABLE SEATS(
     booked					boolean,
     
 	primary key (seat_id),
-    foreign key (theatre_id) references SHOWING(theatre_id),
-    foreign key (movie_id) references SHOWING(movie_id),
-    foreign key (show_time) references SHOWING(show_time)
+    foreign key (theatre_id,movie_id,show_time) references SHOWING(theatre_id,movie_id,show_time)
     
 );
 
