@@ -37,8 +37,8 @@ serviceMethods.createUser = (body) => {
     } = body;
     const id = uuid();
     connection.query(
-      `INSERT INTO REGISTERED_USER (first_name, last_name, email_address, password, address, credit_card) values (?,?,?,?,?,?)`,
-      [first_name, last_name, email_address, password, address, credit_card],
+      `INSERT INTO REGISTERED_USER (id, first_name, last_name, email_address, password, address, credit_card) values (?,?,?,?,?,?,?)`,
+      [id, first_name, last_name, email_address, password, address, credit_card],
       async (err, results) => {
         if (err) return reject(err);
         // return the new user object
