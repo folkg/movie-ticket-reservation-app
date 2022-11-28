@@ -1,5 +1,4 @@
 const connection = require("../config/database");
-const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
 
@@ -14,7 +13,6 @@ serviceMethods.getAllTheatres = () => {
 
 serviceMethods.getOneTheatre = (theatre_id, isRegisteredUser) => {
   return new Promise((resolve, reject) => {
-    let data;
     connection.query(
       `SELECT * FROM THEATRE WHERE theatre_id = ?`,
       [theatre_id],

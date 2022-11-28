@@ -1,4 +1,5 @@
 const showingService = require("../services/showingService");
+const seatService = require("../services/seatService");
 
 const controllerMethods = {};
 
@@ -10,7 +11,7 @@ controllerMethods.getAllShowings = async (req, res) => {
     if (results.length > 0) {
       res.json({ success: true, data: results });
     } else {
-      es.json({ success: false, message: "No showings found." });
+      res.json({ success: false, message: "No showings found." });
     }
   } catch (e) {
     console.log(e.message);
@@ -30,6 +31,11 @@ controllerMethods.getOneShowing = async (req, res) => {
       isRegisteredUser
     );
     if (results) {
+      // add a list of all seats for the chosen showing
+      const query = {};
+      query.showing_id = showing_id;
+      let seats = await seatService.getAllSeats(isRegisteredUser, query);
+      results.seats = seats;
       res.json({ success: true, data: results });
     } else {
       res.json({ success: false, message: "Showing not found." });

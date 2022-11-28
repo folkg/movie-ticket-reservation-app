@@ -1,5 +1,4 @@
 const connection = require("../config/database");
-const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
 
@@ -22,7 +21,6 @@ serviceMethods.getAllShowings = (isRegisteredUser, query) => {
 
 serviceMethods.getOneShowing = (showing_id, isRegisteredUser) => {
   return new Promise((resolve, reject) => {
-    let data;
     connection.query(
       `SELECT * FROM SHOWING S INNER JOIN MOVIE M ON M.movie_id = S.movie_id INNER JOIN THEATRE T ON T.theatre_id = S.theatre_id 
       WHERE S.showing_id = ? AND (M.isPresale = false OR ?)`,
@@ -30,6 +28,49 @@ serviceMethods.getOneShowing = (showing_id, isRegisteredUser) => {
       (err, results) => {
         if (err) return reject(err);
         return resolve(results[0]);
+      }
+    );
+  });
+};
+
+serviceMethods.isPresaleRestricted = (showing_id) => {
+  // function to determine if a showing is presale restricted (10% sold in presale)
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `SELECT M.isPresale FROM SHOWING S INNER JOIN MOVIE M ON M.movie_id = S.movie_id 
+      WHERE S.showing_id = ?`,
+      [showing_id],
+      (err, resultsPresale) => {
+        if (err) return reject(err);
+        // If showing is presale, count number of total seats and booked seats
+        if (resultsPresale[0].isPresale) {
+          console.log("presale");
+          connection.query(
+            `SELECT COUNT(1) AS TS FROM SEATS ST INNER JOIN SHOWING SH ON SH.showing_id = ST.showing_id 
+            WHERE SH.showing_id = ?`,
+            [showing_id],
+            (err, resultsTotalSeats) => {
+              if (err) return reject(err);
+              connection.query(
+                `SELECT COUNT(1) AS BS FROM SEATS ST INNER JOIN SHOWING SH ON SH.showing_id = ST.showing_id 
+            WHERE SH.showing_id = ? AND ST.booked = true`,
+                [showing_id],
+                (err, resultsBookedSeats) => {
+                  if (err) return reject(err);
+                  const percentBooked =
+                    resultsBookedSeats[0].BS / resultsTotalSeats[0].TS;
+                  if (percentBooked > 0.1) {
+                    return resolve(true);
+                  } else {
+                    return resolve(false);
+                  }
+                }
+              );
+            }
+          );
+        } else {
+          return resolve(false);
+        }
       }
     );
   });

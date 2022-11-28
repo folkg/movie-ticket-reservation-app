@@ -6,11 +6,12 @@ const controllerMethods = {};
 controllerMethods.getAllMovies = async (req, res) => {
   try {
     const isRegisteredUser = req.userId != null;
+    console.log("isreg:" + isRegisteredUser);
     let results = await movieService.getAllMovies(isRegisteredUser);
     if (results.length > 0) {
       res.json({ success: true, data: results });
     } else {
-      es.json({ success: false, message: "No movies found." });
+      res.json({ success: false, message: "No movies found." });
     }
   } catch (e) {
     console.log(e.message);

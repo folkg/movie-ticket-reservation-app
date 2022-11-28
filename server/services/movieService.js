@@ -1,5 +1,4 @@
 const connection = require("../config/database");
-const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
 
@@ -18,7 +17,6 @@ serviceMethods.getAllMovies = (isRegisteredUser) => {
 
 serviceMethods.getOneMovie = (movie_id, isRegisteredUser) => {
   return new Promise((resolve, reject) => {
-    let data;
     connection.query(
       `SELECT * FROM MOVIE WHERE movie_id = ? AND (isPresale = false OR ?)`,
       [movie_id, isRegisteredUser],
