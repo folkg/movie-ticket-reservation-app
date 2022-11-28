@@ -15,7 +15,7 @@ const cache = apicache.middleware;
 router.get("/", checkUserId, cache("2 minutes"), movieController.getAllMovies);
 
 // Returns:
-// {"success":true,"data":{"movie_id":"M_002","movie_name":"Titanic","isPresale":0,"showings":[{"showing_id":"ST_002","show_time":"2022-11-26T18:00:00.000Z","theatre_id":"T_002","theatre_name":"Cineplex SW"},{"showing_id":"ST_003","show_time":"2022-11-26T20:00:00.000Z","theatre_id":"T_003","theatre_name":"Landmark NE"}]}}
+// {"success":true,"data":{"movie_id":"M_002","movie_name":"Titanic","isPresale":0,"showings":[{"showing_id":"ST_002","theatre_id":"T_002","movie_id":"M_002","show_time":"2022-11-26T18:00:00.000Z","movie_name":"Titanic","isPresale":0,"theatre_name":"Cineplex SW"},{"showing_id":"ST_003","theatre_id":"T_003","movie_id":"M_002","show_time":"2022-11-26T20:00:00.000Z","movie_name":"Titanic","isPresale":0,"theatre_name":"Landmark NE"}]}}
 router.get("/:movie_id", checkUserId, movieController.getOneMovie);
 
 module.exports = router;
