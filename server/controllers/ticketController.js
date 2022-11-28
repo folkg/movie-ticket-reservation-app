@@ -12,7 +12,7 @@ controllerMethods.getAllTickets = async (req, res) => {
     if (results) {
       res.json({ status: true, data: results });
     } else {
-      res.status(204).json({ status: false, message: "no tickets found" });
+      res.status(404).json({ status: false, message: "no tickets found" });
     }
   } catch (e) {
     console.log(e.message);

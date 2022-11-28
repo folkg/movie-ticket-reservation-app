@@ -11,7 +11,7 @@ controllerMethods.getAllUsers = async (req, res) => {
     if (results.length > 0) {
       res.json({ success: true, data: results });
     } else {
-      res.status(204).json({ success: false, message: "No users found." });
+      res.status(404).json({ success: false, message: "No users found." });
     }
   } catch (e) {
     console.log(e.message);
@@ -35,7 +35,7 @@ controllerMethods.getOneUser = async (req, res) => {
       if (results) {
         res.json({ success: true, data: results });
       } else {
-        res.status(204).json({ success: false, message: "No user found." });
+        res.status(404).json({ success: false, message: "No user found." });
       }
     }
   } catch (e) {
@@ -65,7 +65,7 @@ controllerMethods.getUserTickets = async (req, res) => {
         results.tickets = tickets;
         res.json({ success: true, data: results });
       } else {
-        res.status(204).json({ success: false, message: "No user found." });
+        res.status(404).json({ success: false, message: "No user found." });
       }
     }
   } catch (e) {
@@ -148,7 +148,7 @@ controllerMethods.updateUser = async (req, res) => {
       if (results) {
         res.json({ success: true, data: results });
       } else {
-        res.status(204).json({ success: false, data: "No user found." });
+        res.status(404).json({ success: false, data: "No user found." });
       }
     }
   } catch (e) {
@@ -181,7 +181,7 @@ controllerMethods.deleteUser = async (req, res) => {
       if (results) {
         res.json({ success: true, message: "Delete successful." });
       } else {
-        res.status(204).json({ success: false, data: "No user found." });
+        res.status(404).json({ success: false, data: "No user found." });
       }
     }
   } catch (e) {
@@ -198,7 +198,7 @@ controllerMethods.login = async (req, res) => {
     const { body } = req;
     let results = await userService.getUserByEmail(body);
     if (!results)
-      res.status(204).json({ success: false, data: "No user found." });
+      res.status(404).json({ success: false, data: "No user found." });
     else {
       const result = compareSync(body.password, results.password);
       if (result) {
