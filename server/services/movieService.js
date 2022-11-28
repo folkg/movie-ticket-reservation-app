@@ -24,22 +24,7 @@ serviceMethods.getOneMovie = (movie_id, isRegisteredUser) => {
       [movie_id, isRegisteredUser],
       (err, results) => {
         if (err) return reject(err);
-        data = results[0];
-        if (data) {
-          connection.query(
-            `SELECT showing_id, show_time, T.theatre_id, T.theatre_name FROM SHOWING S INNER JOIN THEATRE T ON T.theatre_id = S.theatre_id 
-            INNER JOIN MOVIE M ON S.movie_id = M.movie_id 
-            WHERE M.movie_id = ? AND (M.isPresale = false OR ?)`,
-            [movie_id, isRegisteredUser],
-            (err, results) => {
-              if (err) return reject(err);
-              data.showings = results;
-              return resolve(data);
-            }
-          );
-        } else {
-          return resolve(null);
-        }
+        resolve(results[0]);
       }
     );
   });
