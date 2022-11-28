@@ -9,7 +9,7 @@ controllerMethods.getAllTheatres = async (req, res) => {
     if (results.length > 0) {
       res.json({ success: true, data: results });
     } else {
-      res.json({ success: false, message: "No theatres found." });
+      res.status(204).json({ success: false, message: "No theatres found." });
     }
   } catch (e) {
     console.log(e.message);
@@ -36,7 +36,7 @@ controllerMethods.getOneTheatre = async (req, res) => {
       results.showings = showings;
       res.json({ success: true, data: results });
     } else {
-      res.json({ success: false, message: "Theatre not found." });
+      res.status(204).json({ success: false, message: "Theatre not found." });
     }
   } catch (e) {
     console.log(e.message);

@@ -12,13 +12,16 @@ const router = express.Router();
 // If the user is not logged in, it will deny them access to use that endpoint.
 
 router.get("/", userController.getAllUsers); // in theory this should probably be an admin function, but leaving it open for now
-router.get("/:userId", checkToken, userController.getOneUser); // use checkToken to ensure user is logged in as the correct user to perform update
+router.get("/:userId", checkToken, userController.getOneUser);
+router.get("/:userId/tickets", checkToken, userController.getUserTickets);
 router.post("/", userController.createUser);
-router.patch("/:userId", checkToken, userController.updateUser); // use checkToken to ensure user is logged in as the correct user to perform update
-router.delete("/:userId", checkToken, userController.deleteUser); // use checkToken to ensure user is logged in as the correct user to perform update
-router.post("/login", userController.login);
+router.patch("/:userId", checkToken, userController.updateUser);
+router.delete("/:userId", checkToken, userController.deleteUser);
+
 // Expects:
 // {"email_address": "rperson@ucalgary.ca","password": "1234"}
 // Returns:
 // {"success":true,"message":"Login successful.","user_id":"U_0001","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVXzAwMDEiLCJpYXQiOjE2Njk1ODI2NTR9.haVvegionYEQ0PEXLhSiBJVatrJusLtAj24b2L7ywc8"}
+router.post("/login", userController.login);
+
 module.exports = router;

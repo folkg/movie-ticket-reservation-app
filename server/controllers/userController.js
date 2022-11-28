@@ -1,4 +1,5 @@
 const userService = require("../services/userService");
+const { getAllTickets } = require("../services/ticketService");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 
@@ -10,7 +11,7 @@ controllerMethods.getAllUsers = async (req, res) => {
     if (results.length > 0) {
       res.json({ success: true, data: results });
     } else {
-      res.json({ success: false, message: "No users found." });
+      res.status(204).json({ success: false, message: "No users found." });
     }
   } catch (e) {
     console.log(e.message);
@@ -34,7 +35,37 @@ controllerMethods.getOneUser = async (req, res) => {
       if (results) {
         res.json({ success: true, data: results });
       } else {
-        res.json({ success: false, message: "No user found." });
+        res.status(204).json({ success: false, message: "No user found." });
+      }
+    }
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).json({
+      success: false,
+      message: e.message,
+    });
+  }
+};
+
+controllerMethods.getUserTickets = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (req.userId !== userId) {
+      res.status(401).json({
+        success: false,
+        message: "Current user is not authorized to get this information.",
+      });
+    } else {
+      let results = await userService.getOneUser(userId);
+      if (results) {
+        // add a list of all tickets for the chosen user
+        const query = {};
+        query.user_id = userId;
+        let tickets = await getAllTickets(query);
+        results.tickets = tickets;
+        res.json({ success: true, data: results });
+      } else {
+        res.status(204).json({ success: false, message: "No user found." });
       }
     }
   } catch (e) {
@@ -117,7 +148,7 @@ controllerMethods.updateUser = async (req, res) => {
       if (results) {
         res.json({ success: true, data: results });
       } else {
-        res.json({ success: false, data: "No user found." });
+        res.status(204).json({ success: false, data: "No user found." });
       }
     }
   } catch (e) {
@@ -150,7 +181,7 @@ controllerMethods.deleteUser = async (req, res) => {
       if (results) {
         res.json({ success: true, message: "Delete successful." });
       } else {
-        res.json({ success: false, data: "No user found." });
+        res.status(204).json({ success: false, data: "No user found." });
       }
     }
   } catch (e) {
@@ -167,7 +198,7 @@ controllerMethods.login = async (req, res) => {
     const { body } = req;
     let results = await userService.getUserByEmail(body);
     if (!results)
-      res.status(404).json({ success: false, data: "No user found." });
+      res.status(204).json({ success: false, data: "No user found." });
     else {
       const result = compareSync(body.password, results.password);
       if (result) {

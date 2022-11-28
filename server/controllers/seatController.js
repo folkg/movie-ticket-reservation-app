@@ -10,7 +10,7 @@ controllerMethods.getAllSeats = async (req, res) => {
     if (results.length > 0) {
       res.json({ success: true, data: results });
     } else {
-      res.json({ success: false, message: "No seats found." });
+      res.status(204).json({ success: false, message: "No seats found." });
     }
   } catch (e) {
     console.log(e.message);
@@ -29,7 +29,7 @@ controllerMethods.getOneSeat = async (req, res) => {
     if (results) {
       res.json({ success: true, data: results });
     } else {
-      res.json({ success: false, message: "Seat not found." });
+      res.status(204).json({ success: false, message: "Seat not found." });
     }
   } catch (e) {
     console.log(e.message);

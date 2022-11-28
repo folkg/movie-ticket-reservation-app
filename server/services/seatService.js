@@ -37,13 +37,17 @@ serviceMethods.getOneSeat = (seat_id, isRegisteredUser) => {
       [seat_id, isRegisteredUser],
       async (err, results) => {
         if (err) return reject(err);
-        // Determine if seat is available or not (takes into account 10% presale limit)
-        results[0].is_available = !(
-          results[0].booked ||
-          (await isPresaleRestricted(results[0].showing_id))
-        );
-        delete results[0].booked;
-        resolve(results[0]);
+        if (results[0]) {
+          // Determine if seat is available or not (takes into account 10% presale limit)
+          results[0].is_available = !(
+            results[0].booked ||
+            (await isPresaleRestricted(results[0].showing_id))
+          );
+          delete results[0].booked;
+          return resolve(results[0]);
+        } else {
+          return resolve(null);
+        }
       }
     );
   });

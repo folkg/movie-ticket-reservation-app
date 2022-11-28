@@ -58,7 +58,7 @@ serviceMethods.isPresaleRestricted = (showing_id) => {
                   if (err) return reject(err);
                   const percentBooked =
                     resultsBookedSeats[0].BS / resultsTotalSeats[0].TS;
-                  if (percentBooked > 0.1) {
+                  if (percentBooked >= 0.1) {
                     return resolve(true);
                   } else {
                     return resolve(false);
