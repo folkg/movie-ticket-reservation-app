@@ -1,5 +1,5 @@
 const theatreService = require("../services/theatreService");
-const showingService = require("../services/showingService");
+const { getAllShowings } = require("../services/showingService");
 
 const controllerMethods = {};
 
@@ -32,10 +32,7 @@ controllerMethods.getOneTheatre = async (req, res) => {
       // add a list of all showings for the chosen theatre
       const query = {};
       query.theatre_id = theatre_id;
-      let showings = await showingService.getAllShowings(
-        isRegisteredUser,
-        query
-      );
+      let showings = await getAllShowings(isRegisteredUser, query);
       results.showings = showings;
       res.json({ success: true, data: results });
     } else {

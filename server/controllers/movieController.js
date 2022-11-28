@@ -1,5 +1,5 @@
 const movieService = require("../services/movieService");
-const showingService = require("../services/showingService");
+const { getAllShowings } = require("../services/showingService");
 
 const controllerMethods = {};
 
@@ -31,10 +31,7 @@ controllerMethods.getOneMovie = async (req, res) => {
       // add a list of all showings for the chosen movie
       const query = {};
       query.movie_id = movie_id;
-      let showings = await showingService.getAllShowings(
-        isRegisteredUser,
-        query
-      );
+      let showings = await getAllShowings(isRegisteredUser, query);
       results.showings = showings;
       res.json({ success: true, data: results });
     } else {

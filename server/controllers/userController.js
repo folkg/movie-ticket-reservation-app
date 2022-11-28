@@ -7,8 +7,11 @@ const controllerMethods = {};
 controllerMethods.getAllUsers = async (req, res) => {
   try {
     let results = await userService.getAllUsers();
-    if (results.length > 0) res.json({ success: true, data: results });
-    else res.json({ success: false, message: "No users found." });
+    if (results.length > 0) {
+      res.json({ success: true, data: results });
+    } else {
+      res.json({ success: false, message: "No users found." });
+    }
   } catch (e) {
     console.log(e.message);
     res.status(500).json({
@@ -28,8 +31,11 @@ controllerMethods.getOneUser = async (req, res) => {
       });
     } else {
       let results = await userService.getOneUser(userId);
-      if (results) res.json({ success: true, data: results });
-      else res.json({ success: false, message: "No user found." });
+      if (results) {
+        res.json({ success: true, data: results });
+      } else {
+        res.json({ success: false, message: "No user found." });
+      }
     }
   } catch (e) {
     console.log(e.message);
@@ -108,8 +114,11 @@ controllerMethods.updateUser = async (req, res) => {
       body.password = hashSync(body.password, salt);
 
       let results = await userService.updateUser(body, userId);
-      if (results) res.json({ success: true, data: results });
-      else res.json({ success: false, data: "No user found." });
+      if (results) {
+        res.json({ success: true, data: results });
+      } else {
+        res.json({ success: false, data: "No user found." });
+      }
     }
   } catch (e) {
     //check the error code coming back from MySQL
@@ -138,8 +147,9 @@ controllerMethods.deleteUser = async (req, res) => {
       });
     } else {
       let results = await userService.deleteUser(userId);
-      if (results) res.json({ success: true, message: "Delete successful." });
-      else {
+      if (results) {
+        res.json({ success: true, message: "Delete successful." });
+      } else {
         res.json({ success: false, data: "No user found." });
       }
     }

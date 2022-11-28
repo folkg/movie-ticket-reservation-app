@@ -1,5 +1,5 @@
 const showingService = require("../services/showingService");
-const seatService = require("../services/seatService");
+const { getAllSeats } = require("../services/seatService");
 
 const controllerMethods = {};
 
@@ -34,7 +34,7 @@ controllerMethods.getOneShowing = async (req, res) => {
       // add a list of all seats for the chosen showing
       const query = {};
       query.showing_id = showing_id;
-      let seats = await seatService.getAllSeats(isRegisteredUser, query);
+      let seats = await getAllSeats(isRegisteredUser, query);
       results.seats = seats;
       res.json({ success: true, data: results });
     } else {
