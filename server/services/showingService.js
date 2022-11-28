@@ -44,7 +44,6 @@ serviceMethods.isPresaleRestricted = (showing_id) => {
         if (err) return reject(err);
         // If showing is presale, count number of total seats and booked seats
         if (resultsPresale[0].isPresale) {
-          console.log("presale");
           connection.query(
             `SELECT COUNT(1) AS TS FROM SEATS ST INNER JOIN SHOWING SH ON SH.showing_id = ST.showing_id 
             WHERE SH.showing_id = ?`,
