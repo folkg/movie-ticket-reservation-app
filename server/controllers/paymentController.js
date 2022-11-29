@@ -29,7 +29,7 @@ controllerMethods.getTotalCreditByUser = async (req, res) => {
     else {
       let credits = await creditService.getCreditByUser(user_id);
       let total_credit = 0;
-      if (credits) {
+      if (credits.length > 0) {
         credits.forEach((credit) => {
           total_credit += credit.credit_available;
         });
