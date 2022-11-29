@@ -8,6 +8,7 @@ const v1TheatreRouter = require("./v1/routes/theatreRoutes");
 const v1TicketRouter = require("./v1/routes/ticketRoutes");
 const v1ShowingRouter = require("./v1/routes/showingRoutes");
 const v1SeatRouter = require("./v1/routes/seatRoutes");
+const v1PaymentRouter = require("./v1/routes/paymentRoutes");
 
 const app = express();
 const PORT = process.env.APP_PORT || 5000;
@@ -15,12 +16,15 @@ const PORT = process.env.APP_PORT || 5000;
 app.use(express.json());
 // app.use(cors());
 
+console.log(process.env.DB_PASS);
+
 app.use("/api/v1/users", v1UserRouter);
 app.use("/api/v1/movies", v1MovieRouter);
 app.use("/api/v1/theatres", v1TheatreRouter);
 app.use("/api/v1/tickets", v1TicketRouter);
 app.use("/api/v1/showings", v1ShowingRouter);
 app.use("/api/v1/seats", v1SeatRouter);
+app.use("/api/v1/payments", v1PaymentRouter);
 
 app.listen(PORT, () => {
   console.log(`API is listening on port ${PORT}`);

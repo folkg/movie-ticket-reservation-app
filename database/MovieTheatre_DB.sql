@@ -71,15 +71,15 @@ VALUES
 ('ST_002','T_002','M_002','2022-11-26 11:00:00'),
 ('ST_003','T_003','M_002','2022-11-26 13:00:00'),
 ('ST_004','T_003','M_003','2022-11-26 09:00:00'),
-('ST_005','T_002','M_004','2022-12-10 09:00:00'),
-('ST_006','T_001','M_005','2022-12-13 09:00:00');
+('ST_005','T_002','M_004','2022-12-10 09:00:00');
 
 DROP TABLE IF EXISTS SEATS;
 CREATE TABLE SEATS(
 	seat_id 				varchar(255) DEFAULT(uuid()) not null,
 	seat_label  				varchar(255) 	not null,
 	showing_id 				varchar(255) 	not null,
-	booked 					boolean,		
+	booked 					boolean,	
+	cost 					decimal(13,2) DEFAULT(10)not null,
 	primary key (seat_id),
 	foreign key (showing_id) references SHOWING(showing_id)
     
@@ -231,36 +231,7 @@ VALUES
 ('S_121022_9_002_004_25','S_D07','ST_005', false), 
 ('S_121022_9_002_004_26','S_D08','ST_005', true), 
 ('S_121022_9_002_004_27','S_D09','ST_005', false), 
-('S_121022_9_002_004_28','S_D10','ST_005', false),
--- Sixth Showing,,,,
-('S_112622_9_001_002_01','S_A01','ST_006', true), 
-('S_112622_9_001_002_02','S_A02','ST_006', false), 
-('S_112622_9_001_002_03','S_A03','ST_006', false), 
-('S_112622_9_001_002_04','S_A04','ST_006', false), 
-('S_112622_9_001_002_05','S_A05','ST_006', false), 
-('S_112622_9_001_002_06','S_A06','ST_006', false), 
-('S_112622_9_001_002_07','S_A07','ST_006', true), 
-('S_112622_9_001_002_08','S_A08','ST_006', false), 
-('S_112622_9_001_002_09','S_A09','ST_006', false), 
-('S_112622_9_001_002_10','S_A10','ST_006', false), 
-('S_112622_9_001_002_11','S_B01','ST_006', false), 
-('S_112622_9_001_002_12','S_B02','ST_006', false), 
-('S_112622_9_001_002_13','S_B03','ST_006', false), 
-('S_112622_9_001_002_14','S_B04','ST_006', false), 
-('S_112622_9_001_002_15','S_C01','ST_006', false), 
-('S_112622_9_001_002_16','S_C02','ST_006', false), 
-('S_112622_9_001_002_17','S_C03','ST_006', false), 
-('S_112622_9_001_002_18','S_C04','ST_006', false), 
-('S_112622_9_001_002_19','S_D01','ST_006', false), 
-('S_112622_9_001_002_20','S_D02','ST_006', false), 
-('S_112622_9_001_002_21','S_D03','ST_006', false), 
-('S_112622_9_001_002_22','S_D04','ST_006', false), 
-('S_112622_9_001_002_23','S_D05','ST_006', false), 
-('S_112622_9_001_002_24','S_D06','ST_006', false), 
-('S_112622_9_001_002_25','S_D07','ST_006', false), 
-('S_112622_9_001_002_26','S_D08','ST_006', false), 
-('S_112622_9_001_002_27','S_D09','ST_006', false), 
-('S_112622_9_001_002_28','S_D10','ST_006', false);
+('S_121022_9_002_004_28','S_D10','ST_005', false);
 -- Look into this if we have time- Loading data drom csv
 -- LOAD DATA INFILE 'C:\Users\AlexTheGr8\Desktop\MEng\Fall\ENSF614(Advanced_System_Analysis_and_Software_Design)\Project\movie-ticket-reservation-app\database\Seats.csv'
 -- INTO TABLE SEATS
@@ -275,7 +246,7 @@ CREATE TABLE TICKET(
 	ticket_id 				varchar(255) DEFAULT(uuid()) not null,
 	user_id 				varchar(255),
 	seat_id 				varchar(255) 	not null,
-	cost 					decimal(13,2) 	not null,
+	-- cost 					decimal(13,2) 	not null,
 	isCredited 				boolean DEFAULT(false) not null,
 	primary key (ticket_id),
 	foreign key (seat_id) references SEATS(seat_id),
@@ -283,31 +254,65 @@ CREATE TABLE TICKET(
 
 );
 
-INSERT INTO TICKET (ticket_id, user_id, seat_id, cost, isCredited)
+INSERT INTO TICKET (ticket_id, user_id, seat_id, isCredited)
 VALUES
-('TK_0001','U_0001','S_112622_9_001_001_01', 10.00, false),
-('TK_0002','U_0002','S_112622_11_002_002_11', 10.00, false),
-('TK_0003','U_0002','S_112622_11_002_002_12', 10.00, false),
-('TK_0004','U_0002','S_112622_11_002_002_13', 10.00, false),
-('TK_0005','U_0002','S_112622_11_002_002_14', 10.00, false),
-('TK_0006','U_0003','S_112622_9_003_003_27', 10.00, false),
-('TK_0007','U_0003','S_112622_9_003_003_28', 10.00, false),
-('TK_0008','U_0003','S_112622_9_003_003_27', 10.00, false),
-('TK_0009','U_0003','S_112622_9_003_003_28', 10.00, false),
-('TK_0010', 'U_0004','S_112622_9_001_001_06', 10.00, false),
-('TK_0011', 'U_0004','S_112622_9_001_001_07', 10.00, false),
-('TK_0012', 'U_0004','S_121022_9_002_004_15', 10.00, false),
-('TK_0013', 'U_0004','S_121022_9_002_004_16', 10.00, false),
-('TK_0014', null,'S_112622_9_001_001_20', 10.00, false),
-('TK_0015', null,'S_112622_11_002_002_5', 10.00, false),
-('TK_0016', null,'S_112622_9_003_003_4', 10.00, false),
-('TK_0017', null,'S_112622_13_003_002_7', 10.00, false),
-('TK_0018', null,'S_121022_9_002_004_26', 10.00, false);
+('TK_0001','U_0001','S_112622_9_001_001_01', false),
+('TK_0002','U_0002','S_112622_11_002_002_11', false),
+('TK_0003','U_0002','S_112622_11_002_002_12', false),
+('TK_0004','U_0002','S_112622_11_002_002_13', false),
+('TK_0005','U_0002','S_112622_11_002_002_14', false),
+('TK_0006','U_0003','S_112622_9_003_003_27', false),
+('TK_0007','U_0003','S_112622_9_003_003_28', false),
+('TK_0008','U_0003','S_112622_9_003_003_27', false),
+('TK_0009','U_0003','S_112622_9_003_003_28', false),
+('TK_0010', 'U_0004','S_112622_9_001_001_06', false),
+('TK_0011', 'U_0004','S_112622_9_001_001_07', false),
+('TK_0012', 'U_0004','S_121022_9_002_004_15', false),
+('TK_0013', 'U_0004','S_121022_9_002_004_16', false),
+('TK_0014', null,'S_112622_9_001_001_20', false),
+('TK_0015', null,'S_112622_11_002_002_5', false),
+('TK_0016', null,'S_112622_9_003_003_4', false),
+('TK_0017', null,'S_112622_13_003_002_7', false),
+('TK_0018', null,'S_121022_9_002_004_26', false);
 
 DROP TABLE IF EXISTS CREDIT;
 CREATE TABLE CREDIT(
 	ticket_id 				varchar(255) not null,
 	credit_available 		decimal(13,2),
+    expiration_date         DateTime not null,	
 	primary key (ticket_id),
 	foreign key (ticket_id) references TICKET(ticket_id)
 );
+
+DROP TABLE IF EXISTS PAYMENT;
+CREATE TABLE PAYMENT(
+	payment_id 				varchar(255) not null,
+    total_amount            decimal(13,2) not null,
+    credit_card             varchar(255),
+	cc_amount 		    	decimal(13,2),
+    completion_date         datetime not null,	
+	primary key (payment_id)
+);
+
+DROP TABLE IF EXISTS REFUND;
+CREATE TABLE REFUND(
+	refund_id 				varchar(255) not null,
+    ticket_id               varchar(255) not null,
+    payment_id				varchar(255) not null,
+	primary key (refund_id),
+	foreign key (ticket_id) references CREDIT(ticket_id),
+    foreign key (payment_id) references PAYMENT(payment_id)
+);
+
+
+
+
+select * from ticket;
+select * from seats;
+select * from REGISTERED_USER;
+select  * from credit;
+select * from payment;
+select * from refund;
+SELECT * FROM CREDIT WHERE ticket_id = "TK_0018" AND credit_available > 0 AND expiration_date > '2022-12-10 09:00:00';
+
+

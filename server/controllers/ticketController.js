@@ -51,6 +51,7 @@ controllerMethods.cancelTicketById = async (req, res) => {
     // Get details about the ticket:
     let ticket = await ticketService.getTicketById(ticket_id);
     const { user_id, seat_id, cost, show_time } = ticket[0];
+
     const isRegisteredUser = req.userId != null || user_id != null;
     //If showtime is < 72 hours away cannot let user cancel.
     if (!canCancel(show_time))
@@ -60,17 +61,26 @@ controllerMethods.cancelTicketById = async (req, res) => {
       });
     else {
       let credit = cost;
+      const expiration_date = getExpirationDate();
       // Apply admin fee if the user is not registered.
       if (!isRegisteredUser) credit = cost * (1 - constants.ADMIN_FEE);
       let results = await ticketService.cancelTicketById(
         ticket_id,
         seat_id,
-        credit
+        credit, 
+        expiration_date
       );
       res.json({ success: true, data: results });
     }
   } catch (e) {
-    res.status(500).json({ success: false, message: e.message });
+    if (e.code === "ER_DUP_ENTRY") {
+      res.status(400).json({
+      success: false,
+      message: "Ticket has already been cancelled.",
+  });
+    } else {
+      res.status(500).json({success: false, message: e.message});
+    }
   }
 };
 
@@ -88,4 +98,11 @@ function canCancel(show_time) {
   let cancel;
   hours >= 72 ? (cancel = true) : (cancel = false);
   return cancel;
+}
+
+
+function getExpirationDate(){
+  let current_date = new Date();
+  let exp_time = current_date.getTime() + constants.EXPIRATION_PERIOD;
+  return new Date(exp_time);
 }

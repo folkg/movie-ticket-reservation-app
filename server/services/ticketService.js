@@ -24,7 +24,7 @@ serviceMethods.getAllTickets = (query) => {
 serviceMethods.getTicketById = (ticket_id) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT user_id, S.seat_id, cost, show_time from Showing SH Inner join Seats S ON SH.showing_id = S.showing_id 
+      `SELECT user_id, S.seat_id, S.cost, show_time from Showing SH Inner join Seats S ON SH.showing_id = S.showing_id 
             INNER JOIN TICKET T ON S.seat_id = T.seat_id Where T.ticket_id = ?`,
       [ticket_id],
       (err, results) => {
@@ -40,7 +40,7 @@ serviceMethods.getTicketById = (ticket_id) => {
 // RETURNS {user_id:"", seat_id:"", cost: "", isCredit: ""}
 serviceMethods.createTicket = (body, user_id) => {
   return new Promise(async (resolve, reject) => {
-    const { seat_id, cost } = body;
+    const { seat_id } = body;
     const ticket_id = uuid();
     const isRegisteredUser = user_id != null;
     // Get provided seat to ensure it is available
@@ -48,8 +48,8 @@ serviceMethods.createTicket = (body, user_id) => {
     if (!seat) return reject({ message: "Selected seat not found." });
     if (seat.is_available) {
       connection.query(
-        `INSERT INTO TICKET(ticket_id, user_id, seat_id, cost) VALUES (?, ?, ?, ?)`,
-        [ticket_id, user_id, seat_id, cost],
+        `INSERT INTO TICKET(ticket_id, user_id, seat_id) VALUES (?, ?, ?)`,
+        [ticket_id, user_id, seat_id],
         async (err, results) => {
           if (err) return reject(err);
           connection.query(
@@ -81,16 +81,16 @@ serviceMethods.createTicket = (body, user_id) => {
 // determine additional details.
 // REQUIRES: ticket_id, seat_id, and credit
 // RETURNS {ticket_id:"", credit_available: ""}
-serviceMethods.cancelTicketById = (ticket_id, seat_id, credit) => {
-  return new Promise((resolve, reject) => {
+serviceMethods.cancelTicketById = (ticket_id, seat_id, credit, expiration_date) => {
+  return new Promise( async (resolve, reject) => {
     connection.query(
       `UPDATE SEATS SET booked = false WHERE seat_id = ?`,
       [seat_id],
       (err, results) => {
         if (err) return reject(err);
         connection.query(
-          `INSERT INTO CREDIT(ticket_id, credit_available) VALUES (?, ?)`,
-          [ticket_id, credit],
+          `INSERT INTO CREDIT(ticket_id, credit_available, expiration_date) VALUES (?, ?, ?)`,
+          [ticket_id, credit, expiration_date],
           (err, results) => {
             if (err) return reject(err);
           }
