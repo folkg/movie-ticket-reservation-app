@@ -37,36 +37,16 @@ serviceMethods.isPresaleRestricted = (showing_id) => {
   // function to determine if a showing is presale restricted (10% sold in presale)
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT M.isPresale FROM SHOWING S INNER JOIN MOVIE M ON M.movie_id = S.movie_id 
-      WHERE S.showing_id = ?`,
+      `SELECT M.isPresale, ST.booked FROM SEATS ST INNER JOIN SHOWING SH ON SH.showing_id = ST.showing_id
+       INNER JOIN MOVIE M ON M.movie_id = SH.movie_id
+       WHERE SH.showing_id = ?`,
       [showing_id],
-      (err, resultsPresale) => {
+      (err, results) => {
         if (err) return reject(err);
-        // If showing is presale, count number of total seats and booked seats
-        if (resultsPresale[0].isPresale) {
-          connection.query(
-            `SELECT COUNT(1) AS TS FROM SEATS ST INNER JOIN SHOWING SH ON SH.showing_id = ST.showing_id 
-            WHERE SH.showing_id = ?`,
-            [showing_id],
-            (err, resultsTotalSeats) => {
-              if (err) return reject(err);
-              connection.query(
-                `SELECT COUNT(1) AS BS FROM SEATS ST INNER JOIN SHOWING SH ON SH.showing_id = ST.showing_id 
-            WHERE SH.showing_id = ? AND ST.booked = true`,
-                [showing_id],
-                (err, resultsBookedSeats) => {
-                  if (err) return reject(err);
-                  const percentBooked =
-                    resultsBookedSeats[0].BS / resultsTotalSeats[0].TS;
-                  if (percentBooked >= 0.1) {
-                    return resolve(true);
-                  } else {
-                    return resolve(false);
-                  }
-                }
-              );
-            }
-          );
+        if (results[0].isPresale) {
+          const totalSeats = results.length;
+          const totalBooked = results.filter((s) => s.booked == 1).length;
+          return resolve(totalBooked / totalSeats >= 0.1);
         } else {
           return resolve(false);
         }

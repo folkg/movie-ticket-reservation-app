@@ -6,11 +6,12 @@ controllerMethods.getAllSeats = async (req, res) => {
   try {
     const { query } = req;
     const isRegisteredUser = req.userId != null;
-    const results = await seatService.getAllSeats(isRegisteredUser, query);
+    let results = await seatService.getAllSeats(isRegisteredUser, query);
     if (results.length > 0) {
       res.json({ success: true, data: results });
     } else {
-      res.status(204).json({ success: false, message: "No seats found." });
+      console.log("test");
+      res.status(404).json({ success: false, message: "No seats found." });
     }
   } catch (e) {
     console.log(e.message);
@@ -29,7 +30,7 @@ controllerMethods.getOneSeat = async (req, res) => {
     if (results) {
       res.json({ success: true, data: results });
     } else {
-      res.status(204).json({ success: false, message: "Seat not found." });
+      res.status(404).json({ success: false, message: "Seat not found." });
     }
   } catch (e) {
     console.log(e.message);

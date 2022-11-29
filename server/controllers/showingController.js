@@ -11,7 +11,7 @@ controllerMethods.getAllShowings = async (req, res) => {
     if (results.length > 0) {
       res.json({ success: true, data: results });
     } else {
-      res.status(204).json({ success: false, message: "No showings found." });
+      res.status(404).json({ success: false, message: "No showings found." });
     }
   } catch (e) {
     console.log(e.message);
@@ -38,7 +38,7 @@ controllerMethods.getOneShowing = async (req, res) => {
       results.seats = seats;
       res.json({ success: true, data: results });
     } else {
-      res.status(204).json({ success: false, message: "Showing not found." });
+      res.status(404).json({ success: false, message: "Showing not found." });
     }
   } catch (e) {
     console.log(e.message);
