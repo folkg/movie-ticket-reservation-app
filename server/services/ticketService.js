@@ -5,12 +5,13 @@ const { v4: uuid } = require("uuid");
 const serviceMethods = {};
 
 // Return all tickets.
+//TODO: Not returning null user_id
 serviceMethods.getAllTickets = (query) => {
   return new Promise((resolve, reject) => {
     const user_id = query.user_id || "%";
     connection.query(
-      `SELECT * FROM TICKET WHERE user_id LIKE ?`,
-      [user_id],
+      `SELECT * FROM TICKET WHERE (user_id LIKE ? OR ?)`,
+      [user_id, user_id === "%"],
       (err, results) => {
         if (err) return reject(err);
         return resolve(results);
@@ -24,7 +25,7 @@ serviceMethods.getAllTickets = (query) => {
 serviceMethods.getTicketById = (ticket_id) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT user_id, S.seat_id, S.cost, show_time from Showing SH Inner join Seats S ON SH.showing_id = S.showing_id 
+      `SELECT user_id, S.seat_id, S.cost, show_time from SHOWING SH Inner join SEATS S ON SH.showing_id = S.showing_id 
             INNER JOIN TICKET T ON S.seat_id = T.seat_id Where T.ticket_id = ?`,
       [ticket_id],
       (err, results) => {
@@ -77,12 +78,21 @@ serviceMethods.createTicket = (body, user_id) => {
   });
 };
 
+// TODO: We can get the seat_id from ticket_id, so no need to pass it in body
+// TODO: backend should probably calculaet the credit, not the frontend
+// TODO: I think the  route should be POST /tickets/:ticket_id, body should be "cancel":true
+// TODO: Update the ticket object to show isCancelled = true
 // Cancel Ticket - Regardless of user type or date. Controller must do logic to
 // determine additional details.
 // REQUIRES: ticket_id, seat_id, and credit
 // RETURNS {ticket_id:"", credit_available: ""}
-serviceMethods.cancelTicketById = (ticket_id, seat_id, credit, expiration_date) => {
-  return new Promise( async (resolve, reject) => {
+serviceMethods.cancelTicketById = (
+  ticket_id,
+  seat_id,
+  credit,
+  expiration_date
+) => {
+  return new Promise(async (resolve, reject) => {
     connection.query(
       `UPDATE SEATS SET booked = false WHERE seat_id = ?`,
       [seat_id],
