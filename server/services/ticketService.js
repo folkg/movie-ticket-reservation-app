@@ -1,5 +1,6 @@
 const connection = require("../config/database");
 const { getOneSeat } = require("../services/seatService");
+const { getOnePayment } = require("../services/paymentService");
 const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
@@ -41,16 +42,18 @@ serviceMethods.getTicketById = (ticket_id) => {
 // RETURNS {user_id:"", seat_id:"", cost: "", isCredit: ""}
 serviceMethods.createTicket = (body, user_id) => {
   return new Promise(async (resolve, reject) => {
-    const { seat_id } = body;
+    const { seat_id, payment_id } = body;
     const ticket_id = uuid();
     const isRegisteredUser = user_id != null;
     // Get provided seat to ensure it is available
     const seat = await getOneSeat(seat_id, isRegisteredUser);
     if (!seat) return reject({ message: "Selected seat not found." });
-    if (seat.is_available) {
+    const payment = await getOnePayment(payment_id);
+    if(!payment) return reject({ message: "Payment was not found" });
+    if (seat.is_available && seat.cost === payment.total_amount) {
       connection.query(
-        `INSERT INTO TICKET(ticket_id, user_id, seat_id) VALUES (?, ?, ?)`,
-        [ticket_id, user_id, seat_id],
+        `INSERT INTO TICKET(ticket_id, user_id, seat_id, payment_id) VALUES (?, ?, ?, ?)`,
+        [ticket_id, user_id, seat_id, payment_id],
         async (err, results) => {
           if (err) return reject(err);
           connection.query(
@@ -63,7 +66,7 @@ serviceMethods.createTicket = (body, user_id) => {
           // TODO: This may not be an issue, but maybe we should call subsequent queries within the previous query's callback function.
           // I'm not certain, but this could be handled asyncronously by the compiler and they COULD be called out of order
           connection.query(
-            `SELECT * FROM TICKET WHERE Ticket_id = ?`,
+            `SELECT * FROM TICKET WHERE ticket_id = ?`,
             [ticket_id],
             (err, results) => {
               if (err) return reject(err);
@@ -80,8 +83,9 @@ serviceMethods.createTicket = (body, user_id) => {
 
 // TODO: We can get the seat_id from ticket_id, so no need to pass it in body
 // TODO: backend should probably calculaet the credit, not the frontend
+// -- THIS IS DONE IN CONTROLLER. IT GETS THE TICKET AND SENDS TO THIS FUNCTION. h
 // TODO: I think the  route should be POST /tickets/:ticket_id, body should be "cancel":true
-// TODO: Update the ticket object to show isCancelled = true
+// COMPLETE: Update the ticket object to show isCancelled = true
 // Cancel Ticket - Regardless of user type or date. Controller must do logic to
 // determine additional details.
 // REQUIRES: ticket_id, seat_id, and credit
@@ -99,14 +103,21 @@ serviceMethods.cancelTicketById = (
       (err, results) => {
         if (err) return reject(err);
         connection.query(
-          `INSERT INTO CREDIT(ticket_id, credit_available, expiration_date) VALUES (?, ?, ?)`,
+          `INSERT INTO REFUND(ticket_id, credit_available, expiration_date) VALUES (?, ?, ?)`,
           [ticket_id, credit, expiration_date],
           (err, results) => {
             if (err) return reject(err);
           }
         );
         connection.query(
-          `SELECT * FROM CREDIT WHERE Ticket_id = ?`,
+          `UPDATE TICKET SET is_credited = true WHERE ticket_id = ?`, 
+          [ticket_id], 
+          (err, results) => {
+            if(err) return reject(err);
+          }
+        )
+        connection.query(
+          `SELECT * FROM REFUND WHERE Ticket_id = ?`,
           [ticket_id],
           (err, results) => {
             if (err) return reject(err);

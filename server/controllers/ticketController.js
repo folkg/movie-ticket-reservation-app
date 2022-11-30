@@ -25,7 +25,6 @@ controllerMethods.getAllTickets = async (req, res) => {
 
 // creates a ticket. Currently assuming the body will
 // consist of the Seat_ID
-// TODO: Confirm if this is the case.
 controllerMethods.createTicket = async (req, res) => {
   try {
     const { body, userId } = req;
@@ -43,7 +42,6 @@ controllerMethods.createTicket = async (req, res) => {
 // TODO: CONFIRM: Set up so that the admin fee is not applied if the user logged in is registered OR if the user_id in the database is tied to a registered user.
 // this means that a registered user can cancel a ticket without logging in, and someone can recieve the reg user perk if they bought a ticket when they were
 // a regular user and have since become registered.
-// TODO: Currently adding to the credit entity, should this be sent to the credit controller?
 
 controllerMethods.cancelTicketById = async (req, res) => {
   try {

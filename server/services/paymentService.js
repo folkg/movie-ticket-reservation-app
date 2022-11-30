@@ -11,7 +11,7 @@ serviceMethods.creditCardByUserId = (user_id) => {
       [user_id],
       (err, result) => {
         if (err) return reject(err);
-        return resolve(result);
+        return resolve(result[0]);
       }
     );
   });
@@ -36,19 +36,34 @@ serviceMethods.makePayment = (credit_card, amount) => {
 
 // Returns the new credit card payment object
 // after inserting into database.
-serviceMethods.storeCreditCardPayment = (
-  id,
-  total_amount,
-  credit_card,
-  cc_amount,
-  date
-) => {
+serviceMethods.storeCreditCardPayment = ( id, amount, credit_card ) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `INSERT INTO PAYMENT(payment_id, total_amount, credit_card, cc_amount, completion_date) VALUES(?, ?, ?, ?, ?)`,
-      [id, total_amount, credit_card, cc_amount, date],
+      `INSERT INTO CREDIT_PAYMENT(payment_id, amount, credit_card) VALUES(?, ?, ?)`,
+      [id, amount, credit_card],
       (err, result) => {
         if (err) return reject(err);
+      }
+    );
+    connection.query(
+      `SELECT * FROM CREDIT_PAYMENT WHERE payment_id = ?`,
+      [id],
+      (err, result) => {
+        if (err) return reject(err);
+        return resolve(result[0]);
+      }
+    );
+  });
+};
+
+serviceMethods.storePayment = ( total_amount ) => {
+  return new Promise((resolve, reject) => {
+    const id = uuid();
+    connection.query(
+      `INSERT INTO PAYMENT(payment_id, total_amount, completion_date) VALUES (?, ?, ?)`,
+      [id, total_amount, new Date()], 
+      (err, result) => {
+        if(err) return reject(err);
       }
     );
     connection.query(
@@ -56,10 +71,23 @@ serviceMethods.storeCreditCardPayment = (
       [id],
       (err, result) => {
         if (err) return reject(err);
-        return resolve(result);
+        return resolve(result[0]);
       }
     );
-  });
-};
+  })
+} 
+
+serviceMethods.getOnePayment = ( payment_id ) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `SELECT * FROM PAYMENT WHERE payment_id = ?`, 
+      [payment_id],
+      (err, result) => {
+        if(err) return reject(err);
+        return resolve(result[0]);
+      }
+    )
+  })
+}
 
 module.exports = serviceMethods;

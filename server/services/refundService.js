@@ -1,5 +1,4 @@
 const connection = require("../config/database");
-const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
 
@@ -8,7 +7,7 @@ const serviceMethods = {};
 serviceMethods.getCreditByTicket = (ticket_id) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT * FROM CREDIT WHERE ticket_id = ? AND credit_available > 0 AND expiration_date > ?`,
+      `SELECT * FROM REFUND WHERE ticket_id = ? AND credit_available > 0 AND expiration_date > ?`,
       [ticket_id, new Date()],
       (err, result) => {
         if (err) return reject(err);
@@ -24,7 +23,7 @@ serviceMethods.getCreditByTicket = (ticket_id) => {
 serviceMethods.getCreditByUser = (user_id) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT r.id, t.ticket_id, credit_available FROM CREDIT c inner join TICKET t on c.ticket_id = t.ticket_id
+      `SELECT r.id, t.ticket_id, credit_available FROM REFUND c inner join TICKET t on c.ticket_id = t.ticket_id
 	        inner join REGISTERED_USER r on t.user_id = r.id WHERE r.id = ? AND credit_available > 0 AND expiration_date > ?`,
       [user_id, new Date()],
       (err, result) => {
@@ -40,10 +39,10 @@ serviceMethods.getCreditByUser = (user_id) => {
 serviceMethods.updateCredit = (p_id, credit_obj) => {
   return new Promise((resolve, reject) => {
     credit_obj.forEach(async (credit_item) => {
-      const { ticket_id, credit_available } = credit_item;
-      await serviceMethods.useCreditAsRefund(p_id, ticket_id);
+      const { ticket_id, credit_available, refund } = credit_item;
+      if(refund) await serviceMethods.useCreditAsRefund(p_id, refund, ticket_id);
       connection.query(
-        `UPDATE CREDIT SET credit_available = ? WHERE ticket_id = ?`,
+        `UPDATE REFUND SET credit_available = ? WHERE ticket_id = ?`,
         [credit_available, ticket_id],
         (err, result) => {
           if (err) return reject(err);
@@ -56,20 +55,18 @@ serviceMethods.updateCredit = (p_id, credit_obj) => {
 
 // return the new refund object
 // should add the credit to refund.
-serviceMethods.useCreditAsRefund = (p_id, ticket_id) => {
+serviceMethods.useCreditAsRefund = (p_id, refund_amount, ticket_id) => {
   return new Promise((resolve, reject) => {
-    const r_id = uuid();
     connection.query(
-      `INSERT INTO REFUND (refund_id, ticket_id, payment_id) Values(?, ?, ?)`,
-      [r_id, ticket_id, p_id],
+      `INSERT INTO REFUND_PAYMENT(payment_id, refund_amount, refund_ticket_id) Values(?, ?, ?)`,
+      [p_id, refund_amount, ticket_id],
       (err, result) => {
         if (err) return reject(err);
       }
     );
-    //possible could get the credit object back here and user updatecredit to update it.
     connection.query(
-      `SELECT * FROM REFUND WHERE refund_id = ?`,
-      [r_id],
+      `SELECT * FROM REFUND_PAYMENT WHERE payment_id = ?`,
+      [p_id],
       (err, result) => {
         if (err) return reject(err);
         return resolve(result);

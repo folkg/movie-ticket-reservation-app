@@ -4,13 +4,14 @@ const paymentController = require("../../controllers/paymentController");
 
 const router = express.Router();
 
-router.get('/:ticket_id', paymentController.getCreditByTicket);
+// RETURNS: { "success": true, "data": {
+//            "payment_id": "23830870-1cea-4ca8-9627-69c6f519c3c0",
+//            "total_amount": 10,
+//            "completion_date": "2022-11-30T06:16:03.000Z"
+//            }
+// }
+router.put('/', checkUserId, paymentController.pay);
 
-router.get('/', checkUserId, paymentController.getTotalCreditByUser);
-
-router.put('/', checkUserId, paymentController.payWithCard);
-
-router.patch('/', checkUserId, paymentController.payBothWays);
 
 
 module.exports = router;
