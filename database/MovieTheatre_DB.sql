@@ -72,7 +72,8 @@ VALUES
 ('ST_002','T_002','M_002','2022-11-26 11:00:00'),
 ('ST_003','T_003','M_002','2022-11-26 13:00:00'),
 ('ST_004','T_003','M_003','2022-11-26 09:00:00'),
-('ST_005','T_002','M_004','2022-12-10 09:00:00');
+('ST_005','T_002','M_004','2022-12-10 09:00:00'),
+('ST_006','T_001','M_005','2022-12-11 09:00:00');
 
 DROP TABLE IF EXISTS SEATS;
 CREATE TABLE SEATS(
@@ -233,6 +234,37 @@ VALUES
 ('S_121022_9_002_004_26','S_D08','ST_005', true), 
 ('S_121022_9_002_004_27','S_D09','ST_005', false), 
 ('S_121022_9_002_004_28','S_D10','ST_005', false);
+
+INSERT INTO SEATS (seat_label, showing_id, booked)
+VALUES
+('S_A01','ST_006', true), 
+('S_A02','ST_006', false), 
+('S_A03','ST_006', false), 
+('S_A04','ST_006', false), 
+('S_A05','ST_006', false), 
+('S_A06','ST_006', false), 
+('S_A07','ST_006', true), 
+('S_A08','ST_006', false), 
+('S_A09','ST_006', false), 
+('S_A10','ST_006', false), 
+('S_B01','ST_006', false), 
+('S_B02','ST_006', false), 
+('S_B03','ST_006', false), 
+('S_B04','ST_006', false), 
+('S_C01','ST_006', false), 
+('S_C02','ST_006', false), 
+('S_C03','ST_006', false), 
+('S_C04','ST_006', false), 
+('S_D01','ST_006', false), 
+('S_D02','ST_006', false), 
+('S_D03','ST_006', false), 
+('S_D04','ST_006', false), 
+('S_D05','ST_006', false), 
+('S_D06','ST_006', false), 
+('S_D07','ST_006', false), 
+('S_D08','ST_006', false), 
+('S_D09','ST_006', false), 
+('S_D10','ST_006', false);
 -- Look into this if we have time- Loading data drom csv
 -- LOAD DATA INFILE 'C:\Users\AlexTheGr8\Desktop\MEng\Fall\ENSF614(Advanced_System_Analysis_and_Software_Design)\Project\movie-ticket-reservation-app\database\Seats.csv'
 -- INTO TABLE SEATS
