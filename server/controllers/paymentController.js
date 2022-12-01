@@ -12,7 +12,6 @@ class paymentController {
     try {
       
       let result = await this.paymentService.pay( req );
-      console.log(result);
       res.json({ success: true, data: result });
     } catch (e) {
       res.json({ success: false, message: e.message });

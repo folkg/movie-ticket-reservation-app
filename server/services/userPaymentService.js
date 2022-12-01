@@ -1,106 +1,10 @@
-const { v4: uuid } = require("uuid");
 const userPayment = require("./userPayment");
 
 class userPaymentService extends userPayment{
 
-    connection
-    refundService
-    seatService
-
     constructor() {
         super();
-        this.connection = require("../config/database");
-        this.refundService = require("../services/refundService");
-        this.seatService = require("../services/seatService");
     }
-
-// Returns the credit card info for a specific user.
-creditCardByUserId = (user_id) => {
-  return new Promise((resolve, reject) => {
-    this.connection.query(
-      `SELECT credit_card FROM REGISTERED_USER WHERE id = ?`,
-      [user_id],
-      (err, result) => {
-        if (err) return reject(err);
-        return resolve(result[0]);
-      }
-    );
-  });
-};
-
-// DUMMY METHOD TO SIMULATE PAYMENT,
-// RETURNS A DUMMY PAYMENT OBJECT
-makePayment = (credit_card, amount) => {
-  return new Promise((resolve, reject) => {
-    let date = new Date();
-    console.log(date);
-    if (!credit_card) {
-      return reject({ success: false, message: "no valid cc number" });
-    }
-    return resolve({
-      success: true,
-      cc_number: credit_card,
-      billed_amount: amount,
-      completion_date: date,
-    });
-  });
-};
-
-// Returns the new credit card payment object
-// after inserting into database.
-storeCreditCardPayment = ( id, amount, credit_card ) => {
-  return new Promise((resolve, reject) => {
-    this.connection.query(
-      `INSERT INTO CREDIT_PAYMENT(payment_id, amount, credit_card) VALUES(?, ?, ?)`,
-      [id, amount, credit_card],
-      (err, result) => {
-        if (err) return reject(err);
-      }
-    );
-    this.connection.query(
-      `SELECT * FROM CREDIT_PAYMENT WHERE payment_id = ?`,
-      [id],
-      (err, result) => {
-        if (err) return reject(err);
-        return resolve(result[0]);
-      }
-    );
-  });
-};
-
-storePayment = ( total_amount ) => {
-  return new Promise((resolve, reject) => {
-    const id = uuid();
-    this.connection.query(
-      `INSERT INTO PAYMENT(payment_id, total_amount, completion_date) VALUES (?, ?, ?)`,
-      [id, total_amount, new Date()], 
-      (err, result) => {
-        if(err) return reject(err);
-      }
-    );
-    this.connection.query(
-      `SELECT * FROM PAYMENT WHERE payment_id = ?`,
-      [id],
-      (err, result) => {
-        if (err) return reject(err);
-        return resolve(result[0]);
-      }
-    );
-  })
-} 
-
-getOnePayment = ( payment_id ) => {
-  return new Promise((resolve, reject) => {
-    this.connection.query(
-      `SELECT * FROM PAYMENT WHERE payment_id = ?`, 
-      [payment_id],
-      (err, result) => {
-        if(err) return reject(err);
-        return resolve(result[0]);
-      }
-    )
-  })
-}
 
 // non registered
 pay = ( req ) => {
@@ -126,18 +30,17 @@ pay = ( req ) => {
           credit.push(refund_obj);
         }
         if (outstanding_charge > 0) {
-          const payment_result = await this.makePayment(
+          const payment_result = await this.paymentService.makePayment(
             credit_card,
             outstanding_charge
           );
           if (!payment_result.success) return reject({ message: "Payment Denied" });
-          console.log(payment_result.completion_date);
           ({ billed_amount } = payment_result);
         }
-        const payment = await this.storePayment( cost );
+        const payment = await this.paymentService.storePayment();
         if(!payment) return reject({ message: "Payment Storage Issue" });
         const { payment_id } = payment;
-        if(billed_amount > 0) await this.storeCreditCardPayment( payment_id, billed_amount, credit_card);
+        if(billed_amount > 0) await this.paymentService.storeCreditCardPayment( payment_id, billed_amount, credit_card);
         if (credit.length > 0) await this.refundService.updateCredit(payment_id, credit);
         return resolve(payment);
       } catch(e) {

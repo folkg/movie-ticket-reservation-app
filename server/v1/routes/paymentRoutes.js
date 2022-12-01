@@ -13,12 +13,6 @@ const router = express.Router();
 //            "completion_date": "2022-11-30T06:16:03.000Z"
 //            }
 // }
-
-// const assignPaymentType = (req, res, next) => {
-//     req.myTypeIs = "this is a test";
-//     next();
-// }
-
 const myWayToPay = new paymentController();
 const pay1 = new regUserPaymentService();
 const pay2 = new userPaymentService();
