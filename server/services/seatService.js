@@ -1,4 +1,6 @@
-const connection = require("../config/database");
+const DatabaseConnection = require("../config/database");
+const dbc = DatabaseConnection.getinstance(); // get Singleton instance
+const connection = dbc.getConnection();
 
 const { isPresaleRestricted } = require("../services/showingService");
 
