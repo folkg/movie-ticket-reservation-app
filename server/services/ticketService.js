@@ -82,9 +82,11 @@ serviceMethods.createTicket = (body, user_id) => {
   });
 };
 
+// TODO: Add query to get the total payment from refund_payment and credit_payment so we can remove total payment all together.
+// TODO: Do we need to check if seat is available? or do we do this during payment? ask Graeme
+// TODO: I think the  route should be POST /tickets/:ticket_id, body should be "cancel":true
 // COMPLETE: We can get the seat_id from ticket_id, so no need to pass it in body
 // COMPLETE: backend should probably calculaet the credit, not the frontend
-// TODO: I think the  route should be POST /tickets/:ticket_id, body should be "cancel":true
 // COMPLETE: Update the ticket object to show isCancelled = true
 // Cancel Ticket - Regardless of user type or date. Controller must do logic to
 // determine additional details.
