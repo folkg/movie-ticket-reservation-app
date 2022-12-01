@@ -17,8 +17,6 @@ const PORT = process.env.APP_PORT || 5000;
 app.use(express.json());
 // app.use(cors());
 
-console.log(process.env.DB_PASS);
-
 app.use("/api/v1/users", v1UserRouter);
 app.use("/api/v1/movies", v1MovieRouter);
 app.use("/api/v1/theatres", v1TheatreRouter);

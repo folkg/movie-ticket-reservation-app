@@ -1,15 +1,19 @@
 const { createConnection } = require("mysql");
+const util = require("util");
 
 class DatabaseConnection {
   // Using the Singleton deisgn pattern
   // There is one instance of DatabaseConnection
+
+  instance;
+  connection;
 
   constructor() {
     this.instance == null;
     this.connection == null;
   }
 
-  static getinstance() {
+  static getInstance() {
     if (this.instance == null) {
       this.instance = new DatabaseConnection();
     }
@@ -28,7 +32,13 @@ class DatabaseConnection {
     }
     return this.connection;
   }
-  // We will just use the connection.query function to implicitly create and end the connection
+
+  // a wrapper function to create promises for queries
+  query(sql, args) {
+    return util
+      .promisify(this.connection.query)
+      .call(this.connection, sql, args);
+  }
 }
 
 module.exports = DatabaseConnection;

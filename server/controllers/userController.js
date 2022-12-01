@@ -1,5 +1,6 @@
 const userService = require("../services/userService");
 const { getAllTickets } = require("../services/ticketService");
+const { getCreditByUser } = require("../services/refundService");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 
@@ -74,6 +75,29 @@ controllerMethods.getUserTickets = async (req, res) => {
       success: false,
       message: e.message,
     });
+  }
+};
+
+controllerMethods.getUserRefunds = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const isRegisteredUser = userId != null;
+    if (!isRegisteredUser)
+      res.status(404).json({ status: false, message: "user id not found" });
+    else {
+      let credits = await getCreditByUser(userId);
+      let total_credit = 0;
+      if (credits.length > 0) {
+        credits.forEach((credit) => {
+          total_credit += credit.credit_available;
+        });
+        res.json({ status: true, data: total_credit });
+      } else {
+        res.json({ status: false, message: "user has no credits" });
+      }
+    }
+  } catch (e) {
+    res.json({ status: false, message: e.message });
   }
 };
 
