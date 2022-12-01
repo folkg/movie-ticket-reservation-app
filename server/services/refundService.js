@@ -1,4 +1,6 @@
-const connection = require("../config/database");
+const DatabaseConnection = require("../config/database");
+const dbc = DatabaseConnection.getinstance(); // get Singleton instance
+const connection = dbc.getConnection();
 
 const serviceMethods = {};
 
@@ -40,7 +42,8 @@ serviceMethods.updateCredit = (p_id, credit_obj) => {
   return new Promise((resolve, reject) => {
     credit_obj.forEach(async (credit_item) => {
       const { ticket_id, credit_available, refund } = credit_item;
-      if(refund) await serviceMethods.useCreditAsRefund(p_id, refund, ticket_id);
+      if (refund)
+        await serviceMethods.useCreditAsRefund(p_id, refund, ticket_id);
       connection.query(
         `UPDATE REFUND SET credit_available = ? WHERE ticket_id = ?`,
         [credit_available, ticket_id],
