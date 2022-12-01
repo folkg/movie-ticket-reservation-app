@@ -1,6 +1,9 @@
 const express = require("express");
 const { checkUserId } = require("../../auth/token_validation");
 const paymentController = require("../../controllers/paymentController");
+const regUserPaymentService = require("../../services/regUserPaymentService");
+const userPaymentService = require("../../services/userPaymentService");
+
 
 const router = express.Router();
 
@@ -10,8 +13,26 @@ const router = express.Router();
 //            "completion_date": "2022-11-30T06:16:03.000Z"
 //            }
 // }
-router.put('/', checkUserId, paymentController.pay);
 
+// const assignPaymentType = (req, res, next) => {
+//     req.myTypeIs = "this is a test";
+//     next();
+// }
+
+const myWayToPay = new paymentController();
+const pay1 = new regUserPaymentService();
+const pay2 = new userPaymentService();
+
+const assignPaymentType = (req, res, next) => {
+    const user_id = req.userId;
+    if(user_id) myWayToPay.setPaymentStrategy(pay1);
+    else myWayToPay.setPaymentStrategy(pay2);    
+    next();
+}
+
+
+
+router.put('/', checkUserId, assignPaymentType, myWayToPay.pay);
 
 
 module.exports = router;
