@@ -1,6 +1,5 @@
 const refundService = require("../services/refundService");
 
-
 const controllerMethods = {};
 
 controllerMethods.getCreditByTicket = async (req, res) => {
@@ -22,7 +21,7 @@ controllerMethods.getTotalCreditByUser = async (req, res) => {
     const user_id = req.userId;
     const isRegisteredUser = user_id != null;
     if (!isRegisteredUser)
-      res.json({ status: false, message: "user id not found" });
+      res.status(404).json({ status: false, message: "user id not found" });
     else {
       let credits = await refundService.getCreditByUser(user_id);
       let total_credit = 0;

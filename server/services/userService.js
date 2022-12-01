@@ -1,35 +1,37 @@
 const DatabaseConnection = require("../config/database");
-const dbc = DatabaseConnection.getinstance(); // get Singleton instance
-const connection = dbc.getConnection();
+const connection = DatabaseConnection.getInstance(); // get Singleton instance
 
 const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
 
 serviceMethods.getAllUsers = () => {
-  return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM REGISTERED_USER`, [], (err, results) => {
-      if (err) return reject(err);
+  return new Promise(async (resolve, reject) => {
+    try {
+      const results = await connection.query(`SELECT * FROM REGISTERED_USER`);
       return resolve(results);
-    });
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 
 serviceMethods.getOneUser = (id) => {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      `SELECT * FROM REGISTERED_USER WHERE id = ?`,
-      [id],
-      (err, results) => {
-        if (err) return reject(err);
-        return resolve(results[0]);
-      }
-    );
+  return new Promise(async (resolve, reject) => {
+    try {
+      const results = await connection.query(
+        `SELECT * FROM REGISTERED_USER WHERE id = ?`,
+        [id]
+      );
+      return resolve(results);
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 
 serviceMethods.createUser = (body) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const {
       first_name,
       last_name,
@@ -39,35 +41,32 @@ serviceMethods.createUser = (body) => {
       credit_card,
     } = body;
     const id = uuid();
-    connection.query(
-      `INSERT INTO REGISTERED_USER (id, first_name, last_name, email_address, password, address, credit_card) values (?,?,?,?,?,?,?)`,
-      [
-        id,
-        first_name,
-        last_name,
-        email_address,
-        password,
-        address,
-        credit_card,
-      ],
-      async (err, results) => {
-        if (err) return reject(err);
-        // return the new user object
-        connection.query(
-          `SELECT * FROM REGISTERED_USER WHERE id = ?`,
-          [id],
-          (err, results) => {
-            if (err) return reject(err);
-            return resolve(results[0]);
-          }
-        );
-      }
-    );
+    try {
+      await connection.query(
+        `INSERT INTO REGISTERED_USER (id, first_name, last_name, email_address, password, address, credit_card) values (?,?,?,?,?,?,?)`,
+        [
+          id,
+          first_name,
+          last_name,
+          email_address,
+          password,
+          address,
+          credit_card,
+        ]
+      );
+      const results = await connection.query(
+        `SELECT * FROM REGISTERED_USER WHERE id = ?`,
+        [id]
+      );
+      return resolve(results[0]);
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 
 serviceMethods.updateUser = (body, id) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const {
       first_name,
       last_name,
@@ -76,59 +75,57 @@ serviceMethods.updateUser = (body, id) => {
       address,
       credit_card,
     } = body;
-    connection.query(
-      `UPDATE REGISTERED_USER SET first_name = ?, last_name = ?, email_address = ?, password = ?, address = ?, credit_card = ? WHERE id = ?`,
-      [
-        first_name,
-        last_name,
-        email_address,
-        password,
-        address,
-        credit_card,
-        id,
-      ],
-      (err, results) => {
-        if (err) return reject(err);
-        // return the new user object
-        connection.query(
-          `SELECT * FROM REGISTERED_USER WHERE id = ?`,
-          [id],
-          (err, results) => {
-            if (err) return reject(err);
-            return resolve(results[0]);
-          }
-        );
-      }
-    );
+    try {
+      await connection.query(
+        `UPDATE REGISTERED_USER SET first_name = ?, last_name = ?, email_address = ?, password = ?, address = ?, credit_card = ? WHERE id = ?`,
+        [
+          first_name,
+          last_name,
+          email_address,
+          password,
+          address,
+          credit_card,
+          id,
+        ]
+      );
+      const results = await connection.query(
+        `SELECT * FROM REGISTERED_USER WHERE id = ?`,
+        [id]
+      );
+      return resolve(results[0]);
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 
 serviceMethods.deleteUser = (id) => {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      `DELETE FROM REGISTERED_USER WHERE id = ?`,
-      [id],
-      (err, results) => {
-        if (err) return reject(err);
-        // return null if nothing was deleted
-        if (results.affectedRows === 1) return resolve(results);
-        return resolve(null);
-      }
-    );
+  return new Promise(async (resolve, reject) => {
+    try {
+      const results = await connection.query(
+        `DELETE FROM REGISTERED_USER WHERE id = ?`,
+        [id]
+      );
+      if (results.affectedRows === 1) return resolve(results);
+      return resolve(null);
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 
 serviceMethods.getUserByEmail = (body) => {
   const { email_address } = body;
-  return new Promise((resolve, reject) => {
-    connection.query(
-      `SELECT * FROM REGISTERED_USER WHERE email_address = ? `,
-      [email_address],
-      (err, results) => {
-        if (err) return reject(err);
-        return resolve(results[0]);
-      }
-    );
+  return new Promise(async (resolve, reject) => {
+    try {
+      const results = await connection.query(
+        `SELECT * FROM REGISTERED_USER WHERE email_address = ? `,
+        [email_address]
+      );
+      return resolve(results[0]);
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 

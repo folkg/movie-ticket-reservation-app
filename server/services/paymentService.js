@@ -1,5 +1,5 @@
 const DatabaseConnection = require("../config/database");
-const dbc = DatabaseConnection.getinstance(); // get Singleton instance
+const dbc = DatabaseConnection.getInstance(); // get Singleton instance
 const connection = dbc.getConnection();
 
 const refundService = require("../services/refundService");
