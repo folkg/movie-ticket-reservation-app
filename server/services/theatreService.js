@@ -1,26 +1,30 @@
-const connection = require("../config/database");
+const DatabaseConnection = require("../config/database");
+const connection = DatabaseConnection.getInstance(); // get Singleton instance
 
 const serviceMethods = {};
 
 serviceMethods.getAllTheatres = () => {
-  return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM THEATRE`, [], (err, results) => {
-      if (err) return reject(err);
+  return new Promise(async (resolve, reject) => {
+    try {
+      const results = await connection.query(`SELECT * FROM THEATRE`, []);
       return resolve(results);
-    });
+    } catch (err) {
+      return reject(err);
+    }
   });
 };
 
-serviceMethods.getOneTheatre = (theatre_id, isRegisteredUser) => {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      `SELECT * FROM THEATRE WHERE theatre_id = ?`,
-      [theatre_id],
-      (err, results) => {
-        if (err) return reject(err);
-        return resolve(results[0]);
-      }
-    );
+serviceMethods.getOneTheatre = (theatre_id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const results = await connection.query(
+        `SELECT * FROM THEATRE WHERE theatre_id = ?`,
+        [theatre_id]
+      );
+      return resolve(results[0]);
+    } catch (err) {
+      return reject(err);
+    }
   });
 };
 

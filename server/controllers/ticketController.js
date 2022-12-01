@@ -1,5 +1,4 @@
 const ticketService = require("../services/ticketService");
-const constants = require("../config/constants");
 
 const controllerMethods = {};
 
@@ -47,17 +46,16 @@ controllerMethods.cancelTicketById = async (req, res) => {
   try {
     const { body } = req;
     const isRegisteredUser = req.userId != null;
-    let results = await ticketService.cancelTicketById( body, isRegisteredUser);
+    let results = await ticketService.cancelTicketById(body, isRegisteredUser);
     res.json({ success: true, data: results });
-    
   } catch (e) {
     if (e.code === "ER_DUP_ENTRY") {
       res.status(400).json({
-      success: false,
-      message: "Ticket has already been cancelled.",
-  });
+        success: false,
+        message: "Ticket has already been cancelled.",
+      });
     } else {
-      res.status(500).json({success: false, message: e.message});
+      res.status(500).json({ success: false, message: e.message });
     }
   }
 };
