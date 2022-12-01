@@ -7,16 +7,15 @@ const userPaymentService = require("../../services/userPaymentService");
 
 const router = express.Router();
 
-// RETURNS: { "success": true, "data": {
-//            "payment_id": "23830870-1cea-4ca8-9627-69c6f519c3c0",
-//            "total_amount": 10,
-//            "completion_date": "2022-11-30T06:16:03.000Z"
-//            }
-// }
+// Instantiate the paymentController object and the 
+// two strategy objects
 const myWayToPay = new paymentController();
 const pay1 = new regUserPaymentService();
 const pay2 = new userPaymentService();
 
+
+// Set the payment Strategy member in the payment Controller
+// based on whether it is a registered user or not.
 const assignPaymentType = (req, res, next) => {
     const user_id = req.userId;
     if(user_id) myWayToPay.setPaymentStrategy(pay1);
@@ -24,8 +23,20 @@ const assignPaymentType = (req, res, next) => {
     next();
 }
 
-
-
+// REQUIRES: {
+//
+//            "seat_id": "S_121022_9_002_004_22",
+//            "credit_card":"1234", - THIS CAN BE EMPTY IF PAYING WITH ALL CREDIT OR IS A REGISTERED USER
+//            "ticket_id": "TK_0014", - THIS CAN BE EMPTY IF PAYING WITH ALL CREDIT CARD OR IS A REGISTERED USER
+//            "use_credit": true -- TRUE - USER REFUND, FALSE, DO NOT USE REFUND
+// 
+// }
+// RETURNS: { "success": true, "data": {
+//            "payment_id": "23830870-1cea-4ca8-9627-69c6f519c3c0",
+//            "total_amount": 10,
+//            "completion_date": "2022-11-30T06:16:03.000Z"
+//            }
+// }
 router.put('/', checkUserId, assignPaymentType, myWayToPay.pay);
 
 
