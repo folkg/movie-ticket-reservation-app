@@ -10,7 +10,6 @@ const { v4: uuid } = require("uuid");
 const serviceMethods = {};
 
 // Return all tickets.
-//TODO: Not returning null user_id
 serviceMethods.getAllTickets = (query) => {
   return new Promise((resolve, reject) => {
     const user_id = query.user_id || "%";
