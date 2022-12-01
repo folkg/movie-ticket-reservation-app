@@ -1,6 +1,7 @@
 const connection = require("../config/database");
 const { getOneSeat } = require("../services/seatService");
 const { getOnePayment } = require("../services/paymentService");
+const constants = require("../config/constants");
 const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
@@ -31,7 +32,7 @@ serviceMethods.getTicketById = (ticket_id) => {
       [ticket_id],
       (err, results) => {
         if (err) return reject(err);
-        return resolve(results);
+        return resolve(results[0]);
       }
     );
   });
@@ -81,22 +82,29 @@ serviceMethods.createTicket = (body, user_id) => {
   });
 };
 
-// TODO: We can get the seat_id from ticket_id, so no need to pass it in body
-// TODO: backend should probably calculaet the credit, not the frontend
-// -- THIS IS DONE IN CONTROLLER. IT GETS THE TICKET AND SENDS TO THIS FUNCTION. h
+// COMPLETE: We can get the seat_id from ticket_id, so no need to pass it in body
+// COMPLETE: backend should probably calculaet the credit, not the frontend
 // TODO: I think the  route should be POST /tickets/:ticket_id, body should be "cancel":true
 // COMPLETE: Update the ticket object to show isCancelled = true
 // Cancel Ticket - Regardless of user type or date. Controller must do logic to
 // determine additional details.
 // REQUIRES: ticket_id, seat_id, and credit
 // RETURNS {ticket_id:"", credit_available: ""}
-serviceMethods.cancelTicketById = (
-  ticket_id,
-  seat_id,
-  credit,
-  expiration_date
-) => {
+serviceMethods.cancelTicketById = ( body, isRegisteredUser ) => {
   return new Promise(async (resolve, reject) => {
+    const { ticket_id } = body;
+    let ticket = await serviceMethods.getTicketById(ticket_id);
+    if(!ticket) return reject({ message: "Selected Ticket Not Found" })
+    const { user_id, seat_id, show_time } = ticket;
+    const seat = await getOneSeat(seat_id, isRegisteredUser);
+    if (!seat) return reject({ message: "No Seat Found for Ticket" });
+    const { cost } = seat;
+    isRegisteredUser = isRegisteredUser || user_id != null;
+    if (!canCancel(show_time)) return reject({ message: "Show time less than 72 hours away, cancellation not fulfilled." });
+    let credit = cost;
+    const expiration_date = getExpirationDate();
+    // Apply admin fee if the user is not registered.
+    if (!isRegisteredUser) credit = cost * (1 - constants.ADMIN_FEE);
     connection.query(
       `UPDATE SEATS SET booked = false WHERE seat_id = ?`,
       [seat_id],
@@ -130,3 +138,24 @@ serviceMethods.cancelTicketById = (
 };
 
 module.exports = serviceMethods;
+
+
+// canCancel checks the difference between the current time and the
+// showtime. Returns true if the distance is >= 72 hours else returns
+// false.
+function canCancel(show_time) {
+  // Add UTC OFFSET to compensate for Mountain Standard Time.
+  let show_time_date = new Date(new Date(show_time) + constants.UTC_OFFSET);
+  let current_date = new Date();
+  difference = show_time_date.getTime() - current_date.getTime();
+  hours = difference / (1000 * 3600);
+  let cancel;
+  hours >= 72 ? (cancel = true) : (cancel = false);
+  return cancel;
+}
+
+function getExpirationDate(){
+  let current_date = new Date();
+  let exp_time = current_date.getTime() + constants.EXPIRATION_PERIOD;
+  return new Date(exp_time);
+}

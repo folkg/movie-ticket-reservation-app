@@ -45,31 +45,11 @@ controllerMethods.createTicket = async (req, res) => {
 
 controllerMethods.cancelTicketById = async (req, res) => {
   try {
-    const { ticket_id } = req.body;
-    // Get details about the ticket:
-    let ticket = await ticketService.getTicketById(ticket_id);
-    const { user_id, seat_id, cost, show_time } = ticket[0];
-
-    const isRegisteredUser = req.userId != null || user_id != null;
-    //If showtime is < 72 hours away cannot let user cancel.
-    if (!canCancel(show_time))
-      res.json({
-        success: false,
-        message: "Showtime is in less than 72 hrs. Cannot Cancel.",
-      });
-    else {
-      let credit = cost;
-      const expiration_date = getExpirationDate();
-      // Apply admin fee if the user is not registered.
-      if (!isRegisteredUser) credit = cost * (1 - constants.ADMIN_FEE);
-      let results = await ticketService.cancelTicketById(
-        ticket_id,
-        seat_id,
-        credit, 
-        expiration_date
-      );
-      res.json({ success: true, data: results });
-    }
+    const { body } = req;
+    const isRegisteredUser = req.userId != null;
+    let results = await ticketService.cancelTicketById( body, isRegisteredUser);
+    res.json({ success: true, data: results });
+    
   } catch (e) {
     if (e.code === "ER_DUP_ENTRY") {
       res.status(400).json({
@@ -83,24 +63,3 @@ controllerMethods.cancelTicketById = async (req, res) => {
 };
 
 module.exports = controllerMethods;
-
-// canCancel checks the difference between the current time and the
-// showtime. Returns true if the distance is >= 72 hours else returns
-// false.
-function canCancel(show_time) {
-  // Add UTC OFFSET to compensate for Mountain Standard Time.
-  let show_time_date = new Date(new Date(show_time) + constants.UTC_OFFSET);
-  let current_date = new Date();
-  difference = show_time_date.getTime() - current_date.getTime();
-  hours = difference / (1000 * 3600);
-  let cancel;
-  hours >= 72 ? (cancel = true) : (cancel = false);
-  return cancel;
-}
-
-
-function getExpirationDate(){
-  let current_date = new Date();
-  let exp_time = current_date.getTime() + constants.EXPIRATION_PERIOD;
-  return new Date(exp_time);
-}
