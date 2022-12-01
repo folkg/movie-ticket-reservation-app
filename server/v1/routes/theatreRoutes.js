@@ -11,6 +11,6 @@ const router = express.Router();
 router.get("/", theatreController.getAllTheatres);
 
 // {"success":true,"data":{"theatre_id":"T_001","theatre_name":"MovieTown NE","showings":[{"showing_id":"ST_001","theatre_id":"T_001","movie_id":"M_001","show_time":"2022-11-26T16:00:00.000Z","movie_name":"Citizen Kane","isPresale":0,"theatre_name":"MovieTown NE"}]}}
-router.get("/:theatre_id", checkUserId, theatreController.getOneTheatre);
+router.get("/:theatre_id", theatreController.getOneTheatre);
 
 module.exports = router;

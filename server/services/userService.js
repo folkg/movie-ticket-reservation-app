@@ -11,7 +11,7 @@ serviceMethods.getAllUsers = () => {
       const results = await connection.query(`SELECT * FROM REGISTERED_USER`);
       return resolve(results);
     } catch (err) {
-      reject(err);
+      return reject(err);
     }
   });
 };
@@ -25,7 +25,7 @@ serviceMethods.getOneUser = (id) => {
       );
       return resolve(results);
     } catch (err) {
-      reject(err);
+      return reject(err);
     }
   });
 };
@@ -60,7 +60,7 @@ serviceMethods.createUser = (body) => {
       );
       return resolve(results[0]);
     } catch (err) {
-      reject(err);
+      return reject(err);
     }
   });
 };
@@ -94,7 +94,7 @@ serviceMethods.updateUser = (body, id) => {
       );
       return resolve(results[0]);
     } catch (err) {
-      reject(err);
+      return reject(err);
     }
   });
 };
@@ -109,7 +109,7 @@ serviceMethods.deleteUser = (id) => {
       if (results.affectedRows === 1) return resolve(results);
       return resolve(null);
     } catch (err) {
-      reject(err);
+      return reject(err);
     }
   });
 };
@@ -124,7 +124,7 @@ serviceMethods.getUserByEmail = (body) => {
       );
       return resolve(results[0]);
     } catch (err) {
-      reject(err);
+      return reject(err);
     }
   });
 };
