@@ -8,7 +8,7 @@ class userPayment {
     paymentService;
 
     constructor() {
-        this.connection = DatabaseConnection.getinstance().getConnection();
+        this.connection = DatabaseConnection.getInstance().getConnection();
         this.refundService = require("../services/refundService");
         this.seatService = require("../services/seatService");
         this.paymentService = require("../services/paymentService");
