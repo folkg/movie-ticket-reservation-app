@@ -27,8 +27,7 @@ export default function PaymentForm() {
         console.log(lname);
         console.log(cc_email);
         console.log(cc_number);
-        console.log(formDataObj);
-        alert(formDataObj);
+        alert();
     }
     
 
