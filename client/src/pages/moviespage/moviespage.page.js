@@ -1,8 +1,11 @@
 import React from 'react'; 
+import PaymentForm from '../../components/paymentForm/paymentForm.component';
 
 const MoviesPage = () =>{
     return (
-        <div>Movies page</div>
+        <div>
+            <PaymentForm/>
+        </div>
     )
 }
 
