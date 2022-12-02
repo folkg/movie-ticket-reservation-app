@@ -7,8 +7,8 @@ export const MovieAPIContext = createContext();
 
 export function MovieAPIProvider(props) {
   // Create a token and studentInfo for the user and save in session storage. Default value is null.
-  const [jwt, setJwt] = useSessionStorageState("token", null);
-  const [userInfo, setUserInfo] = useSessionStorageState("user", null);
+  const [jwt, setJwt] = useSessionStorageState("jwt", null);
+  const [userId, setUserId] = useSessionStorageState("userId", null);
 
   // [] option will behave like componentDidMount and run only once at startup
   useEffect(() => {
@@ -24,36 +24,67 @@ export function MovieAPIProvider(props) {
     // });
   }, []);
 
-  async function exampleFetchWithJWT() {
-    fetch(API_URL, {
-      method: "POST",
-      headers: new Headers({
-        Authorization: `JWT ${jwt}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      }),
-      body: "test",
-    });
-  }
-
   async function login(email, password) {
     // Send credentials to server and save the token from the response
     try {
       const response = await fetch(API_URL + "users/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
+          email_address: email,
           password,
         }),
       });
 
       const body = await response.json();
-      if (body.status === "success") {
+      if (body.success === true) {
         // Set the token in session storage for use in later API calls
-        const token = body.data;
+        const { token, user_id } = body.data;
         setJwt(token);
+        setUserId(user_id);
+        return true;
+      } else return body.data;
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
+  async function getUserInfo() {
+    try {
+      const response = await fetch(API_URL + "users/" + userId, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) {
+        console.log(body.data);
+        return body.data;
+      } else return body.message;
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
+  //TODO: Added just to test. I don't think we need this function in the end.
+  async function getAllUsers() {
+    try {
+      const response = await fetch(API_URL + "users", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const body = await response.json();
+      if (body.success === true) {
+        // Set the token in session storage for use in later API calls
+        console.log(body.data);
         return true;
       } else return body.message;
     } catch (e) {
@@ -81,7 +112,8 @@ export function MovieAPIProvider(props) {
   };
 
   function logout() {
-    setJwt("");
+    setJwt(null);
+    setUserId(null);
   }
 
   async function register(email, password, firstName, lastName) {
@@ -113,10 +145,12 @@ export function MovieAPIProvider(props) {
     <MovieAPIContext.Provider
       value={{
         login,
-        isTokenValid,
+        isLoggedIn: isTokenValid(),
         jwt,
         logout,
         register,
+        getUserInfo,
+        getAllUsers,
       }}
     >
       {props.children}
