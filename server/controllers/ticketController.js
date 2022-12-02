@@ -14,7 +14,6 @@ controllerMethods.getAllTickets = async (req, res) => {
       res.status(404).json({ status: false, message: "no tickets found" });
     }
   } catch (e) {
-    console.log(e.message);
     res.status(500).json({
       status: false,
       message: e.message,
