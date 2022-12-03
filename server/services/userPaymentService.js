@@ -10,6 +10,7 @@ class userPaymentService extends userPayment{
 pay = ( req ) => {
     return new Promise( async (resolve, reject) => {
       try{
+        console.log(req.body);
         const { seat_id, ticket_id, use_credit, credit_card } = req.body;
         let seat_result = await this.seatService.getOneSeat(seat_id, false);
         if(!seat_result) throw "Seat not found";
