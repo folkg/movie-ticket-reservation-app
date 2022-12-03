@@ -51,6 +51,10 @@ export function MovieAPIProvider(props) {
     }
   }
 
+  function isLoggedIn() {
+    return jwt != null;
+  }
+
   async function getUserInfo() {
     try {
       const response = await fetch(API_URL + "users/" + userId, {
@@ -118,24 +122,26 @@ export function MovieAPIProvider(props) {
     setUserId(null);
   }
 
-  async function register(email, password, firstName, lastName) {
+  async function register(firstName, lastName, address, cc, email, password) {
     // Send credentials to server and save the token from the response
     try {
-      const response = await fetch(API_URL + "register", {
+      const response = await fetch(API_URL + "users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
+          first_name: firstName,
+          last_name: lastName,
+          email_address: email,
           password,
+          address,
+          credit_card: cc,
         }),
       });
       const body = await response.json();
 
-      if (body.status === "success") return true;
+      if (body.success) return true;
       else return body.message;
     } catch (e) {
       console.log(e);
@@ -230,7 +236,7 @@ export function MovieAPIProvider(props) {
     <MovieAPIContext.Provider
       value={{
         login,
-        isLoggedIn: isTokenValid(),
+        isLoggedIn: isLoggedIn(),
         jwt,
         logout,
         register,
