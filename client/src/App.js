@@ -1,6 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { ProtectedRoute, AnyonymousRoute } from "./routes/Routes";
 import { MovieAPIProvider } from "./contexts/movie-api-provider";
 import Navbar from "./components/navbar/navbar.component";
 import CancelPage from "./pages/cancelpage/cancelpage.page";
@@ -26,12 +27,15 @@ function App() {
             <Route exact path="/cancel">
               <CancelPage />
             </Route>
-            <Route exact path="/register">
+            <AnyonymousRoute exact path="/register">
               <RegisterPage />
-            </Route>
-            <Route exact path="/login">
+            </AnyonymousRoute>
+            <AnyonymousRoute exact path="/login">
               <LoginPage />
-            </Route>
+            </AnyonymousRoute>
+            <ProtectedRoute exact path="/profile">
+              Profile
+            </ProtectedRoute>
             <Route path="*">
               <NoPage />
             </Route>
