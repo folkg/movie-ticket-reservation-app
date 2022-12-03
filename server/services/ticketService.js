@@ -52,11 +52,11 @@ serviceMethods.createTicket = (body, user_id) => {
       const isRegisteredUser = user_id != null;
       // Get provided seat to ensure it is available
       const seat = await getOneSeat(seat_id, isRegisteredUser);
-      if (!seat) return reject({ message: "Selected seat not found." });
+      if (!seat) throw "Selected seat not found.";
+      if (!seat.is_available) throw "Selected seat is not available.";
       const payment = await getOnePayment(payment_id);
-      if (!payment) return reject({ message: "Payment was not found" });
-      if (!seat.is_available) reject({ message: "Selected seat is not available." });
-      if(seat.cost > payment.total_amount) reject( {message: "Payment insufficient."} );
+      if (!payment) throw "Payment was not found";
+      if(seat.cost > payment.total_amount) throw "Payment insufficient.";
       const insert = await connection.query(`INSERT INTO TICKET(ticket_id, user_id, seat_id, payment_id) VALUES (?, ?, ?, ?)`,
         [ticket_id, user_id, seat_id, payment_id]);
       const update = await connection.query(`UPDATE SEATS SET booked = true WHERE seat_id = ?`,
@@ -82,17 +82,13 @@ serviceMethods.cancelTicketById = (body, isRegisteredUser) => {
     try{
       const { ticket_id } = body;
       let ticket = await serviceMethods.getTicketById(ticket_id);
-      if (!ticket) return reject({ message: "Selected Ticket Not Found" });
+      if (!ticket) throw "Selected Ticket Not Found";
       const { user_id, seat_id, show_time } = ticket;
       const seat = await getOneSeat(seat_id, isRegisteredUser);
-      if (!seat) return reject({ message: "No Seat Found for Ticket" });
+      if (!seat) throw "No Seat Found for Ticket";
       const { cost } = seat;
       isRegisteredUser = isRegisteredUser || user_id != null;
-      if (!canCancel(show_time))
-        return reject({
-          message:
-            "Show time less than 72 hours away, cancellation not fulfilled.",
-        });
+      if (!canCancel(show_time)) throw "Show time less than 72 hours away, cancellation not fulfilled.";
       let credit = cost;
       const expiration_date = getExpirationDate();
       // Apply admin fee if the user is not registered.
