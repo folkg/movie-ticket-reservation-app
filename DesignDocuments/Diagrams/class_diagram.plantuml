@@ -59,7 +59,7 @@ package Model {
     }
 }
 
-package Frontend-React {
+package View-React {
     class RegisterViewController <<boundary>> {
 
     }
@@ -91,7 +91,7 @@ package Frontend-React {
 
     }
 
-    class APIContextController {
+    class MovieAPIContextController {
         ' add getters and setters
         - getters()
         - setters()
@@ -99,10 +99,9 @@ package Frontend-React {
 }
 
 package Controller-Express {
-    class ServerController <<control>> {
-        - emailReceipt(ticket : Ticket, emailAddress : String)
-        - emailNews(user : RegisteredUser, news : String)
-    }
+    class ServerRoutes <<boundary>> {}
+
+    class emailService <<boundary>> {}
 
     class userController <<control>> {}
     class userService <<control>> {}
@@ -122,6 +121,7 @@ package Controller-Express {
     class presaleService <<control>> {}
 }
 
+' start Relationships betweens client views
 TicketBuyingViewController *-- MovieViewController
 TicketBuyingViewController *-- TheatreViewController
 TicketBuyingViewController *-- ShowingViewController
@@ -129,18 +129,22 @@ TicketBuyingViewController *-- SeatViewController
 TicketBuyingViewController *-- PaymentViewController
 TicketBuyingViewController *-- ReceiptViewController
 
-RegisterViewController --> APIContextController
-LoginViewController --> APIContextController
-AccountViewController --> APIContextController
-TicketBuyingViewController --> APIContextController
-MovieViewController --> APIContextController
-TheatreViewController --> APIContextController
-ShowingViewController --> APIContextController
-SeatViewController --> APIContextController
-PaymentViewController --> APIContextController
-ReceiptViewController --> APIContextController
+RegisterViewController --> MovieAPIContextController
+LoginViewController --> MovieAPIContextController
+AccountViewController --> MovieAPIContextController
+TicketBuyingViewController --> MovieAPIContextController
+MovieViewController --> MovieAPIContextController
+TheatreViewController --> MovieAPIContextController
+ShowingViewController --> MovieAPIContextController
+SeatViewController --> MovieAPIContextController
+PaymentViewController --> MovieAPIContextController
+ReceiptViewController --> MovieAPIContextController
+' end Relationships betweens client views
 
 ' start Relationships betweens controllers/services/models
+userController --> userService
+userService --> RegisteredUser
+
 movieController --> movieService
 movieService --> Movie
 movieService --> showingService
@@ -159,6 +163,7 @@ showingService --> Showing
 showingService --> seatService
 ' --end Relationships betweens controllers/services/models
 
+' -- start Model relastionships
 Movie -- Showing
 Theatre -- Showing
 Showing *-r- Seat
@@ -167,6 +172,7 @@ Ticket o-- Theatre
 Ticket o-- Showing
 Ticket --- Seat
 RegisteredUser --> Ticket
+' -- end Model relastionships
 
 package MySQL <<Database>> {
   class Database
@@ -175,6 +181,6 @@ package MySQL <<Database>> {
 DatabaseConnection *-- DatabaseConnection
 DatabaseConnection -- Database
 
-APIContextController -- ServerController : API communication
+MovieAPIContextController -- ServerRoutes : HTTP API communication
 
 @enduml
