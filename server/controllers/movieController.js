@@ -1,5 +1,4 @@
 const movieService = require("../services/movieService");
-const { getAllShowings } = require("../services/showingService");
 
 const controllerMethods = {};
 
@@ -28,11 +27,6 @@ controllerMethods.getOneMovie = async (req, res) => {
     const isRegisteredUser = req.userId != null;
     let results = await movieService.getOneMovie(movie_id, isRegisteredUser);
     if (results) {
-      // add a list of all showings for the chosen movie
-      const query = {};
-      query.movie_id = movie_id;
-      let showings = await getAllShowings(isRegisteredUser, query);
-      results.showings = showings;
       res.json({ success: true, data: results });
     } else {
       res.status(404).json({ success: false, message: "Movie not found." });

@@ -1,34 +1,23 @@
-const DatabaseConnection = require("../config/database");
-const connection = DatabaseConnection.getInstance(); // get Singleton instance
+const movieModel = require("../models/Movie");
+const { getAllShowings } = require("./showingService");
 
 const serviceMethods = {};
 
-serviceMethods.getAllMovies = (isRegisteredUser) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const results = await connection.query(
-        `SELECT * FROM MOVIE WHERE (isPresale = false OR ?)`,
-        [isRegisteredUser]
-      );
-      return resolve(results);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.getAllMovies = async (isRegisteredUser) => {
+  const results = await movieModel.getAllMovies(isRegisteredUser);
+  return results;
 };
 
-serviceMethods.getOneMovie = (movie_id, isRegisteredUser) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const results = await connection.query(
-        `SELECT * FROM MOVIE WHERE movie_id = ? AND (isPresale = false OR ?)`,
-        [movie_id, isRegisteredUser]
-      );
-      return resolve(results[0]);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.getOneMovie = async (movie_id, isRegisteredUser) => {
+  const results = await movieModel.getOneMovie(movie_id, isRegisteredUser);
+  if (results) {
+    // add a list of all showings for the chosen movie
+    const query = {};
+    query.movie_id = movie_id;
+    let showings = await getAllShowings(isRegisteredUser, query);
+    results.showings = showings;
+  }
+  return results;
 };
 
 module.exports = serviceMethods;
