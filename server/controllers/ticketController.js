@@ -9,9 +9,9 @@ controllerMethods.getAllTickets = async (req, res) => {
     const { query } = req;
     let results = await ticketService.getAllTickets(query);
     if (results) {
-      res.json({ status: true, data: results });
+      res.json({ success: true, data: results });
     } else {
-      res.status(404).json({ status: false, message: "no tickets found" });
+      res.status(404).json({ success: false, message: "no tickets found" });
     }
   } catch (e) {
     res.status(500).json({
@@ -32,8 +32,7 @@ controllerMethods.createTicket = async (req, res) => {
       res.status(201).json({ success: true, data: results });
     }
   } catch (e) {
-    console.log(e.message);
-    res.status(500).json({ success: false, message: e.message });
+    res.status(500).json({ success: false, message: e });
   }
 };
 
