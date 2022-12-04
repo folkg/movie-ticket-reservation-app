@@ -71,13 +71,12 @@ const sendMovieNewsService = async (recipient, first_name) => {
 //TODO: Get user email and name
 //TODO: No errors thrown on ticket not found?
 //TODO: Add link to cancel ticket
-serviceMethods.sendTicketReceipt = async (ticket_id) => {
+serviceMethods.sendTicketReceipt = async (ticket_id, email) => {
   ticket = await getTicketReceipt(ticket_id);
   console.log(ticket);
-  const recipient = "graemefolk@gmail.com";
+  //TODO: Change this link to point to the ticket UI
   url = "http://localhost:3000";
-  //TODO: Get user name and email
-  result = await sendTicketReceiptService(recipient, ticket, url);
+  result = await sendTicketReceiptService(email, ticket, url);
   if (result.accepted.length > 0) return { successes: [email] };
   else return { failures: [email] };
 };
