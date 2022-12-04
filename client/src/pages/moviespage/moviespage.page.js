@@ -1,8 +1,11 @@
 import React from 'react'; 
+import SelectMovieForm from '../../components/selectMovieForm/selectMovieForm.component';
 
 const MoviesPage = () =>{
     return (
-        <div>Movies page</div>
+        <div>
+            <SelectMovieForm/>
+        </div>
     )
 }
 
