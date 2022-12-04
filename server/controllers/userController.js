@@ -1,5 +1,5 @@
 const userService = require("../services/userService");
-const { getAllTickets } = require("../services/ticketService");
+const { getAllTicketsDetailed } = require("../services/ticketService");
 const { getCreditByUser } = require("../services/refundService");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -57,13 +57,10 @@ controllerMethods.getUserTickets = async (req, res) => {
         message: "Current user is not authorized to get this information.",
       });
     } else {
-      let results = await userService.getOneUser(userId);
+      const query = {};
+      query.user_id = userId;
+      let results = await getAllTicketsDetailed(query);
       if (results) {
-        // add a list of all tickets for the chosen user
-        const query = {};
-        query.user_id = userId;
-        let tickets = await getAllTickets(query);
-        results.tickets = tickets;
         res.json({ success: true, data: results });
       } else {
         res.status(404).json({ success: false, message: "No user found." });
@@ -231,8 +228,10 @@ controllerMethods.login = async (req, res) => {
         res.json({
           success: true,
           message: "Login successful.",
-          user_id: results.id,
-          token: jsontoken,
+          data: {
+            user_id: results.id,
+            token: jsontoken,
+          },
         });
       } else {
         res.status(401).json({

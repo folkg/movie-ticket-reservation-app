@@ -1,132 +1,53 @@
-const DatabaseConnection = require("../config/database");
-const connection = DatabaseConnection.getInstance(); // get Singleton instance
-
+const userModel = require("../models/User");
+const { sendWelcomeEmail } = require("./emailService");
 const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
 
-serviceMethods.getAllUsers = () => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const results = await connection.query(`SELECT * FROM REGISTERED_USER`);
-      return resolve(results);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.getAllUsers = async () => {
+  const results = await userModel.getAllUsers();
+  return results;
 };
 
-serviceMethods.getOneUser = (id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const results = await connection.query(
-        `SELECT * FROM REGISTERED_USER WHERE id = ?`,
-        [id]
-      );
-      return resolve(results);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.getOneUser = async (id) => {
+  const results = await userModel.getOneUser(id);
+  return results;
 };
 
-serviceMethods.createUser = (body) => {
-  return new Promise(async (resolve, reject) => {
-    const {
-      first_name,
-      last_name,
-      email_address,
-      password,
-      address,
-      credit_card,
-    } = body;
-    const id = uuid();
-    try {
-      await connection.query(
-        `INSERT INTO REGISTERED_USER (id, first_name, last_name, email_address, password, address, credit_card) values (?,?,?,?,?,?,?)`,
-        [
-          id,
-          first_name,
-          last_name,
-          email_address,
-          password,
-          address,
-          credit_card,
-        ]
-      );
-      const results = await connection.query(
-        `SELECT * FROM REGISTERED_USER WHERE id = ?`,
-        [id]
-      );
-      return resolve(results[0]);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.createUser = async (body) => {
+  const id = uuid();
+  const result = await userModel.createUser(body, id);
+  if (result) {
+    const results = await userModel.getOneUser(id);
+    sendWelcomeEmail(results.email_address, results.first_name);
+    return results;
+  }
+  return null;
 };
 
-serviceMethods.updateUser = (body, id) => {
-  return new Promise(async (resolve, reject) => {
-    const {
-      first_name,
-      last_name,
-      email_address,
-      password,
-      address,
-      credit_card,
-    } = body;
-    try {
-      await connection.query(
-        `UPDATE REGISTERED_USER SET first_name = ?, last_name = ?, email_address = ?, password = ?, address = ?, credit_card = ? WHERE id = ?`,
-        [
-          first_name,
-          last_name,
-          email_address,
-          password,
-          address,
-          credit_card,
-          id,
-        ]
-      );
-      const results = await connection.query(
-        `SELECT * FROM REGISTERED_USER WHERE id = ?`,
-        [id]
-      );
-      return resolve(results[0]);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.updateUser = async (body, id) => {
+  const result = await userModel.updateUser(body, id);
+  if (result) {
+    const results = await userModel.getOneUser(id);
+    return results;
+  }
+  return null;
 };
 
-serviceMethods.deleteUser = (id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const results = await connection.query(
-        `DELETE FROM REGISTERED_USER WHERE id = ?`,
-        [id]
-      );
-      if (results.affectedRows === 1) return resolve(results);
-      return resolve(null);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.deleteUser = async (id) => {
+  const results = await userModel.deleteUser(id);
+  return results;
 };
 
-serviceMethods.getUserByEmail = (body) => {
+serviceMethods.getUserByEmail = async (body) => {
   const { email_address } = body;
-  return new Promise(async (resolve, reject) => {
-    try {
-      const results = await connection.query(
-        `SELECT * FROM REGISTERED_USER WHERE email_address = ? `,
-        [email_address]
-      );
-      return resolve(results[0]);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+  const results = await userModel.getUserByEmail(email_address);
+  return results;
+};
+
+serviceMethods.updateRenewalDate = async (renewal_date, id) => {
+  const results = await userModel.updateRenewalDate(renewal_date, id);
+  return results;
 };
 
 module.exports = serviceMethods;
