@@ -11,12 +11,12 @@ import { FormWrapper } from './paymentForm.styles';
 import { MovieAPIContext } from '../../contexts/movie-api-provider';
 
 
-
 //TODO: MAKE THE BUTTON PAGE THE MAIN COMPONENT. SEND IN PROPS FOR SEAT_ID
 
 export default function RegisteredPaymentForm(props) {
     
     let seat_id = props.seat_id;
+
 
     const { getRefundByUser, makePayment, processTicket } = useContext(MovieAPIContext);
     const [ showModal, setShow ] = useState(false);
@@ -33,6 +33,7 @@ export default function RegisteredPaymentForm(props) {
     const [ paymentSuccess, setPaymentSuccess ] = useState(null)
     const [ ticketConfirmation, setTicketConfirmation ] = useState(null);
     const [ payEnabled, setPayEnabled ] = useState(true);
+
 
     useEffect(() => {
         async function updateRefundsForUser() {
@@ -60,6 +61,7 @@ export default function RegisteredPaymentForm(props) {
         updateRefundsForUser();
         
     }, [ticketConfirmation]);
+
 
     const handleClose = () => {
         setShow(false);

@@ -16,6 +16,7 @@ export default function PaymentForm(props) {
 
     let seat_id = props.seat_id;
 
+
     const { getRefundByTicket, makePayment, processTicket } = useContext(MovieAPIContext);
     const [ showModal, setShow ] = useState(false);
     const [ fname, setFname ] = useState();

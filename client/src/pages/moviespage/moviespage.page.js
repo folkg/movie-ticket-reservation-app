@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from 'react';
 import Form from 'react-bootstrap/Form'
 // import PaymentForm from '../../components/paymentForm/paymentForm.component';
@@ -18,7 +19,6 @@ const MoviesPage = () =>{
 
     return (
         <div>
-
             <Form>
             <Form.Group className="mb-3" controlId="cc_email">
                                         <Form.Label>Enter Email:</Form.Label>
