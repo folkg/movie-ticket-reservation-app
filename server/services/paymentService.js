@@ -1,89 +1,56 @@
-const DatabaseConnection = require("../config/database");
-const connection = DatabaseConnection.getInstance(); // get Singleton instance
-// const connection = dbc.getConnection();
-const { v4: uuid } = require("uuid");
+const paymentModel = require("../models/Payment");
+const { updateRenewalDate, getOneUser } = require("../services/userService");
+const constants = require("../config/constants");
 
 const serviceMethods = {};
 
-// Returns the credit card info for a specific user.
-serviceMethods.creditCardByUserId = (user_id) => {
-  return new Promise( async (resolve, reject) => {
+serviceMethods.getOnePayment = async (payment_id) => {
     try {
-    const result = await connection.query(`SELECT credit_card FROM REGISTERED_USER WHERE id = ?`,
-      [user_id]);
-      return resolve(result[0]);
-    } catch (err) {
-      return reject(err);
+        const result = paymentModel.getOnePayment(payment_id);
+        return result;    
+    } catch (error) {
+        return error;
     }  
-  });
 };
 
-// DUMMY METHOD TO SIMULATE PAYMENT,
-// RETURNS A DUMMY PAYMENT OBJECT
-serviceMethods.makePayment = (credit_card, amount) => {
-  return new Promise((resolve, reject) => {
-    let date = new Date();
-    if (!credit_card) {
-      return reject({ success: false, message: "no valid cc number" });
-    }
-    return resolve({
-      success: true,
-      cc_number: credit_card,
-      billed_amount: amount,
-      completion_date: date,
-    });
-  });
-};
+serviceMethods.payRegistration = async ( body, user_id ) => {
+    try{   
+        const mem_fee = constants.MEM_FEE;
+        let billed_amount = 0;
+        let { credit_card } = body;
+        if (!credit_card) {
+            const user_cc = await paymentModel.creditCardByUserId(user_id);
+            if(!user_cc) throw "No Credit Card Information Available for User";
+            credit_card = user_cc.credit_card;
+        }
 
-// Returns the new credit card payment object
-// after inserting into database.
-serviceMethods.storeCreditCardPayment = (id, amount, credit_card) => {
-  return new Promise( async (resolve, reject) => {
-    try {
-      const insert = await connection.query(`INSERT INTO CREDIT_PAYMENT(payment_id, amount, credit_card) VALUES(?, ?, ?)`,
-        [id, amount, credit_card]);
-      const result = await connection.query(`SELECT * FROM CREDIT_PAYMENT WHERE payment_id = ?`,
-        [id]);
-      return resolve(result[0]);
-    } catch (err) {
-      return reject(err);
-    }
-    
-  });
-};
+        const payment_result = await paymentModel.makePayment(
+            credit_card,
+            mem_fee
+        );
 
-serviceMethods.storePayment = () => {
-  return new Promise( async (resolve, reject) => {
-    try {
-      const id = uuid();
-      const insert = await connection.query(
-      `INSERT INTO PAYMENT(payment_id, completion_date) VALUES (?, ?)`,
-      [id, new Date()]);
-      const result = await connection.query(`SELECT * FROM PAYMENT WHERE payment_id = ?`,
-      [id]);
-      return resolve(result[0]);
-    } catch (err) {
-      return reject(err);
-    }
-  });
-};
+        if (!payment_result.success) throw "Payment Denied";
+        ({ billed_amount } = payment_result);
+        const payment = await paymentModel.storePayment();
+        if(!payment) throw "Credit_Payment Storage Issue";
+        const { payment_id } = payment;
+        const renewal_date = getExpirationDate();
+        const cc_result = await paymentModel.storeCreditCardPayment( payment_id, billed_amount, credit_card);
+        const user_update = await updateRenewalDate(renewal_date, user_id);
+        const user_result = await getOneUser(user_id);
+        payment.billed_amount = billed_amount;
+        payment.new_expiry_date = user_result.annual_fee_expiry_date;
+        return payment;
 
-serviceMethods.getOnePayment = (payment_id) => {
-  return new Promise( async (resolve, reject) => {
-    try {
-      const result = await connection.query(
-        `SELECT payment_id, SUM(amount) as total_amount from 
-        (SELECT payment_id, SUM(amount) as amount from CREDIT_PAYMENT GROUP BY payment_id
-        UNION
-        SELECT payment_id, SUM(refund_amount) as amount from REFUND_PAYMENT GROUP BY payment_id) amount
-        WHERE payment_id = ?;`,
-        [payment_id]);
-        return resolve(result[0]);
-    } catch (err) {
-      return reject(err);
+   } catch (error) {
+        return (error);
     }
-    
-  });
-};
+}
+
+function getExpirationDate() {
+    let current_date = new Date();
+    let exp_time = current_date.getTime() + constants.EXPIRATION_PERIOD;
+    return new Date(exp_time);
+}
 
 module.exports = serviceMethods;

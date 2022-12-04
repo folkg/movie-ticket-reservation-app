@@ -4,7 +4,8 @@ import PaymentForm from '../../components/paymentForm/paymentForm.component';
 import RegisteredPaymentForm from '../../components/paymentForm/registeredPaymentForm.component';
 import { MovieAPIContext } from '../../contexts/movie-api-provider';
 
-export default function PaymentButton() {
+
+export default function PaymentButton(props) {
 
     const { isLoggedIn } = useContext(MovieAPIContext);
 
@@ -17,9 +18,9 @@ export default function PaymentButton() {
     return(
         <div>
             {isLoggedIn ? (
-                <RegisteredPaymentForm />
+                <RegisteredPaymentForm seat_id={props.seat_id}/>
             ) : ( 
-                <PaymentForm />
+                <PaymentForm seat_id={props.seat_id}/>
             )}
         </div>
         

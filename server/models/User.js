@@ -119,4 +119,18 @@ modelMethods.getUserByEmail = (email_address) => {
   });
 };
 
+modelMethods.updateRenewalDate = (renewal_date, id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const update = await connection.query(
+        `UPDATE REGISTERED_USER SET annual_fee_expiry_date = ? WHERE id = ?`,
+        [renewal_date, id]);
+        return resolve(update);
+    } catch (err) {
+      return reject(err);
+
+    }
+  })
+}
+
 module.exports = modelMethods;

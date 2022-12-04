@@ -27,4 +27,9 @@ serviceMethods.getOneSeat = async (seat_id, isRegisteredUser) => {
   return result;
 };
 
+serviceMethods.updateOneSeat = async (seat_id, isBooked) => {
+  const result = await seatModel.updateOneSeat(seat_id, isBooked);
+  return result;
+}
+
 module.exports = serviceMethods;
