@@ -29,7 +29,7 @@ transporter.use(
 );
 const sender = '"Group 2 Movie Theatres" <TheOnlyMovieTheatreEver@gmail.com>';
 
-const sendTicketReceiptService = (recipient, subject, ticket, url) => {
+const sendTicketReceiptService = (recipient, ticket, url) => {
   try {
     const result = transporter.sendMail({
       from: sender,
