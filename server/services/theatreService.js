@@ -1,31 +1,23 @@
-const DatabaseConnection = require("../config/database");
-const connection = DatabaseConnection.getInstance(); // get Singleton instance
+const theatreModel = require("../models/Theatre");
+const { getAllShowings } = require("./showingService");
 
 const serviceMethods = {};
 
-serviceMethods.getAllTheatres = () => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const results = await connection.query(`SELECT * FROM THEATRE`, []);
-      return resolve(results);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.getAllTheatres = async () => {
+  const results = await theatreModel.getAllTheatres();
+  return results;
 };
 
-serviceMethods.getOneTheatre = (theatre_id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const results = await connection.query(
-        `SELECT * FROM THEATRE WHERE theatre_id = ?`,
-        [theatre_id]
-      );
-      return resolve(results[0]);
-    } catch (err) {
-      return reject(err);
-    }
-  });
+serviceMethods.getOneTheatre = async (theatre_id, isRegisteredUser) => {
+  const results = await theatreModel.getOneTheatre(theatre_id);
+  if (results) {
+    // add a list of all showings for the chosen theatre
+    const query = {};
+    query.theatre_id = theatre_id;
+    let showings = await getAllShowings(isRegisteredUser, query);
+    results.showings = showings;
+  }
+  return results;
 };
 
 module.exports = serviceMethods;
