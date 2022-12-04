@@ -20,6 +20,26 @@ modelMethods.getAllTickets = (quert) => {
   });
 };
 
+// Return all tickets with detailed information.
+modelMethods.getAllTicketsDetailed = (quert) => {
+  return new Promise(async (resolve, reject) => {
+    const user_id = quert.user_id || "%";
+    try {
+      const results = await connection.query(
+        `SELECT * 
+          FROM SHOWING SH Inner join SEATS S ON SH.showing_id = S.showing_id 
+          INNER JOIN TICKET T ON S.seat_id = T.seat_id INNER JOIN MOVIE M ON SH.movie_id = M.movie_id 
+          INNER JOIN THEATRE TH ON TH.theatre_id = SH.theatre_id 
+          WHERE (user_id LIKE ? OR ?)`,
+        [user_id, user_id === "%"]
+      );
+      return resolve(results);
+    } catch (err) {
+      return reject(err);
+    }
+  });
+};
+
 // Get Tickets by ID only.
 // RETURNS {user_id:"", seat_id:"", cost: "", show_time: ""}
 modelMethods.getTicketById = (ticket_id) => {

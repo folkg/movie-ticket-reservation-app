@@ -10,7 +10,14 @@ function Ticket(props) {
     cost,
   } = props.ticket;
 
-  function canCancel() {
+  const dateDisplayOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  const canCancel = () => {
     // Add UTC OFFSET to compensate for Mountain Standard Time.
     const UTC_OFFSET = 7 * 3600 * 1000;
     const show_time_date = new Date(new Date(show_time) + UTC_OFFSET);
@@ -19,24 +26,30 @@ function Ticket(props) {
     const hours = difference / (1000 * 3600);
     let cancel;
     hours >= 72 ? (cancel = true) : (cancel = false);
+    console.log("cancel: " + cancel);
     return cancel;
-  }
+  };
+
+  const dateString = () => {
+    const date = new Date(show_time);
+    return date.toLocaleDateString("en-US", dateDisplayOptions);
+  };
 
   async function handleClick(e) {}
   return (
-    <Card className="w-50 p-3 m-2">
+    <Card className="p-2 m-2">
       <Card.Body>
         <Card.Title>{movie_name}</Card.Title>
-        <Card.Text>
-          <p>Theatre: {theatre_name}</p>
-          <p>Showtime: {show_time}</p>
-          <p>Seat: {seat_label}</p>
-          <p>Cost: {cost}</p>
+        <Card.Text style={{ whiteSpace: "pre-line" }}>
+          {`Theatre: ${theatre_name}
+          Showtime: ${dateString()}
+          Seat: ${seat_label}
+          Cost: $${cost}`}
         </Card.Text>
         <Button
           variant="outline-danger"
           onClick={handleClick}
-          disabled={canCancel()}
+          disabled={!canCancel()}
         >
           Cancel Ticket
         </Button>
