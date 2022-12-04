@@ -1,116 +1,93 @@
-const DatabaseConnection = require("../config/database");
-// const dbc = DatabaseConnection.getInstance(); // get Singleton instance
-// const connection = dbc.getConnection();
-const connection = DatabaseConnection.getInstance();
-
-
-const { getOneSeat } = require("../services/seatService");
+const ticketModel = require("../models/Ticket");
+const { getOneSeat, updateOneSeat } = require("../services/seatService");
+const { makeNewRefund } = require("../services/refundService");
 const { getOnePayment } = require("../services/paymentService");
+const { getOneUser } = require("../services/userService");
+const { sendTicketReceipt } = require("../services/emailService");
 const constants = require("../config/constants");
-const { v4: uuid } = require("uuid");
+
 
 const serviceMethods = {};
 
 // Return all tickets.
-serviceMethods.getAllTickets = (query) => {
-  return new Promise( async (resolve, reject) => {
-    const user_id = query.user_id || "%";
+serviceMethods.getAllTickets = async (query) => {
     try{
-      const results = await connection.query(`SELECT * FROM TICKET WHERE (user_id LIKE ? OR ?)`,
-        [user_id, user_id === "%"]);
-      return resolve(results);
+      const results = await ticketModel.getAllTickets(query)
+      return results;
     } catch(err) {
-      return reject(err);
+      return err;
     }
-  });
 };
 
 // Get Tickets by ID only.
 // RETURNS {user_id:"", seat_id:"", cost: "", show_time: ""}
-serviceMethods.getTicketById = (ticket_id) => {
-  return new Promise( async (resolve, reject) => {
+serviceMethods.getTicketById = async (ticket_id) => {
     try {
-      const results = await connection.query(
-        `SELECT user_id, S.seat_id, S.cost, show_time from SHOWING SH Inner join SEATS S ON SH.showing_id = S.showing_id 
-              INNER JOIN TICKET T ON S.seat_id = T.seat_id Where T.ticket_id = ?`,
-        [ticket_id]);
-        return resolve(results[0]);
+      const results = await ticketModel.getTicketById(ticket_id);
+        return results;
     } catch (err) {
-      return reject(err);
+      return err;
     }
-  });
 };
 
 // Create Ticket.
 // REQUIRES: User_id, and the body to contain key for "seat_id" and "cost"
 // RETURNS {user_id:"", seat_id:"", cost: "", isCredit: ""}
-serviceMethods.createTicket = (body, user_id) => {
-  return new Promise(async (resolve, reject) => {
+serviceMethods.createTicket = async (body, user_id) => {
     try {
       const { seat_id, payment_id } = body;
-      const ticket_id = uuid();
+      let { email } = body;
       const isRegisteredUser = user_id != null;
+      if(isRegisteredUser) {
+        const user = await getOneUser(user_id);
+        email = user.email_address;
+      }
       // Get provided seat to ensure it is available
       const seat = await getOneSeat(seat_id, isRegisteredUser);
-      if (!seat) return reject({ message: "Selected seat not found." });
+      if (!seat) throw new Error("Selected seat not found.");
+      if (!seat.is_available) throw new Error("Selected seat is not available.");
       const payment = await getOnePayment(payment_id);
-      if (!payment) return reject({ message: "Payment was not found" });
-      if (!seat.is_available) reject({ message: "Selected seat is not available." });
-      if(seat.cost > payment.total_amount) reject( {message: "Payment insufficient."} );
-      const insert = await connection.query(`INSERT INTO TICKET(ticket_id, user_id, seat_id, payment_id) VALUES (?, ?, ?, ?)`,
-        [ticket_id, user_id, seat_id, payment_id]);
-      const update = await connection.query(`UPDATE SEATS SET booked = true WHERE seat_id = ?`,
-            [seat_id]);
-      const results = await connection.query(`SELECT * FROM TICKET WHERE ticket_id = ?`,
-            [ticket_id]);
-      return resolve(results[0]);
+      if (!payment) throw new Error ("Payment was not found");
+      if(seat.cost > payment.total_amount) throw new Error("Payment insufficient.");
+      const result = await ticketModel.createTicket( body, user_id);
+      const update = await updateOneSeat(seat_id, true);
+      const send_email = await sendTicketReceipt(result.ticket_id, email);
+      console.log(send_email);
+      return result;
     } catch(err) {
-      return reject(err);
+      return err;
     }
-  });
 };
 
 
-// TODO: Do we need to check if seat is available? or do we do this during payment? ask Graeme
 // TODO: I think the  route should be POST /tickets/:ticket_id, body should be "cancel":true
 // Cancel Ticket - Regardless of user type or date. Controller must do logic to
 // determine additional details.
 // REQUIRES: ticket_id, seat_id, and credit
 // RETURNS {ticket_id:"", credit_available: ""}
-serviceMethods.cancelTicketById = (body, isRegisteredUser) => {
-  return new Promise(async (resolve, reject) => {
+serviceMethods.cancelTicketById = async (body, isRegisteredUser) => {
     try{
       const { ticket_id } = body;
       let ticket = await serviceMethods.getTicketById(ticket_id);
-      if (!ticket) return reject({ message: "Selected Ticket Not Found" });
+      if (!ticket) throw "Selected Ticket Not Found";
       const { user_id, seat_id, show_time } = ticket;
       const seat = await getOneSeat(seat_id, isRegisteredUser);
-      if (!seat) return reject({ message: "No Seat Found for Ticket" });
+      if (!seat) throw "No Seat Found for Ticket";
       const { cost } = seat;
       isRegisteredUser = isRegisteredUser || user_id != null;
-      if (!canCancel(show_time))
-        return reject({
-          message:
-            "Show time less than 72 hours away, cancellation not fulfilled.",
-        });
+      if (!canCancel(show_time)) throw "Show time less than 72 hours away, cancellation not fulfilled.";
       let credit = cost;
       const expiration_date = getExpirationDate();
       // Apply admin fee if the user is not registered.
       if (!isRegisteredUser) credit = cost * (1 - constants.ADMIN_FEE);
-      const update = await connection.query(`UPDATE SEATS SET booked = false WHERE seat_id = ?`,
-        [seat_id]);
-      const insert = await connection.query(`INSERT INTO REFUND(ticket_id, credit_available, expiration_date) VALUES (?, ?, ?)`,
-            [ticket_id, credit, expiration_date]);
-            
-      const update2 = await connection.query(`UPDATE TICKET SET is_credited = true WHERE ticket_id = ?`,
-            [ticket_id]);
-      const results = await connection.query(`SELECT * FROM REFUND WHERE Ticket_id = ?`,
-            [ticket_id]);
-      return resolve(results);
+      const update = await updateOneSeat(seat_id, false);
+      const results = await makeNewRefund(ticket_id, credit, expiration_date);
+      // if(results.code == 'ER_DUP_ENTRY') throw "Ticket has already been cancelled"
+      const update2 = await ticketModel.cancelTicketById(ticket_id);
+      return results;
     } catch(err) {
-        return reject(err);
+        return err;
     }
-  });
 };
 
 module.exports = serviceMethods;

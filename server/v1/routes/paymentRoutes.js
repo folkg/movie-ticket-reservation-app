@@ -10,16 +10,17 @@ const router = express.Router();
 // Instantiate the paymentController object and the 
 // two strategy objects
 const myWayToPay = new paymentController();
-const pay1 = new regUserPaymentService();
-const pay2 = new userPaymentService();
+const registeredUser = new regUserPaymentService();
+const normalUser = new userPaymentService();
+
 
 
 // Set the payment Strategy member in the payment Controller
 // based on whether it is a registered user or not.
 const assignPaymentType = (req, res, next) => {
     const user_id = req.userId;
-    if(user_id) myWayToPay.setPaymentStrategy(pay1);
-    else myWayToPay.setPaymentStrategy(pay2);    
+    if(user_id) myWayToPay.setPaymentStrategy(registeredUser);
+    else myWayToPay.setPaymentStrategy(normalUser);    
     next();
 }
 
@@ -39,5 +40,6 @@ const assignPaymentType = (req, res, next) => {
 // }
 router.put('/', checkUserId, assignPaymentType, myWayToPay.pay);
 
+router.patch('/:user_id', checkUserId, assignPaymentType, myWayToPay.payMembership);
 
 module.exports = router;

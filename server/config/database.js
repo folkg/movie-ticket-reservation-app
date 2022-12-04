@@ -16,6 +16,7 @@ class DatabaseConnection {
   static getInstance() {
     if (this.instance == null) {
       this.instance = new DatabaseConnection();
+      this.instance.getConnection();
     }
     return this.instance;
   }
