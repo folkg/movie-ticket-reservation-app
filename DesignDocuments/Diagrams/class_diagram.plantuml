@@ -30,11 +30,8 @@ package Model {
 
     class Ticket <<entity>> {
         - id : int
-        - movie : Movie
-        - theatre : Theatre
-        - showing : Showing
         - seat : Seat
-        - cost : double
+        - payment: Payment
         - isCredited : boolean
     }
 
@@ -48,6 +45,21 @@ package Model {
         - annualFeeExpiryDate : String
         - tickets : ArrayList<Ticket>
         + addTicket(t : Ticket)
+    }
+
+    class Payment <<entity>> {
+        - payment_id: int
+        - completion_date: String
+        - credit_card: int
+        - billed_cost: int
+        - refund_amount: int
+        - refund_ticket: Refund
+    }
+
+    class Refund <<entity>> {
+        - ticket: Ticket
+        - expiration_date: int
+        - credit_available: int
     }
 
     class DatabaseConnection <<boundary>> {
@@ -119,7 +131,41 @@ package Controller-Express {
     class theatreService <<control>> {}
 
     class presaleService <<control>> {}
+
+    class refundController <<control>> {}
+    class refundService <<control>> {}
+
+    class paymentController <<control>> {}
+    class paymentService <<control>>
+
+    interface userPaymentInterface <<interface>> {
+        + pay(payment: Payment)
+        + payMembership(payment: Payment)
+    }
+    class userPaymentService <<control>> {
+        + pay(payment: Payment)
+        + payMembership(payment: Payment)
+    }
+    class regUserPaymentService <<control>> {
+        + pay(payment: Payment)
+        + payMembership(payment: Payment)
+    }
+
+    class ticketController <<control>> {}
+    class ticketService <<control>> {}
+
 }
+
+' start Relationships between server routes
+ServerRoutes --> movieController
+ServerRoutes --> userController
+ServerRoutes --> seatController
+ServerRoutes --> showingController
+ServerRoutes --> theatreController
+ServerRoutes --> ticketController
+ServerRoutes --> paymentController
+ServerRoutes --> refundController
+' end Relationships between server routes
 
 ' start Relationships betweens client views
 TicketBuyingViewController *-- MovieViewController
@@ -161,17 +207,38 @@ presaleService --> Seat
 showingController --> showingService
 showingService --> Showing
 showingService --> seatService
+
+refundController --> refundService
+refundService --> Refund
+
+ticketController --> ticketService
+ticketService --> Ticket
+ticketService --> seatService
+ticketService --> paymentService
+ticketService --> refundService
+
+paymentController --> userPaymentInterface
+userPaymentInterface --> Payment
+userPaymentInterface --> refundService
+userPaymentInterface --> paymentService
+userPaymentInterface --> seatService
+userPaymentService ..|> userPaymentInterface
+regUserPaymentService ..|> userPaymentInterface
+paymentService --> Payment
+paymentService --> userService
+
 ' --end Relationships betweens controllers/services/models
 
 ' -- start Model relastionships
 Movie -- Showing
 Theatre -- Showing
-Showing *-r- Seat
-Ticket o-- Movie
-Ticket o-- Theatre
-Ticket o-- Showing
-Ticket --- Seat
-RegisteredUser --> Ticket
+Showing --- Seat
+Ticket o-- Seat
+Ticket o-- Payment
+Refund o-- Ticket
+RegisteredUser --- Ticket
+Payment --> Refund
+
 ' -- end Model relastionships
 
 package MySQL <<Database>> {
