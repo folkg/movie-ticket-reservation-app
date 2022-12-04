@@ -39,6 +39,17 @@ serviceMethods.getTicketById = async (ticket_id) => {
   }
 };
 
+// Get Detailed Tickets by ID only.
+// RETURNS {user_id:"", seat_id:"", cost: "", show_time: ""}
+serviceMethods.getOneTicket = async (ticket_id) => {
+  try {
+    const results = await ticketModel.getOneTicket(ticket_id);
+    return results;
+  } catch (err) {
+    return err;
+  }
+};
+
 // Create Ticket.
 // REQUIRES: User_id, and the body to contain key for "seat_id" and "cost"
 // RETURNS {user_id:"", seat_id:"", cost: "", isCredit: ""}

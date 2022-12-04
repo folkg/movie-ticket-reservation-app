@@ -26,7 +26,6 @@ function Ticket(props) {
     const hours = difference / (1000 * 3600);
     let cancel;
     hours >= 72 ? (cancel = true) : (cancel = false);
-    console.log("cancel: " + cancel);
     return cancel;
   };
 

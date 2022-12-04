@@ -185,6 +185,24 @@ export function MovieAPIProvider(props) {
     }
   }
 
+  async function getTicketById(ticket_id) {
+    try {
+      const response = await fetch(API_URL + `tickets/${ticket_id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) return body.data;
+      else return [];
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
   async function makePayment(
     seat_id_number,
     credit_card_number,
@@ -292,6 +310,7 @@ export function MovieAPIProvider(props) {
         processTicket,
         getRefundByUser,
         getOneSeat,
+        getTicketById,
         getTicketsForCurrentUser,
       }}
     >

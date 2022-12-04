@@ -5,7 +5,7 @@ import { MovieAPIContext } from "../../contexts/movie-api-provider";
 
 export default function viewUserTickets() {
   const { getTicketsForCurrentUser } = useContext(MovieAPIContext);
-  const [tickets, setTickets] = useState([]);
+  const [tickets, setTickets] = useState(null);
 
   useEffect(() => {
     async function fetchTickets() {

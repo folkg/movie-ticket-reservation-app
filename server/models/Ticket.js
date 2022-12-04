@@ -5,9 +5,9 @@ const { v4: uuid } = require("uuid");
 const modelMethods = {};
 
 // Return all tickets.
-modelMethods.getAllTickets = (quert) => {
+modelMethods.getAllTickets = (query) => {
   return new Promise(async (resolve, reject) => {
-    const user_id = quert.user_id || "%";
+    const user_id = query.user_id || "%";
     try {
       const results = await connection.query(
         `SELECT * FROM TICKET WHERE (user_id LIKE ? OR ?)`,
@@ -21,9 +21,9 @@ modelMethods.getAllTickets = (quert) => {
 };
 
 // Return all tickets with detailed information.
-modelMethods.getAllTicketsDetailed = (quert) => {
+modelMethods.getAllTicketsDetailed = (query) => {
   return new Promise(async (resolve, reject) => {
-    const user_id = quert.user_id || "%";
+    const user_id = query.user_id || "%";
     try {
       const results = await connection.query(
         `SELECT * 
@@ -100,7 +100,7 @@ modelMethods.cancelTicketById = (ticket_id) => {
   });
 };
 
-modelMethods.getTicketReceipt = (ticket_id) => {
+modelMethods.getOneTicket = (ticket_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const results = await connection.query(
