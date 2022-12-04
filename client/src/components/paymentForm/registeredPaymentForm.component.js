@@ -10,11 +10,13 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import { FormWrapper } from './paymentForm.styles';
 import { MovieAPIContext } from '../../contexts/movie-api-provider';
 
-const seat_id = "S_121022_9_002_004_22";
+
 
 //TODO: MAKE THE BUTTON PAGE THE MAIN COMPONENT. SEND IN PROPS FOR SEAT_ID
 
-export default function RegisteredPaymentForm() {
+export default function RegisteredPaymentForm(props) {
+    
+    let seat_id = props.seat_id;
 
     const { getRefundByUser, makePayment, processTicket } = useContext(MovieAPIContext);
     const [ showModal, setShow ] = useState(false);
@@ -30,6 +32,7 @@ export default function RegisteredPaymentForm() {
     const [ applyRefund, setApplyRefund ] = useState(false);
     const [ paymentSuccess, setPaymentSuccess ] = useState(null)
     const [ ticketConfirmation, setTicketConfirmation ] = useState(null);
+    const [ payEnabled, setPayEnabled ] = useState(true);
 
     useEffect(() => {
         async function updateRefundsForUser() {
@@ -56,7 +59,7 @@ export default function RegisteredPaymentForm() {
         };
         updateRefundsForUser();
         
-    }, []);
+    }, [ticketConfirmation]);
 
     const handleClose = () => {
         setShow(false);
@@ -68,6 +71,7 @@ export default function RegisteredPaymentForm() {
         setRefund([]);
         setApplyRefund(false);
         setPaymentSuccess(null);
+        setPayEnabled(true);
         setTicketConfirmation(null);
     }
     const handleShow = () => setShow(true);
@@ -81,6 +85,7 @@ export default function RegisteredPaymentForm() {
             if(ticket_result[0] !== true) throw ticket_result[1];
             setTicketConfirmation(ticket_result[1]);
             setPaymentSuccess(true);
+            setPayEnabled(false);
         } catch (error) {
             setTicketConfirmation(error);
             setPaymentSuccess(false);
@@ -202,7 +207,8 @@ export default function RegisteredPaymentForm() {
                     <Button 
                         variant="primary" 
                         type="button" 
-                        onClick={handleSubmit}>
+                        onClick={handleSubmit}
+                        disabled={!payEnabled}>
                             Pay
                     </Button>
                 </Modal.Footer>

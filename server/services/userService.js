@@ -43,4 +43,9 @@ serviceMethods.getUserByEmail = async (body) => {
   return results;
 };
 
+serviceMethods.updateRenewalDate = async (renewal_date, id) => {
+  const results = await userModel.updateRenewalDate(renewal_date, id);
+  return results;
+}
+
 module.exports = serviceMethods;

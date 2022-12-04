@@ -53,4 +53,17 @@ modelMethods.getPresaleSeatsForOneShowing = (showing_id) => {
   });
 };
 
+modelMethods.updateOneSeat = (seat_id, isBooked) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const update = connection.query(`UPDATE SEATS SET booked = ? WHERE seat_id = ?`,
+            [isBooked, seat_id]
+      );
+      return resolve(update);
+    } catch (err) {
+      return reject(err);
+    }
+  });
+}
+
 module.exports = modelMethods;

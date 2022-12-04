@@ -1,11 +1,11 @@
-const userPayment = require("../services/userPayment");
+const userPaymentInterface = require("../services/userPaymentInterface");
 
 class paymentController {
 
   paymentService;
 
-  setPaymentStrategy = (userPayment) => {
-      this.paymentService = userPayment;
+  setPaymentStrategy = (userPaymentInterface) => {
+      this.paymentService = userPaymentInterface;
   }
     
   pay = async (req, res) => {
@@ -17,6 +17,16 @@ class paymentController {
       res.json({ success: false, message: e.message });
     }
 };
+
+  payMembership = async (req, res) => {
+    try {
+      let result = await this.paymentService.payMembership( req );
+      if(result.code) throw result;
+      res.json({ success: true, data: result });
+    } catch (e) {
+      res.json({ success: false, message: e.message });
+    }
+  }
   
 }
 

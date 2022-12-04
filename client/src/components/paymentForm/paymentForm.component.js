@@ -10,9 +10,11 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import { FormWrapper } from './paymentForm.styles';
 import { MovieAPIContext } from '../../contexts/movie-api-provider';
 
-const seat_id = "S_121022_9_002_004_22";
+// const seat_id = "S_121022_9_002_004_22";
 
-export default function PaymentForm() {
+export default function PaymentForm(props) {
+
+    let seat_id = props.seat_id;
 
     const { getRefundByTicket, makePayment, processTicket } = useContext(MovieAPIContext);
     const [ showModal, setShow ] = useState(false);
@@ -25,6 +27,7 @@ export default function PaymentForm() {
     const [ applyRefund, setApplyRefund ] = useState(false);
     const [ paymentSuccess, setPaymentSuccess ] = useState(null)
     const [ ticketConfirmation, setTicketConfirmation ] = useState(null);
+    const [ payEnabled, setPayEnabled ] = useState(true);
 
     const handleClose = () => {
         setShow(false);
@@ -36,6 +39,7 @@ export default function PaymentForm() {
         setRefund([]);
         setApplyRefund(false);
         setPaymentSuccess(null);
+        setPayEnabled(true);
         setTicketConfirmation(null);
     }
     const handleShow = () => setShow(true);
@@ -47,6 +51,7 @@ export default function PaymentForm() {
             const ticket_result = await processTicket(seat_id, cc_email, payment_result[1]);
             if(ticket_result[0] !== true) throw ticket_result[1];
             setTicketConfirmation(ticket_result[1]);
+            setPayEnabled(false);
             setPaymentSuccess(true);
         } catch (error) {
             setTicketConfirmation(error);
@@ -195,7 +200,8 @@ export default function PaymentForm() {
                     <Button 
                         variant="primary" 
                         type="button" 
-                        onClick={handleSubmit}>
+                        onClick={handleSubmit}
+                        diabled={!payEnabled}>
                             Pay
                     </Button>
                 </Modal.Footer>
