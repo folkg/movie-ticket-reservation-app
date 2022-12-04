@@ -2,6 +2,8 @@ const ticketModel = require("../models/Ticket");
 const { getOneSeat, updateOneSeat } = require("../services/seatService");
 const { makeNewRefund } = require("../services/refundService");
 const { getOnePayment } = require("../services/paymentService");
+const { getOneUser } = require("../services/userService");
+const { sendTicketReceipt } = require("../services/emailService");
 const constants = require("../config/constants");
 
 
@@ -34,8 +36,12 @@ serviceMethods.getTicketById = async (ticket_id) => {
 serviceMethods.createTicket = async (body, user_id) => {
     try {
       const { seat_id, payment_id } = body;
-      // const ticket_id = uuid();
+      let { email } = body;
       const isRegisteredUser = user_id != null;
+      if(isRegisteredUser) {
+        const user = await getOneUser(user_id);
+        email = user.email_address;
+      }
       // Get provided seat to ensure it is available
       const seat = await getOneSeat(seat_id, isRegisteredUser);
       if (!seat) throw new Error("Selected seat not found.");
@@ -45,6 +51,8 @@ serviceMethods.createTicket = async (body, user_id) => {
       if(seat.cost > payment.total_amount) throw new Error("Payment insufficient.");
       const result = await ticketModel.createTicket( body, user_id);
       const update = await updateOneSeat(seat_id, true);
+      const send_email = await sendTicketReceipt(result.ticket_id, email);
+      console.log(send_email);
       return result;
     } catch(err) {
       return err;

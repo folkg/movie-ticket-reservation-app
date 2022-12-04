@@ -258,6 +258,25 @@ export function MovieAPIProvider(props) {
     }
   }
 
+  async function getOneSeat(seat_id) {
+    try {
+      const response = await fetch(API_URL + `seats/${seat_id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      console.log(body);
+      if (body.success === true) return body.data;
+      else return null;
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
   return (
     <MovieAPIContext.Provider
       value={{
@@ -272,6 +291,7 @@ export function MovieAPIProvider(props) {
         makePayment,
         processTicket,
         getRefundByUser,
+        getOneSeat,
         getTicketsForCurrentUser,
       }}
     >
