@@ -18,14 +18,13 @@ export default function RegisteredPaymentForm(props) {
     let seat_id = props.seat_id;
 
 
-    const { getRefundByUser, makePayment, processTicket } = useContext(MovieAPIContext);
+    const { getRefundByUser, makePayment, processTicket, getOneSeat } = useContext(MovieAPIContext);
     const [ showModal, setShow ] = useState(false);
     const [ userCredit, setUserCredit ] = useState([])
     const [ creditAlertState, setCreditAlertState ] = useState("success");
     const [ enableCreditButton, setCreditButton ] = useState(true);
     const [ fname, setFname ] = useState();
     const [ lname, setLname ] = useState();
-    const [ cc_email, setEmail ] = useState();
     const [ cc_number, setCardNumber ] = useState();
     const [ ticket_id, setTicket ] = useState();
     const [ refund, setRefund ] = useState([]);
@@ -33,6 +32,8 @@ export default function RegisteredPaymentForm(props) {
     const [ paymentSuccess, setPaymentSuccess ] = useState(null)
     const [ ticketConfirmation, setTicketConfirmation ] = useState(null);
     const [ payEnabled, setPayEnabled ] = useState(true);
+    const [ seat_cost, setSeatDetails] = useState();
+    const [ useOther, setUseOtherCreditCard] = useState(false);
 
 
     useEffect(() => {
@@ -52,7 +53,6 @@ export default function RegisteredPaymentForm(props) {
                     setCreditAlertState("success"); 
                     setCreditButton(true);
                 }
-                console.log(users_credit);
             } catch (e){
                 console.log("error")
             }
@@ -60,14 +60,48 @@ export default function RegisteredPaymentForm(props) {
         };
         updateRefundsForUser();
         
-    }, [ticketConfirmation]);
+    }, []);
+
+    useEffect(() => {
+        async function getSeatCost() {
+            try{
+                const seat_details = await getOneSeat(seat_id);
+                if(!seat_details) {
+                    setSeatDetails("N/A");
+                }
+                else {
+                    setSeatDetails(seat_details.cost);
+                }
+            } catch (e){
+                console.log(e)
+            }
+        };
+    getSeatCost();       
+    }, [seat_id]);
+
+
+    useEffect(() => {
+        if(!useOther) setPayEnabled(true);
+        else if(useOther && fname && lname && validateInputs())
+            setPayEnabled(true);
+        else {
+            setPayEnabled(false);
+        }
+    });
+
+    function validateInputs(){
+        const reg1 = /^\d{16}$/i;
+        if(reg1.test(cc_number)){
+            return true;
+        }
+        return false;
+    }
 
 
     const handleClose = () => {
         setShow(false);
         setFname("");
         setLname("");
-        setEmail("");
         setCardNumber("");
         setTicket("");
         setRefund([]);
@@ -83,11 +117,10 @@ export default function RegisteredPaymentForm(props) {
         try {
             const payment_result = await makePayment(seat_id, cc_number, ticket_id, applyRefund);
             if(payment_result[0] !== true) throw payment_result[1];
-            const ticket_result = await processTicket(seat_id, cc_email, payment_result[1]);
+            const ticket_result = await processTicket(seat_id, "", payment_result[1]);
             if(ticket_result[0] !== true) throw ticket_result[1];
             setTicketConfirmation(ticket_result[1]);
             setPaymentSuccess(true);
-            setPayEnabled(false);
         } catch (error) {
             setTicketConfirmation(error);
             setPaymentSuccess(false);
@@ -126,8 +159,18 @@ export default function RegisteredPaymentForm(props) {
                             </div>
                         </Alert>
                     )}
+                    {paymentSuccess === true ? ( 
+                        <div></div>
+                     ) : (
                     <Accordion defaultActiveKey={['0']}>
                     <Accordion.Item eventkey="0">
+                            <Alert variant="info">
+                                <Alert.Heading>Checkout:</Alert.Heading>
+                                    <p>
+                                        Total Cost is: <b>${seat_cost}</b>.
+                                    </p>
+                                    <hr />
+                            </Alert>
                         {userCredit[0]===true ? (
                             <Alert variant={creditAlertState}>You have ${userCredit[1]} in credit
                             <div className="d-grid gap-2">
@@ -149,6 +192,12 @@ export default function RegisteredPaymentForm(props) {
                         <Accordion.Item eventkey="1">
                                 <Accordion.Header>Use Different Credit Card</Accordion.Header>
                                 <Accordion.Body>
+                                <Form.Check
+                                    
+                                    type='checkbox'
+                                    label = 'Use Different Credit Card?'
+                                    onChange={(e) => setUseOtherCreditCard(e.target.checked)}
+                                    />
                                     <FormWrapper onSubmit={handleSubmit}>
                                     <Row>
                                         <Form.Group as={Col} className="mb-3" controlId="fname">
@@ -172,17 +221,6 @@ export default function RegisteredPaymentForm(props) {
                                             </Form.Control>
                                         </Form.Group>
                                     </Row>
-                                    <Form.Group className="mb-3" controlId="cc_email">
-                                        <Form.Label>Enter Email:</Form.Label>
-                                        <Form.Control 
-                                            type="email" 
-                                            placeholder="email" 
-                                            value={cc_email || ""} 
-                                            onChange={(e) => setEmail(e.target.value)} 
-                                            required>
-                                        </Form.Control>
-                                    </Form.Group>
-                                    
                                     <Form.Group className="mb-3" controlId="credit_card_number">
                                         <Form.Label>Enter Credit Card Number:</Form.Label>
                                         <Form.Control 
@@ -198,7 +236,11 @@ export default function RegisteredPaymentForm(props) {
                             </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>
+                )}
                 </Modal.Body>
+                {paymentSuccess === true ? ( 
+                        <div></div>
+                     ) : (
                 <Modal.Footer>
                     <Button 
                         variant="secondary" 
@@ -214,6 +256,7 @@ export default function RegisteredPaymentForm(props) {
                             Pay
                     </Button>
                 </Modal.Footer>
+            )}
             </Modal>
         </div>
     )

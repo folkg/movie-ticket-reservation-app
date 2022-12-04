@@ -12,7 +12,8 @@ pay = async ( req ) => {
         console.log(req.body);
         const { seat_id, ticket_id, use_credit, credit_card } = req.body;
         let seat_result = await this.seatService.getOneSeat(seat_id, false);
-        if(!seat_result) throw "Seat not found";
+        if(!seat_result) throw new Error("Seat not found");
+        if (!seat_result.is_available) throw new Error("Selected seat is not available.");
         const { cost } = seat_result;
         let outstanding_charge = cost;
         let credit = [];
@@ -20,7 +21,7 @@ pay = async ( req ) => {
   
         if (use_credit) {
           const refund_obj = await this.refundService.getCreditByTicket(ticket_id)
-          if(!refund_obj) throw "Ticket is not associated with any refunds";
+          if(!refund_obj) throw new Error("Ticket is not associated with any refunds");
           let temp = outstanding_charge - refund_obj.credit_available;
           if(temp < 0) temp = 0;
           let refund = outstanding_charge - temp;
@@ -34,11 +35,11 @@ pay = async ( req ) => {
             credit_card,
             outstanding_charge
           );
-          if (!payment_result.success) throw "Payment Denied";
+          if (!payment_result.success) throw new Error("Payment Denied");
           ({ billed_amount } = payment_result);
         }
         const payment = await this.paymentModel.storePayment();
-        if(!payment) throw "Payment Storage Issue";
+        if(!payment) throw new Error("Payment Storage Issue");
         const { payment_id } = payment;
         if(billed_amount > 0) await this.paymentModel.storeCreditCardPayment( payment_id, billed_amount, credit_card);
         if (credit.length > 0) await this.refundService.updateCredit(payment_id, credit);

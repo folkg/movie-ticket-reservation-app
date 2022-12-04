@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'; 
 import Form from 'react-bootstrap/Form';
@@ -16,8 +16,7 @@ export default function PaymentForm(props) {
 
     let seat_id = props.seat_id;
 
-
-    const { getRefundByTicket, makePayment, processTicket } = useContext(MovieAPIContext);
+    const { getRefundByTicket, makePayment, processTicket, getOneSeat } = useContext(MovieAPIContext);
     const [ showModal, setShow ] = useState(false);
     const [ fname, setFname ] = useState();
     const [ lname, setLname ] = useState();
@@ -28,7 +27,42 @@ export default function PaymentForm(props) {
     const [ applyRefund, setApplyRefund ] = useState(false);
     const [ paymentSuccess, setPaymentSuccess ] = useState(null)
     const [ ticketConfirmation, setTicketConfirmation ] = useState(null);
-    const [ payEnabled, setPayEnabled ] = useState(true);
+    const [ payEnabled, setPayEnabled ] = useState(false);
+    const [ seat_cost, setSeatDetails] = useState();
+
+
+    useEffect(() => {
+        async function getSeatCost() {
+            try{
+                const seat_details = await getOneSeat(seat_id);
+                if(!seat_details) {
+                    setSeatDetails("N/A");
+                }
+                else {
+                    setSeatDetails(seat_details.cost);
+                }
+            } catch (e){
+                console.log(e)
+            }
+        };
+    getSeatCost();       
+    }, [seat_id]);
+
+
+    useEffect(() => {
+        if(fname && lname && validateInputs())
+            setPayEnabled(true);
+    });
+
+    function validateInputs(){
+        const reg = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+        const reg1 = /^\d{16}$/i;
+        if(reg.test(cc_email) && reg1.test(cc_number)){
+            return true;
+        }
+        return false;
+    }
+
 
     const handleClose = () => {
         setShow(false);
@@ -40,7 +74,7 @@ export default function PaymentForm(props) {
         setRefund([]);
         setApplyRefund(false);
         setPaymentSuccess(null);
-        setPayEnabled(true);
+        setPayEnabled(false);
         setTicketConfirmation(null);
     }
     const handleShow = () => setShow(true);
@@ -61,10 +95,10 @@ export default function PaymentForm(props) {
     }
 
     const handleRefund = async (e) => {
-        console.log(ticket_id);
         const result = await getRefundByTicket(ticket_id);
         setRefund(result);
     }
+
     
 
     return (
@@ -99,8 +133,21 @@ export default function PaymentForm(props) {
                             </div>
                         </Alert>
                     )}
+
+                    {paymentSuccess === true ? ( 
+                        <div></div>
+                     ) : (
+
                     <Accordion defaultActiveKey={['0']}>
                     <Accordion.Item eventkey="0">
+
+                        <Alert variant="info">
+                                <Alert.Heading>Checkout:</Alert.Heading>
+                                    <p>
+                                        Total Cost is: <b>${seat_cost}</b>.
+                                    </p>
+                                    <hr />
+                            </Alert>
                                 <FormWrapper onSubmit={handleSubmit}>
                                 <Row>
                                     <Form.Group as={Col} className="mb-3" controlId="fname">
@@ -190,7 +237,11 @@ export default function PaymentForm(props) {
                         </Accordion.Item>
                         
                     </Accordion>
+                    )}
                 </Modal.Body>
+                {paymentSuccess === true ? ( 
+                        <div></div>
+                     ) : (
                 <Modal.Footer>
                     <Button 
                         variant="secondary" 
@@ -202,10 +253,11 @@ export default function PaymentForm(props) {
                         variant="primary" 
                         type="button" 
                         onClick={handleSubmit}
-                        diabled={!payEnabled}>
+                        disabled={!payEnabled}>
                             Pay
                     </Button>
                 </Modal.Footer>
+                )}
             </Modal>
         </div>
     )
