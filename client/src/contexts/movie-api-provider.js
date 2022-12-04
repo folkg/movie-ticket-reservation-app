@@ -99,7 +99,7 @@ export function MovieAPIProvider(props) {
   }
 
   const isTokenValid = () => {
-    console.log("testing!")
+    console.log("testing!");
     if (jwt == null) {
       return false;
     } else {
@@ -151,45 +151,72 @@ export function MovieAPIProvider(props) {
 
   async function getRefundByTicket(ticket_id) {
     try {
-      const response = await fetch(API_URL + `refunds/${ticket_id}`);
-      const body = await response.json();
-      if( body.success === true ) return [ true, body.data.credit_available];
-      else return [ false, body.message ];
-    } catch (e) {
-      console.log(e);
-      return "Server communication error";
-    }
-  } 
-
-  async function makePayment(seat_id_number, credit_card_number, refund_ticket_id,applyRefund){
-    try{
-      const response = await fetch(API_URL + `payments/`, {
-        method: "PUT",
+      const response = await fetch(API_URL + `refunds/${ticket_id}`, {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${jwt}`,
           "Content-Type": "application/json",
-        }, 
-        body: JSON.stringify({
-          seat_id: seat_id_number,
-          credit_card: credit_card_number,
-          use_credit: new Boolean(applyRefund),
-          ticket_id: refund_ticket_id,
-          
-        }),
-        });
-        const body = await response.json();
-        console.log(body);
-        if( body.success === true ) return [ true, body.data.payment_id];
-        else return [ false, body.message ];
-  
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) return [true, body.data.credit_available];
+      else return [false, body.message];
     } catch (e) {
       console.log(e);
       return "Server communication error";
     }
   }
 
-  async function processTicket(seat_id, email, payment_id){
-    try{
+  async function getTicketsForCurrentUser() {
+    try {
+      const response = await fetch(API_URL + `users/${userId}/tickets`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) return body.data;
+      else return [false, body.message];
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
+  async function makePayment(
+    seat_id_number,
+    credit_card_number,
+    refund_ticket_id,
+    applyRefund
+  ) {
+    try {
+      const response = await fetch(API_URL + `payments/`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          seat_id: seat_id_number,
+          credit_card: credit_card_number,
+          use_credit: new Boolean(applyRefund),
+          ticket_id: refund_ticket_id,
+        }),
+      });
+      const body = await response.json();
+      console.log(body);
+      if (body.success === true) return [true, body.data.payment_id];
+      else return [false, body.message];
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
+  async function processTicket(seat_id, email, payment_id) {
+    try {
       const response = await fetch(API_URL + `tickets`, {
         method: "POST",
         headers: {
@@ -197,40 +224,39 @@ export function MovieAPIProvider(props) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          seat_id, 
-          email, 
-          payment_id
+          seat_id,
+          email,
+          payment_id,
         }),
       });
       const body = await response.json();
       console.log(body);
-      if( body.success === true ) return [ true, body.data.ticket_id];
-      else return [ false, body.message ];
-    } catch(e) {
-    console.log(e);
-    return "Server communication error";
-  }
+      if (body.success === true) return [true, body.data.ticket_id];
+      else return [false, body.message];
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
   }
 
-  async function getRefundByUser(){
+  async function getRefundByUser() {
     try {
       const response = await fetch(API_URL + `refunds/`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${jwt}`,
           "Content-Type": "application/json",
-        }
-    });
+        },
+      });
       const body = await response.json();
       console.log(body);
-      if( body.success === true ) return [ true, body.data];
-      else return [ false, body.message ];
+      if (body.success === true) return [true, body.data];
+      else return [false, body.message];
     } catch (e) {
       console.log(e);
-      return "Server communication error";    
+      return "Server communication error";
     }
   }
-
 
   return (
     <MovieAPIContext.Provider
@@ -246,13 +272,10 @@ export function MovieAPIProvider(props) {
         makePayment,
         processTicket,
         getRefundByUser,
+        getTicketsForCurrentUser,
       }}
     >
       {props.children}
     </MovieAPIContext.Provider>
   );
 }
-
-
-
-

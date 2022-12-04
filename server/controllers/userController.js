@@ -57,13 +57,10 @@ controllerMethods.getUserTickets = async (req, res) => {
         message: "Current user is not authorized to get this information.",
       });
     } else {
-      let results = await userService.getOneUser(userId);
+      const query = {};
+      query.user_id = userId;
+      let results = await getAllTickets(query);
       if (results) {
-        // add a list of all tickets for the chosen user
-        const query = {};
-        query.user_id = userId;
-        let tickets = await getAllTickets(query);
-        results.tickets = tickets;
         res.json({ success: true, data: results });
       } else {
         res.status(404).json({ success: false, message: "No user found." });
