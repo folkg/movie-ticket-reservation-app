@@ -1,9 +1,15 @@
-import React from 'react'; 
+import React, { useContext } from "react";
+import GuestCancelTicketForm from "../../components/cancelTicketForm/guestCancelTicketForm.component";
+import RegisteredCancelTicketForm from "../../components/ticket/viewUserTickets.component";
+import { MovieAPIContext } from "../../contexts/movie-api-provider";
 
-const CancelPage = () =>{
-    return (
-        <div>Cancel page</div>
-    )
+function CancelPage() {
+  const { isLoggedIn } = useContext(MovieAPIContext);
+  return isLoggedIn ? (
+    <RegisteredCancelTicketForm />
+  ) : (
+    <GuestCancelTicketForm />
+  );
 }
 
 export default CancelPage;

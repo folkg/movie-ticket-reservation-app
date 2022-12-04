@@ -5,7 +5,8 @@ const controllerMethods = {};
 controllerMethods.sendTicketReceipt = async (req, res) => {
   try {
     const { ticket_id } = req.params;
-    let results = await emailService.sendTicketReceipt(ticket_id);
+    const email = "graemefolk@gmail.com";
+    let results = await emailService.sendTicketReceipt(ticket_id, email);
     if (results) {
       res.json({ success: true, data: results });
     } else {
