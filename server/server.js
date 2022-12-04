@@ -10,6 +10,7 @@ const v1ShowingRouter = require("./v1/routes/showingRoutes");
 const v1SeatRouter = require("./v1/routes/seatRoutes");
 const v1PaymentRouter = require("./v1/routes/paymentRoutes");
 const v1RefundRouter = require("./v1/routes/refundRoutes");
+const v1EmailRouter = require("./v1/routes/emailRoutes");
 
 const app = express();
 const PORT = process.env.APP_PORT || 5000;
@@ -27,6 +28,7 @@ app.use("/api/v1/showings", v1ShowingRouter);
 app.use("/api/v1/seats", v1SeatRouter);
 app.use("/api/v1/payments", v1PaymentRouter);
 app.use("/api/v1/refunds", v1RefundRouter);
+app.use("/api/v1/emails", v1EmailRouter);
 
 app.listen(PORT, () => {
   console.log(`API is listening on port ${PORT}`);

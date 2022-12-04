@@ -1,18 +1,20 @@
 const DatabaseConnection = require("../config/database");
-const connection = DatabaseConnection.getInstance(); 
+const connection = DatabaseConnection.getInstance();
 const { v4: uuid } = require("uuid");
 
 const modelMethods = {};
 
 // Return all tickets.
 modelMethods.getAllTickets = (quert) => {
-  return new Promise( async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const user_id = quert.user_id || "%";
-    try{
-      const results = await connection.query(`SELECT * FROM TICKET WHERE (user_id LIKE ? OR ?)`,
-        [user_id, user_id === "%"]);
+    try {
+      const results = await connection.query(
+        `SELECT * FROM TICKET WHERE (user_id LIKE ? OR ?)`,
+        [user_id, user_id === "%"]
+      );
       return resolve(results);
-    } catch(err) {
+    } catch (err) {
       return reject(err);
     }
   });
@@ -21,13 +23,14 @@ modelMethods.getAllTickets = (quert) => {
 // Get Tickets by ID only.
 // RETURNS {user_id:"", seat_id:"", cost: "", show_time: ""}
 modelMethods.getTicketById = (ticket_id) => {
-  return new Promise( async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const results = await connection.query(
         `SELECT user_id, S.seat_id, S.cost, show_time from SHOWING SH Inner join SEATS S ON SH.showing_id = S.showing_id 
               INNER JOIN TICKET T ON S.seat_id = T.seat_id Where T.ticket_id = ?`,
-        [ticket_id]);
-        return resolve(results[0]);
+        [ticket_id]
+      );
+      return resolve(results[0]);
     } catch (err) {
       return reject(err);
     }
@@ -42,18 +45,20 @@ modelMethods.createTicket = (body, user_id) => {
     try {
       const { seat_id, payment_id } = body;
       const ticket_id = uuid();
-      const insert = await connection.query(`INSERT INTO TICKET(ticket_id, user_id, seat_id, payment_id) VALUES (?, ?, ?, ?)`,
-        [ticket_id, user_id, seat_id, payment_id]);
-      const results = await connection.query(`SELECT * FROM TICKET WHERE ticket_id = ?`,
-            [ticket_id]);
+      const insert = await connection.query(
+        `INSERT INTO TICKET(ticket_id, user_id, seat_id, payment_id) VALUES (?, ?, ?, ?)`,
+        [ticket_id, user_id, seat_id, payment_id]
+      );
+      const results = await connection.query(
+        `SELECT * FROM TICKET WHERE ticket_id = ?`,
+        [ticket_id]
+      );
       return resolve(results[0]);
-    } catch(err) {
+    } catch (err) {
       return reject(err);
     }
   });
 };
-
-
 
 // TODO: Do we need to check if seat is available? or do we do this during payment? ask Graeme
 // TODO: I think the  route should be POST /tickets/:ticket_id, body should be "cancel":true
@@ -63,15 +68,34 @@ modelMethods.createTicket = (body, user_id) => {
 // RETURNS {ticket_id:"", credit_available: ""}
 modelMethods.cancelTicketById = (ticket_id) => {
   return new Promise(async (resolve, reject) => {
-    try{          
-      const update = await connection.query(`UPDATE TICKET SET is_credited = true WHERE ticket_id = ?`,
-            [ticket_id]);
+    try {
+      const update = await connection.query(
+        `UPDATE TICKET SET is_credited = true WHERE ticket_id = ?`,
+        [ticket_id]
+      );
       return resolve(update);
-    } catch(err) {
-        return reject(err);
+    } catch (err) {
+      return reject(err);
+    }
+  });
+};
+
+modelMethods.getTicketReceipt = (ticket_id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const results = await connection.query(
+        `SELECT M.movie_name, TH.theatre_name, SH.show_time, S.seat_label, S.cost 
+          FROM SHOWING SH Inner join SEATS S ON SH.showing_id = S.showing_id 
+          INNER JOIN TICKET T ON S.seat_id = T.seat_id INNER JOIN MOVIE M ON SH.movie_id = M.movie_id 
+          INNER JOIN THEATRE TH ON TH.theatre_id = SH.theatre_id 
+          WHERE T.ticket_id = ?`,
+        [ticket_id]
+      );
+      return resolve(results[0]);
+    } catch (err) {
+      return reject(err);
     }
   });
 };
 
 module.exports = modelMethods;
-

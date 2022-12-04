@@ -1,4 +1,5 @@
 const userModel = require("../models/User");
+const { sendWelcomeEmail } = require("./emailService");
 const { v4: uuid } = require("uuid");
 
 const serviceMethods = {};
@@ -18,6 +19,7 @@ serviceMethods.createUser = async (body) => {
   const result = await userModel.createUser(body, id);
   if (result) {
     const results = await userModel.getOneUser(id);
+    sendWelcomeEmail(results.email_address, results.first_name);
     return results;
   }
   return null;
@@ -46,6 +48,6 @@ serviceMethods.getUserByEmail = async (body) => {
 serviceMethods.updateRenewalDate = async (renewal_date, id) => {
   const results = await userModel.updateRenewalDate(renewal_date, id);
   return results;
-}
+};
 
 module.exports = serviceMethods;
