@@ -11,6 +11,8 @@ import MoviesPage from "./pages/moviespage/moviespage.page";
 import NoPage from "./pages/404page/404page.page";
 import HomePage from "./pages/homepage/homepage.page";
 import TicketPage from "./pages/ticketpage/ticketpage.page";
+import ProfilePage from "./pages/profilepage/profilepage.page";
+
 
 function App() {
   return (
@@ -38,7 +40,7 @@ function App() {
               <LoginPage />
             </AnyonymousRoute>
             <ProtectedRoute exact path="/profile">
-              Profile
+              <ProfilePage />
             </ProtectedRoute>
             <Route path="*">
               <NoPage />

@@ -54,12 +54,14 @@ package Model {
         - billed_cost: int
         - refund_amount: int
         - refund_ticket: Refund
+        + makePayment(payment: Payment): String
     }
 
     class Refund <<entity>> {
         - ticket: Ticket
         - expiration_date: int
         - credit_available: int
+        + useCreditAsRefund(Refund: refund): Refund
     }
 
     class DatabaseConnection <<boundary>> {
@@ -113,9 +115,19 @@ package View-React {
 package Controller-Express {
     class ServerRoutes <<boundary>> {}
 
-    class emailService <<boundary>> {}
+    class emailService <<boundary>> {
+        + sendTicketReceiptService(ticket: Ticket): String
+        + sendMovieNewsService(news String)
+        + sendTicketReceipt(ticket: Ticket): String
+        + sendMovieNewsAllUsers(news String)
+        + sendWelcomeEmail()
+    }
 
-    class userController <<control>> {}
+    class userController <<control>> {
+        + login(user: User): User
+        + updateUser(user: User)
+        + createUser(user: User)
+    }
     class userService <<control>> {}
 
     class seatController <<control>> {}
@@ -130,13 +142,19 @@ package Controller-Express {
     class theatreController <<control>> {}
     class theatreService <<control>> {}
 
-    class presaleService <<control>> {}
+    class presaleService <<control>> {
+        + isPresaleRestricted(showing: Showing): boolean
+    }
 
     class refundController <<control>> {}
-    class refundService <<control>> {}
+    class refundService <<control>> {
+        + makeNewRefund(refund: Refund)
+    }
 
     class paymentController <<control>> {}
-    class paymentService <<control>>
+    class paymentService <<control>> {
+        + payRegistration(payment: Payment)
+    }
 
     interface userPaymentInterface <<interface>> {
         + pay(payment: Payment)
@@ -151,13 +169,16 @@ package Controller-Express {
         + payMembership(payment: Payment)
     }
 
-    class ticketController <<control>> {}
+    class ticketController <<control>> {
+        + createTicket(ticket: Ticket): Ticket
+        + cancelTicket(ticket: Ticket)
+    }
     class ticketService <<control>> {}
 
 }
 
 ' start Relationships between server routes
-ServerRoutes --> movieController
+ServerRoutes -->  movieController
 ServerRoutes --> userController
 ServerRoutes --> seatController
 ServerRoutes --> showingController
@@ -190,6 +211,7 @@ ReceiptViewController --> MovieAPIContextController
 ' start Relationships betweens controllers/services/models
 userController --> userService
 userService --> RegisteredUser
+userService --> emailService
 
 movieController --> movieService
 movieService --> Movie
@@ -216,6 +238,7 @@ ticketService --> Ticket
 ticketService --> seatService
 ticketService --> paymentService
 ticketService --> refundService
+ticketService --> emailService
 
 paymentController --> userPaymentInterface
 userPaymentInterface --> Payment
@@ -230,14 +253,14 @@ paymentService --> userService
 ' --end Relationships betweens controllers/services/models
 
 ' -- start Model relastionships
-Movie -- Showing
-Theatre -- Showing
-Showing --- Seat
-Ticket o-- Seat
-Ticket o-- Payment
-Refund o-- Ticket
-RegisteredUser --- Ticket
-Payment --> Refund
+Movie "1" -- "*" Showing
+Theatre "1" -- "*" Showing
+Showing "1" --- "*" Seat
+Ticket "1" o-- "1" Seat
+Ticket "1" o-- "1" Payment
+Refund "1" o-- "1" Ticket
+RegisteredUser "1" --- "*" Ticket
+Payment "1" --> "*" Refund
 
 ' -- end Model relastionships
 
@@ -245,8 +268,8 @@ package MySQL <<Database>> {
   class Database
 }
 
-DatabaseConnection *-- DatabaseConnection
-DatabaseConnection -- Database
+DatabaseConnection *-- "1" DatabaseConnection
+DatabaseConnection -- "1" Database
 
 MovieAPIContextController -- ServerRoutes : HTTP API communication
 

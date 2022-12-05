@@ -299,6 +299,27 @@ export function MovieAPIProvider(props) {
     }
   }
 
+  async function payMembershipFee(credit_card) {
+    try {
+      const response = await fetch(API_URL + `payments/${userId}`, {
+        method: "PATCH", 
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+         credit_card,
+        }),
+      });
+      const body = await response.json();
+      if (body.success === true) return [true, body.data];
+      else return [false, body.message];
+    } catch (e) {
+      console.log(e)
+      return "Server communication error";
+    }
+  }
+
   return (
     <MovieAPIContext.Provider
       value={{
@@ -317,6 +338,7 @@ export function MovieAPIProvider(props) {
         getOneSeat,
         getTicketById,
         getTicketsForCurrentUser,
+        payMembershipFee,
       }}
     >
       {props.children}
