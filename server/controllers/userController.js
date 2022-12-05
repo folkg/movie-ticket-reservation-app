@@ -1,5 +1,5 @@
 const userService = require("../services/userService");
-const { getAllTickets } = require("../services/ticketService");
+const { getAllTicketsDetailed } = require("../services/ticketService");
 const { getCreditByUser } = require("../services/refundService");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -59,7 +59,7 @@ controllerMethods.getUserTickets = async (req, res) => {
     } else {
       const query = {};
       query.user_id = userId;
-      let results = await getAllTickets(query);
+      let results = await getAllTicketsDetailed(query);
       if (results) {
         res.json({ success: true, data: results });
       } else {

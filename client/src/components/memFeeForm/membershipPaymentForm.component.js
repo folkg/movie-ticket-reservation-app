@@ -1,74 +1,19 @@
 import React, { useState, useContext, useEffect } from 'react';
-import {Button, Modal, Form, Col, Row, Accordion, Alert, ToggleButton } from 'react-bootstrap/';
-import { FormWrapper } from './paymentForm.styles';
+import {Button, Modal, Form, Col, Row, Accordion, Alert} from 'react-bootstrap/';
 import { MovieAPIContext } from '../../contexts/movie-api-provider';
 
-export default function RegisteredPaymentForm(props) {
-    
-    let seat_id = props.seat_id;
+export default function MembershipPaymentForm(props) {
 
-
-    const { getRefundByUser, makePayment, processTicket, getOneSeat } = useContext(MovieAPIContext);
+    const { payMembershipFee } = useContext(MovieAPIContext);
     const [ showModal, setShow ] = useState(false);
-    const [ userCredit, setUserCredit ] = useState([])
-    const [ creditAlertState, setCreditAlertState ] = useState("success");
-    const [ enableCreditButton, setCreditButton ] = useState(true);
     const [ fname, setFname ] = useState();
     const [ lname, setLname ] = useState();
     const [ cc_number, setCardNumber ] = useState();
-    const [ ticket_id, setTicket ] = useState();
-    const [ refund, setRefund ] = useState([]);
-    const [ applyRefund, setApplyRefund ] = useState(false);
     const [ paymentSuccess, setPaymentSuccess ] = useState(null)
-    const [ ticketConfirmation, setTicketConfirmation ] = useState(null);
+    const [ paymentConfirmation, setPaymentConfirmation ] = useState(null);
     const [ payEnabled, setPayEnabled ] = useState(true);
-    const [ seat_cost, setSeatDetails] = useState();
-    const [ useOther, setUseOtherCreditCard] = useState(false);
-
-
-    useEffect(() => {
-        async function updateRefundsForUser() {
-            try{
-                const users_credit = await getRefundByUser();
-                setUserCredit(users_credit);
-                if(users_credit[0] === false) {
-                    setCreditAlertState("danger"); 
-                    setCreditButton(false);
-                }
-                else if(users_credit[1] === 0) {
-                    setCreditAlertState("warning")
-                    setCreditButton(false);
-                }
-                else {
-                    setCreditAlertState("success"); 
-                    setCreditButton(true);
-                }
-            } catch (e){
-                console.log("error")
-            }
-            
-        };
-        updateRefundsForUser();
-        
-    }, []);
-
-    useEffect(() => {
-        async function getSeatCost() {
-            try{
-                const seat_details = await getOneSeat(seat_id);
-                if(!seat_details) {
-                    setSeatDetails("N/A");
-                }
-                else {
-                    setSeatDetails(seat_details.cost);
-                }
-            } catch (e){
-                console.log(e)
-            }
-        };
-    getSeatCost();       
-    }, [seat_id]);
-
+    const [ useOther, setUseOtherCreditCard ] = useState(false);
+    const [ expirationDate, setExpirationDate ] = useState(null);
 
     useEffect(() => {
         if(!useOther) setPayEnabled(true);
@@ -87,48 +32,55 @@ export default function RegisteredPaymentForm(props) {
         return false;
     }
 
-
     const handleClose = () => {
         setShow(false);
         setFname("");
         setLname("");
         setCardNumber("");
-        setTicket("");
-        setRefund([]);
-        setApplyRefund(false);
         setPaymentSuccess(null);
         setPayEnabled(true);
-        setTicketConfirmation(null);
+        setPaymentConfirmation(null);
+        props.helper(true);
     }
-    const handleShow = () => setShow(true);
 
+    const handleShow = () => setShow(true);
 
     const handleSubmit = async (event) => {
         try {
-            const payment_result = await makePayment(seat_id, cc_number, ticket_id, applyRefund);
+            const payment_result = await payMembershipFee(cc_number);
             if(payment_result[0] !== true) throw payment_result[1];
-            const ticket_result = await processTicket(seat_id, "", payment_result[1]);
-            if(ticket_result[0] !== true) throw ticket_result[1];
-            setTicketConfirmation(ticket_result[1]);
+            setPaymentConfirmation(payment_result[1].payment_id);
+            setExpirationDate(formatDate(payment_result[1].new_expiry_date));
             setPaymentSuccess(true);
         } catch (error) {
-            setTicketConfirmation(error);
+            setPaymentConfirmation(error);
             setPaymentSuccess(false);
         }
     }
 
+    function formatDate(date_time){
+        const date = new Date(date_time);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return [year, month, day].join('/');
+    }
+
     return (
         <div>
-            <Button variant="primary" onClick={handleShow}>Make Payment</Button>
+            <Button variant="primary" onClick={handleShow}>Pay Membership Fee</Button>
             <Modal show={showModal} onHide={handleClose} >
                 <Modal.Header>Payment</Modal.Header>
                 <Modal.Body>
                     {paymentSuccess === true ? (
                         <Alert variant="success">
-                            <Alert.Heading>Ticket Completed Successfully!</Alert.Heading>
+                            <Alert.Heading>Membership is Renewed!</Alert.Heading>
                                 <p>
-                                    Here is your ticket id #: <b>{ticketConfirmation} </b>
-                                    an email has been sent with your receipt and ticket confirmation.
+                                    You Membership is renewed until <b>{expirationDate}</b>.
+                                </p>
+                                    <hr />
+                                <p>
+                                    Here is your receipt#: <b>{paymentConfirmation}</b>. 
                                 </p>
                                 <hr />
                                 <div className="d-flex justify-content-end">
@@ -137,10 +89,10 @@ export default function RegisteredPaymentForm(props) {
                                     </Button>
                                 </div>
                         </Alert>
-                    ) : (ticketConfirmation && <Alert variant="danger">
+                    ) : (paymentConfirmation && <Alert variant="danger">
                             <Alert.Heading>Processing Error</Alert.Heading>
                             <p>
-                                {ticketConfirmation}
+                                {paymentConfirmation}
                             </p>
                             <div className="d-flex justify-content-end">
                                 <Button onClick={handleClose} variant="outline-danger">
@@ -157,27 +109,10 @@ export default function RegisteredPaymentForm(props) {
                             <Alert variant="info">
                                 <Alert.Heading>Checkout:</Alert.Heading>
                                     <p>
-                                        Total Cost is: <b>${seat_cost}</b>.
+                                        Total Cost is: <b>$20</b>.
                                     </p>
                                     <hr />
-                            </Alert>
-                        {userCredit[0]===true ? (
-                            <Alert variant={creditAlertState}>You have ${userCredit[1]} in credit
-                            <div className="d-grid gap-2">
-                                <ToggleButton
-                                    className="mb-2"
-                                    id="toggle-check"
-                                    type="checkbox"
-                                    variant="outline-primary"
-                                    checked={applyRefund}
-                                    value="1"
-                                    disabled = {!enableCreditButton}
-                                    onChange={(e) => setApplyRefund(e.currentTarget.checked)}>
-                                        Click to Apply Credit
-                                </ToggleButton>
-                            </div>
-                            </Alert>     
-                        ) : (!refund[0] && <Alert variant={creditAlertState}>Issue Retrieving Your Credit</Alert>)}            
+                            </Alert>          
                         </Accordion.Item>
                         <Accordion.Item eventkey="1">
                                 <Accordion.Header>Use Different Credit Card</Accordion.Header>
@@ -188,7 +123,7 @@ export default function RegisteredPaymentForm(props) {
                                     label = 'Use Different Credit Card?'
                                     onChange={(e) => setUseOtherCreditCard(e.target.checked)}
                                     />
-                                    <FormWrapper onSubmit={handleSubmit}>
+                                    <Form onSubmit={handleSubmit}>
                                     <Row>
                                         <Form.Group as={Col} className="mb-3" controlId="fname">
                                             <Form.Label>First Name:</Form.Label>
@@ -222,7 +157,7 @@ export default function RegisteredPaymentForm(props) {
                                             required>
                                         </Form.Control>
                                     </Form.Group> 
-                                </FormWrapper>
+                                </Form>
                             </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>
@@ -250,7 +185,5 @@ export default function RegisteredPaymentForm(props) {
             </Modal>
         </div>
     )
-
-
 
 }

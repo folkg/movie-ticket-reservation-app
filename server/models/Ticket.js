@@ -5,12 +5,32 @@ const { v4: uuid } = require("uuid");
 const modelMethods = {};
 
 // Return all tickets.
-modelMethods.getAllTickets = (quert) => {
+modelMethods.getAllTickets = (query) => {
   return new Promise(async (resolve, reject) => {
-    const user_id = quert.user_id || "%";
+    const user_id = query.user_id || "%";
     try {
       const results = await connection.query(
         `SELECT * FROM TICKET WHERE (user_id LIKE ? OR ?)`,
+        [user_id, user_id === "%"]
+      );
+      return resolve(results);
+    } catch (err) {
+      return reject(err);
+    }
+  });
+};
+
+// Return all tickets with detailed information.
+modelMethods.getAllTicketsDetailed = (query) => {
+  return new Promise(async (resolve, reject) => {
+    const user_id = query.user_id || "%";
+    try {
+      const results = await connection.query(
+        `SELECT * 
+          FROM SHOWING SH Inner join SEATS S ON SH.showing_id = S.showing_id 
+          INNER JOIN TICKET T ON S.seat_id = T.seat_id INNER JOIN MOVIE M ON SH.movie_id = M.movie_id 
+          INNER JOIN THEATRE TH ON TH.theatre_id = SH.theatre_id 
+          WHERE (user_id LIKE ? OR ?)`,
         [user_id, user_id === "%"]
       );
       return resolve(results);
@@ -80,11 +100,11 @@ modelMethods.cancelTicketById = (ticket_id) => {
   });
 };
 
-modelMethods.getTicketReceipt = (ticket_id) => {
+modelMethods.getOneTicket = (ticket_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const results = await connection.query(
-        `SELECT M.movie_name, TH.theatre_name, SH.show_time, S.seat_label, S.cost 
+        `SELECT * 
           FROM SHOWING SH Inner join SEATS S ON SH.showing_id = S.showing_id 
           INNER JOIN TICKET T ON S.seat_id = T.seat_id INNER JOIN MOVIE M ON SH.movie_id = M.movie_id 
           INNER JOIN THEATRE TH ON TH.theatre_id = SH.theatre_id 

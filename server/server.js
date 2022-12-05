@@ -15,8 +15,6 @@ const v1EmailRouter = require("./v1/routes/emailRoutes");
 const app = express();
 const PORT = process.env.APP_PORT || 5000;
 
-console.log(process.env.DB_PASS);
-
 app.use(express.json());
 app.use(cors());
 

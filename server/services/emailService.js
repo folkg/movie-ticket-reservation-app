@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 
-const { getTicketReceipt } = require("../models/Ticket");
+const { getOneTicket } = require("../models/Ticket");
 const { getPresaleMovieTitles } = require("../models/Movie");
 const { getAllUsers } = require("../models/User");
 
@@ -72,10 +72,8 @@ const sendMovieNewsService = async (recipient, first_name) => {
 //TODO: No errors thrown on ticket not found?
 //TODO: Add link to cancel ticket
 serviceMethods.sendTicketReceipt = async (ticket_id, email) => {
-  ticket = await getTicketReceipt(ticket_id);
-  console.log(ticket);
-  //TODO: Change this link to point to the ticket UI
-  url = "http://localhost:3000";
+  ticket = await getOneTicket(ticket_id);
+  url = "http://localhost:3000/ticket/" + ticket_id;
   result = await sendTicketReceiptService(email, ticket, url);
   if (result.accepted.length > 0) return { successes: [email] };
   else return { failures: [email] };
