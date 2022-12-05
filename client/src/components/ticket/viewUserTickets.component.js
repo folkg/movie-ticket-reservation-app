@@ -5,7 +5,7 @@ import { MovieAPIContext } from "../../contexts/movie-api-provider";
 
 export default function viewUserTickets() {
   const { getTicketsForCurrentUser } = useContext(MovieAPIContext);
-  const [tickets, setTickets] = useState([]);
+  const [tickets, setTickets] = useState(null);
 
   useEffect(() => {
     async function fetchTickets() {
@@ -24,6 +24,7 @@ export default function viewUserTickets() {
           flexDirection: "column",
           justifyContent: "center",
           maxWidth: "600px",
+          marginTop: "2rem",
         }}
       >
         <h2 className="text-center">All Your Tickets are Listed below:</h2>
