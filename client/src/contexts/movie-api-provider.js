@@ -277,6 +277,42 @@ export function MovieAPIProvider(props) {
     }
   }
 
+  async function getAllMovies(movie_id) {
+    try {
+      const response = await fetch(API_URL + `movies/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) return body.data;
+      else return null;
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
+  async function getOneMovie(movie_id) {
+    try {
+      const response = await fetch(API_URL + `movies/${movie_id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) return body.data;
+      else return null;
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
   return (
     <MovieAPIContext.Provider
       value={{
@@ -293,6 +329,8 @@ export function MovieAPIProvider(props) {
         getRefundByUser,
         getOneSeat,
         getTicketsForCurrentUser,
+        getAllMovies,
+        getOneMovie,
       }}
     >
       {props.children}

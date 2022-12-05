@@ -1,62 +1,58 @@
-import React, {useContext} from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { Container } from './selectMovie.styles';
-import { MovieAPIContext } from '../../contexts/movie-api-provider';
+import React, { useContext } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { Container } from "./selectMovie.styles";
+import { MovieAPIContext } from "../../contexts/movie-api-provider";
 
-const SelectMovie = ({nextStep, handleChange, values}) =>{
-    const [data, setData] = React.useState({});
-    // const [movies, setMovies] = React.useState([]);
-    const { isLoggedIn } = useContext(MovieAPIContext);
+const SelectMovie = ({ nextStep, handleChange, values }) => {
+  const [data, setData] = React.useState(null);
+  // const [movies, setMovies] = React.useState([]);
+  const { getAllMovies } = useContext(MovieAPIContext);
 
-    React.useEffect(() => {
-        (async () => {
-          const response = await fetch("http://localhost:5000/api/v1/movies");
-          setData(await response.json());
-        //   setMovies(await Array.from(data.data));
-        //   console.log(movies);
-        })();
-      }, []);
-    
-    const Continue = e => {
-        e.preventDefault();
-        if (values.moviename === ""){
-            alert("you have to select a movie");
-            return;
-        }
-        nextStep();
-      }
+  //NOTE: getAllMovies function is using the Bearer jwt, so if they are logged in, the API will return all movies for logged in users or not. No need to check separately for users logged in here.
+  React.useEffect(() => {
+    async function fetchTickets() {
+      setData(await getAllMovies());
+    }
+    fetchTickets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
+  const Continue = (e) => {
+    e.preventDefault();
+    if (values.moviename === "") {
+      alert("you have to select a movie");
+      return;
+    }
+    nextStep();
+  };
+
+  return (
     <Container>
-        <h1>Select Movie</h1>
+      <h1>Select Movie</h1>
+      {data != null && (
         <Form>
-            {isLoggedIn? 
-                <Form.Select onChange={handleChange('moviename')} defaultValue = {values.moviename}>
-                    <option>Open this select menu</option>
-                    <option value="M_001">Citizen Kane</option>
-                    <option value="M_002">Titanic</option>
-                    <option value="M_003">Demon Slayer</option>
-                    <option value="M_004">The Good, The Bad, And The Ugly</option>
-                    <option value="M_005">Citizen Kane 2</option>
+          <Form.Select
+            onChange={handleChange("moviename")}
+            defaultValue={values.moviename}
+          >
+            {data.map((m) => (
+              <option key={m.movie_id} value={m.movie_id}>
+                {m.movie_name}
+              </option>
+            ))}
+          </Form.Select>
 
-                </Form.Select>
-                :
-                <Form.Select onChange={handleChange('moviename')} defaultValue = {values.moviename}>
-                    <option>Open this select menu</option>
-                    <option value="M_001">Citizen Kane</option>
-                    <option value="M_002">Titanic</option>
-                    <option value="M_003">Demon Slayer</option>
-                    <option value="M_004">The Good, The Bad, And The Ugly</option>
-                </Form.Select>
-            }
-
-            <Button onClick={Continue} style = {{float: "right", marginTop: "5vh"}}>
-                Next
-            </Button>   
+          <Button
+            onClick={Continue}
+            style={{ float: "right", marginTop: "5vh" }}
+          >
+            Next
+          </Button>
         </Form>
- 
-    </Container>)
-}
+      )}
+    </Container>
+  );
+};
 
 export default SelectMovie;
