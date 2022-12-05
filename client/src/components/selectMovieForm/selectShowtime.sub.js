@@ -24,13 +24,15 @@ const SelectShowtime = ({prevStep, nextStep, handleChange, values}) =>{
                     <option value="Two">Two</option>
                     <option value="Three">Three</option>
                 </Form.Select>
-                <Button onClick={Previous} style = {{marginTop: "5vh"}}>
+
+            </Form>
+
+            <Button onClick={Previous} style = {{marginTop: "5vh"}}>
                     Back
                 </Button>
-                <Button onClick={Continue} style = {{float: "right", marginTop: "5vh"}}>
-                    Next
-                </Button>
-            </Form>
+            <Button onClick={Continue} style = {{float: "right", marginTop: "5vh"}}>
+                Next
+            </Button>
         </Container>)
 }
 

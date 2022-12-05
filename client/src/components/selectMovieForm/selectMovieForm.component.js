@@ -2,6 +2,7 @@ import React , { Component } from 'react';
 import SelectMovie from './selectMovie.sub';
 import SelectTheatre from './selectTheatre.sub';
 import SelectShowtime from './selectShowtime.sub';
+import SelectSeat from './selectSeat.sub';
 
 class SelectMovieForm extends Component {
     state = {
@@ -65,6 +66,16 @@ class SelectMovieForm extends Component {
                   values={ values }
                 />
               )
+          case 4:
+            return (
+              <SelectSeat 
+                prevStep={ this.prevStep }
+                nextStep={ this.nextStep }
+                handleChange = {this.handleChange}
+                values={ values }
+              />
+            )
+
           //   case 4: 
           //     return (
           //       <Success />

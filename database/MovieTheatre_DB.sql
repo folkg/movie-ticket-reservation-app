@@ -1,3 +1,4 @@
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 
 DROP DATABASE IF EXISTS MOVIEAPP;
 CREATE DATABASE MOVIEAPP; 

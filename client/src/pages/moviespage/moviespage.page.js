@@ -22,21 +22,21 @@ const MoviesPage = () =>{
         <div>
             <SelectMovieForm/>
             {/* testing only  */}
-            <Form>
+            {/* <Form>
             <Form.Group className="mb-3" controlId="cc_email">
-                                        <Form.Label>Enter SEAT NUMBER TO TEST:</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            placeholder="enter text" 
-                                            value={seatid || ""} 
-                                            onChange={handleChange} 
-                                            required>
-                                        </Form.Control>
-                                    </Form.Group>
-            </Form>
+                <Form.Label>Enter SEAT NUMBER TO TEST:</Form.Label>
+                <Form.Control 
+                    type="text" 
+                    placeholder="enter text" 
+                    value={seatid || ""} 
+                    onChange={handleChange} 
+                    required>
+                </Form.Control>
+            </Form.Group>
+            </Form> */}
             {/* end testing only */}
 
-           <PaymentButtonForm seat_id={seatid}/>
+           {/* <PaymentButtonForm seat_id={seatid}/> */}
             
         </div>
     )
