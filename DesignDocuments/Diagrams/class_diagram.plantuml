@@ -80,7 +80,7 @@ package View-React {
     class LoginViewController <<boundary>> {
 
     }
-    class AccountViewController <<boundary>> {
+    class ProfileViewController <<boundary>> {
 
     }
     class TicketBuyingViewController <<boundary>> {
@@ -105,76 +105,73 @@ package View-React {
 
     }
 
-    class MovieAPIContextController {
-        ' add getters and setters
+    class MovieAPIContextController <<boundary>> {
         - getters()
         - setters()
     }
 }
 
-package Controller-Express {
+package Server-Express {
     class ServerRoutes <<boundary>> {}
 
-    class emailService <<boundary>> {
-        + sendTicketReceiptService(ticket: Ticket): String
-        + sendMovieNewsService(news String)
-        + sendTicketReceipt(ticket: Ticket): String
-        + sendMovieNewsAllUsers(news String)
-        + sendWelcomeEmail()
+    package Control_Layer {
+        class userController <<control>> {
+            + login(user: User): User
+            + updateUser(user: User)
+            + createUser(user: User)
+        }
+        class seatController <<control>> {}     
+        class showingController <<control>> {}
+        class movieController <<control>> {}
+        class theatreController <<control>> {}
+        class refundController <<control>> {}
+        class paymentController <<control>> {}
+        class ticketController <<control>> {
+            + createTicket(ticket: Ticket): Ticket
+            + cancelTicket(ticket: Ticket)
+        }
     }
 
-    class userController <<control>> {
-        + login(user: User): User
-        + updateUser(user: User)
-        + createUser(user: User)
+    package Service_Layer{
+        class emailService <<boundary>> {
+            + sendTicketReceiptService(ticket: Ticket): String
+            + sendMovieNewsService(news String)
+            + sendTicketReceipt(ticket: Ticket): String
+            + sendMovieNewsAllUsers(news String)
+            + sendWelcomeEmail()
+        }
+        class userService <<control>> {}
+        class seatService <<control>> {}
+        class showingService <<control>> {}
+        class movieService <<control>> {}
+        class theatreService <<control>> {}
+        class presaleService <<control>> {
+            + isPresaleRestricted(showing: Showing): boolean
+        }
+        class refundService <<control>> {
+            + makeNewRefund(refund: Refund)
+        }
+        class paymentService <<control>> {
+            + payRegistration(payment: Payment)
+        }
+        interface userPaymentInterface <<interface>> {
+            + pay(payment: Payment)
+            + payMembership(payment: Payment)
+        }
+        class userPaymentService <<control>> {
+            + pay(payment: Payment)
+            + payMembership(payment: Payment)
+        }
+        class regUserPaymentService <<control>> {
+            + pay(payment: Payment)
+            + payMembership(payment: Payment)
+        }
+        class ticketService <<control>> {}
     }
-    class userService <<control>> {}
+}
 
-    class seatController <<control>> {}
-    class seatService <<control>> {}
-
-    class showingController <<control>> {}
-    class showingService <<control>> {}
-
-    class movieController <<control>> {}
-    class movieService <<control>> {}
-
-    class theatreController <<control>> {}
-    class theatreService <<control>> {}
-
-    class presaleService <<control>> {
-        + isPresaleRestricted(showing: Showing): boolean
-    }
-
-    class refundController <<control>> {}
-    class refundService <<control>> {
-        + makeNewRefund(refund: Refund)
-    }
-
-    class paymentController <<control>> {}
-    class paymentService <<control>> {
-        + payRegistration(payment: Payment)
-    }
-
-    interface userPaymentInterface <<interface>> {
-        + pay(payment: Payment)
-        + payMembership(payment: Payment)
-    }
-    class userPaymentService <<control>> {
-        + pay(payment: Payment)
-        + payMembership(payment: Payment)
-    }
-    class regUserPaymentService <<control>> {
-        + pay(payment: Payment)
-        + payMembership(payment: Payment)
-    }
-
-    class ticketController <<control>> {
-        + createTicket(ticket: Ticket): Ticket
-        + cancelTicket(ticket: Ticket)
-    }
-    class ticketService <<control>> {}
-
+package MySQL <<Database>> {
+  class Database
 }
 
 ' start Relationships between server routes
@@ -198,7 +195,7 @@ TicketBuyingViewController *-- ReceiptViewController
 
 RegisterViewController --> MovieAPIContextController
 LoginViewController --> MovieAPIContextController
-AccountViewController --> MovieAPIContextController
+ProfileViewController --> MovieAPIContextController
 TicketBuyingViewController --> MovieAPIContextController
 MovieViewController --> MovieAPIContextController
 TheatreViewController --> MovieAPIContextController
@@ -210,47 +207,59 @@ ReceiptViewController --> MovieAPIContextController
 
 ' start Relationships betweens controllers/services/models
 userController --> userService
-userService --> RegisteredUser
+
 userService --> emailService
 
 movieController --> movieService
-movieService --> Movie
+
 movieService --> showingService
 
 theatreController --> theatreService
-theatreService --> Theatre
+
 theatreService --> showingService
 
 seatController --> seatService
-seatService --> Seat
+
 seatService --> presaleService
-presaleService --> Seat
+
 
 showingController --> showingService
-showingService --> Showing
+
 showingService --> seatService
 
 refundController --> refundService
-refundService --> Refund
+
 
 ticketController --> ticketService
-ticketService --> Ticket
+
 ticketService --> seatService
 ticketService --> paymentService
 ticketService --> refundService
 ticketService --> emailService
 
 paymentController --> userPaymentInterface
-userPaymentInterface --> Payment
+
 userPaymentInterface --> refundService
 userPaymentInterface --> paymentService
 userPaymentInterface --> seatService
 userPaymentService ..|> userPaymentInterface
 regUserPaymentService ..|> userPaymentInterface
-paymentService --> Payment
-paymentService --> userService
 
-' --end Relationships betweens controllers/services/models
+paymentService --> userService
+' --end Relationships betweens controllers/services
+
+userService --> RegisteredUser
+movieService --> Movie
+theatreService --> Theatre
+seatService --> Seat
+presaleService --> Seat
+showingService --> Showing
+refundService --> Refund
+ticketService --> Ticket
+userPaymentInterface --> Payment
+paymentService --> Payment
+
+MovieAPIContextController -- ServerRoutes : HTTP API communication
 
 ' -- start Model relastionships
 Movie "1" -- "*" Showing
@@ -264,13 +273,17 @@ Payment "1" --> "*" Refund
 
 ' -- end Model relastionships
 
-package MySQL <<Database>> {
-  class Database
-}
-
+Movie --> DatabaseConnection
+Theatre --> DatabaseConnection
+Showing --> DatabaseConnection
+Seat --> DatabaseConnection
+Ticket --> DatabaseConnection
+Refund --> DatabaseConnection
+RegisteredUser --> DatabaseConnection
+Payment --> DatabaseConnection
 DatabaseConnection *-- "1" DatabaseConnection
 DatabaseConnection -- "1" Database
 
-MovieAPIContextController -- ServerRoutes : HTTP API communication
+
 
 @enduml
