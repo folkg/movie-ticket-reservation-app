@@ -2,6 +2,9 @@
 A full stack web app to handle a movie theatre ticket reservation system. The backend is built with Express.js, the frontend is built with React.js, and the database is using MySQL.
 
 ## Instructions for building and running locally:
+
+A sample .env file with environment variables necessary for running the server has been placed in the /server folder. The DB_USER and DB_Pass fields in particular need to be provided to match a user's specific individual MySQL settings, or else the app will not be able to communicate with the data store.
+
 ### Backend:
 1. cd server
 2. node server.js
