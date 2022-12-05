@@ -2,12 +2,27 @@ const ticketService = require("../services/ticketService");
 
 const controllerMethods = {};
 
-// pointless method used to boost self esteem!
-// Not at all! We'll use this to get all tickets from the user endpoint!
 controllerMethods.getAllTickets = async (req, res) => {
   try {
     const { query } = req;
     let results = await ticketService.getAllTickets(query);
+    if (results) {
+      res.json({ success: true, data: results });
+    } else {
+      res.status(404).json({ success: false, message: "no tickets found" });
+    }
+  } catch (e) {
+    res.status(500).json({
+      status: false,
+      message: e.message,
+    });
+  }
+};
+
+controllerMethods.getOneTicket = async (req, res) => {
+  try {
+    const { ticket_id } = req.params;
+    let results = await ticketService.getOneTicket(ticket_id);
     if (results) {
       res.json({ success: true, data: results });
     } else {
@@ -28,7 +43,7 @@ controllerMethods.createTicket = async (req, res) => {
     const { body, userId } = req;
 
     let results = await ticketService.createTicket(body, userId);
-    if(results.message) throw results;
+    if (results.message) throw results;
     if (results) {
       res.status(201).json({ success: true, data: results });
     }
@@ -46,7 +61,7 @@ controllerMethods.cancelTicketById = async (req, res) => {
     const { body } = req;
     const isRegisteredUser = req.userId != null;
     let results = await ticketService.cancelTicketById(body, isRegisteredUser);
-    if (results.code ==="ER_DUP_ENTRY") throw "ER_DUP_ENTRY";
+    if (results.code === "ER_DUP_ENTRY") throw "ER_DUP_ENTRY";
     res.json({ success: true, data: results });
   } catch (e) {
     if (e === "ER_DUP_ENTRY") {

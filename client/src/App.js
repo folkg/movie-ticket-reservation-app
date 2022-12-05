@@ -10,7 +10,9 @@ import RegisterPage from "./pages/registerpage/registerpage.page";
 import MoviesPage from "./pages/moviespage/moviespage.page";
 import NoPage from "./pages/404page/404page.page";
 import HomePage from "./pages/homepage/homepage.page";
+import TicketPage from "./pages/ticketpage/ticketpage.page";
 import ProfilePage from "./pages/profilepage/profilepage.page";
+
 
 function App() {
   return (
@@ -27,6 +29,9 @@ function App() {
             </Route>
             <Route exact path="/cancel">
               <CancelPage />
+            </Route>
+            <Route exact path="/ticket/:ticket_id">
+              <TicketPage />
             </Route>
             <AnyonymousRoute exact path="/register">
               <RegisterPage />
