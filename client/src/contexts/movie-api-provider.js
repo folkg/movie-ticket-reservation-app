@@ -98,25 +98,6 @@ export function MovieAPIProvider(props) {
     }
   }
 
-  const isTokenValid = () => {
-    console.log("testing!");
-    if (jwt == null) {
-      return false;
-    } else {
-      try {
-        const expiryDate = JSON.parse(window.atob(jwt.split(".")[1]));
-        if (expiryDate.exp * 1000 < Date.now()) {
-          logout();
-          return false;
-        }
-      } catch (e) {
-        console.log(e);
-        return false;
-      }
-      return true;
-    }
-  };
-
   function logout() {
     setJwt(null);
     setUserId(null);
@@ -197,6 +178,27 @@ export function MovieAPIProvider(props) {
       const body = await response.json();
       if (body.success === true) return body.data;
       else return [];
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
+  async function cancelTicketById(ticket_id) {
+    try {
+      const response = await fetch(API_URL + `tickets/`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ticket_id,
+        }),
+      });
+      const body = await response.json();
+      if (body.success === true) return true;
+      else return body.message;
     } catch (e) {
       console.log(e);
       return "Server communication error";
@@ -305,6 +307,7 @@ export function MovieAPIProvider(props) {
         register,
         getUserInfo,
         getAllUsers,
+        cancelTicketById,
         getRefundByTicket,
         makePayment,
         processTicket,

@@ -1,15 +1,19 @@
-import React from "react";
-import { Button, Card } from "react-bootstrap";
+import React, { useContext, useState } from "react";
+import { Button, Card, Alert } from "react-bootstrap";
+import { MovieAPIContext } from "../../contexts/movie-api-provider";
 
 function Ticket(props) {
+  const { cancelTicketById } = useContext(MovieAPIContext);
   const {
     movie_name,
+    ticket_id,
     theatre_name,
     show_time,
     seat_label,
     cost,
+    is_credited,
   } = props.ticket;
-
+  const [cancelResult, setCancelResult] = useState(null);
   const dateDisplayOptions = {
     weekday: "long",
     year: "numeric",
@@ -34,25 +38,42 @@ function Ticket(props) {
     return date.toLocaleDateString("en-US", dateDisplayOptions);
   };
 
-  async function handleClick(e) {}
+  async function handleCancel(e) {
+    const results = await cancelTicketById(ticket_id);
+    setCancelResult(results);
+  }
   return (
-    <Card className="p-2 m-2">
+    <Card className="m-2">
       <Card.Body>
         <Card.Title>{movie_name}</Card.Title>
+        <Card.Subtitle className="mb-2 text-muted">#{ticket_id}</Card.Subtitle>
         <Card.Text style={{ whiteSpace: "pre-line" }}>
           {`Theatre: ${theatre_name}
           Showtime: ${dateString()}
           Seat: ${seat_label}
           Cost: $${cost}`}
         </Card.Text>
+        {cancelResult === true ? (
+          <Alert variant="success">Ticket was cancelled succesfully.</Alert>
+        ) : (
+          cancelResult != null && <Alert variant="danger">{cancelResult}</Alert>
+        )}
         <Button
           variant="outline-danger"
-          onClick={handleClick}
-          disabled={!canCancel()}
+          onClick={handleCancel}
+          disabled={!canCancel() || is_credited}
         >
           Cancel Ticket
         </Button>
       </Card.Body>
+      {is_credited === 1 && (
+        <Card.Footer className="text-danger">Ticket Cancelled</Card.Footer>
+      )}
+      {is_credited === 0 && !canCancel() && (
+        <Card.Footer className="text-muted">
+          Ticket cannot be Cancelled within 72 Hours of Showing
+        </Card.Footer>
+      )}
     </Card>
   );
 }
