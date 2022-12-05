@@ -280,6 +280,24 @@ export function MovieAPIProvider(props) {
     }
   }
 
+  async function getAllSeats() {
+    try {
+      const response = await fetch(API_URL + `seats/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) return body.data;
+      else return null;
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
   async function getOneSeat(seat_id) {
     try {
       const response = await fetch(API_URL + `seats/${seat_id}`, {
@@ -299,6 +317,41 @@ export function MovieAPIProvider(props) {
     }
   }
 
+  async function getAllMovies(movie_id) {
+    try {
+      const response = await fetch(API_URL + `movies/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) return body.data;
+      else return null;
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
+
+  async function getOneMovie(movie_id) {
+    try {
+      const response = await fetch(API_URL + `movies/${movie_id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const body = await response.json();
+      if (body.success === true) return body.data;
+      else return null;
+    } catch (e) {
+      console.log(e);
+      return "Server communication error";
+    }
+  }
   async function payMembershipFee(credit_card) {
     try {
       const response = await fetch(API_URL + `payments/${userId}`, {
@@ -335,10 +388,13 @@ export function MovieAPIProvider(props) {
         makePayment,
         processTicket,
         getRefundByUser,
+        getAllSeats,
         getOneSeat,
+        getAllMovies,
+        getOneMovie,
         getTicketById,
         getTicketsForCurrentUser,
-        payMembershipFee,
+        payMembershipFee
       }}
     >
       {props.children}
