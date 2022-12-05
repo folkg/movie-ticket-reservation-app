@@ -16,7 +16,7 @@ export default function PaymentButton(props) {
     // }
 
     return(
-        <div>
+        <div style={{marginTop: "10vh", marginLeft: "45vw"}}>
             {isLoggedIn ? (
                 <RegisteredPaymentForm seat_id={props.seat_id}/>
             ) : ( 

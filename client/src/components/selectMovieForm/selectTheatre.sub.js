@@ -7,7 +7,7 @@ import { MovieAPIContext } from "../../contexts/movie-api-provider";
 const SelectTheatre = ({ prevStep, nextStep, handleChange, values }) => {
   const { getOneMovie } = useContext(MovieAPIContext);
   const [data, setData] = React.useState(null);
-  var showings;
+
   const Continue = (e) => {
     e.preventDefault();
     if (values.theatrename === "") {

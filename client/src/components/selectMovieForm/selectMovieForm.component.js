@@ -3,13 +3,14 @@ import SelectMovie from './selectMovie.sub';
 import SelectTheatre from './selectTheatre.sub';
 import SelectShowtime from './selectShowtime.sub';
 import SelectSeat from './selectSeat.sub';
-
+import PaymentButtonForm from '../paymentForm/paymentButtonForm.component';
 class SelectMovieForm extends Component {
     state = {
         step: 1,
         moviename: '',
         theatrename: '', 
         showtime: '',
+        seats: '',
         creditcardnum: '',
       }
 
@@ -32,8 +33,8 @@ class SelectMovieForm extends Component {
 
     render() {
         const { step } = this.state;
-        const { moviename, theatrename, showtime, creditcardnum } = this.state;
-        const values = { moviename, theatrename, showtime, creditcardnum }
+        const { moviename, theatrename, showtime, seats, creditcardnum } = this.state;
+        const values = { moviename, theatrename, showtime, seats, creditcardnum }
         
         switch(step) {
           case 1: 
@@ -44,10 +45,7 @@ class SelectMovieForm extends Component {
                 values={ values }
               />
             )
-          // case 2:
-          //   return (
-          //     <div>case 2</div>
-          //   )
+
           case 2: 
             return (
               <SelectTheatre 
@@ -75,11 +73,11 @@ class SelectMovieForm extends Component {
                 values={ values }
               />
             )
-
-          //   case 4: 
-          //     return (
-          //       <Success />
-          //     )
+          
+          case 5: 
+            return (
+              <PaymentButtonForm seat_id={values.seats}/> 
+            )
           default: 
               // do nothing
         }

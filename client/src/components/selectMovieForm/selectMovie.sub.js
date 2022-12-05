@@ -36,6 +36,7 @@ const SelectMovie = ({ nextStep, handleChange, values }) => {
             onChange={handleChange("moviename")}
             defaultValue={values.moviename}
           >
+            <option value="">Open this menu to select movie</option>
             {data.map((m) => (
               <option key={m.movie_id} value={m.movie_id}>
                 {m.movie_name}
