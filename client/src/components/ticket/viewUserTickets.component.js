@@ -24,6 +24,7 @@ export default function viewUserTickets() {
           flexDirection: "column",
           justifyContent: "center",
           maxWidth: "600px",
+          marginTop: "2rem",
         }}
       >
         <h2 className="text-center">All Your Tickets are Listed below:</h2>

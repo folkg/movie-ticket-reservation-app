@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect } from "react";
 import { useSessionStorageState } from "../hooks/useSessionStorageState";
 
 const API_URL = "http://localhost:5000/api/v1/";
@@ -122,8 +122,10 @@ export function MovieAPIProvider(props) {
       });
       const body = await response.json();
 
-      if (body.success) return true;
-      else return body.message;
+      if (body.success) {
+        //TODO: login
+        return true;
+      } else return body.message;
     } catch (e) {
       console.log(e);
       return "Server communication error";
