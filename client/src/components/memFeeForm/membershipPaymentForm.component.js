@@ -1,14 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'; 
-import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Accordion from 'react-bootstrap/Accordion';
-import Alert from 'react-bootstrap/Alert';
+import {Button, Modal, Form, Col, Row, Accordion, Alert} from 'react-bootstrap/';
 import { MovieAPIContext } from '../../contexts/movie-api-provider';
 
-export default function MembershipPaymentForm() {
+export default function MembershipPaymentForm(props) {
 
     const { payMembershipFee } = useContext(MovieAPIContext);
     const [ showModal, setShow ] = useState(false);
@@ -46,6 +40,7 @@ export default function MembershipPaymentForm() {
         setPaymentSuccess(null);
         setPayEnabled(true);
         setPaymentConfirmation(null);
+        props.helper(true);
     }
 
     const handleShow = () => setShow(true);
