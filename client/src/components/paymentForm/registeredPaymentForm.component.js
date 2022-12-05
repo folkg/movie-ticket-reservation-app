@@ -1,17 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'; 
-import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Accordion from 'react-bootstrap/Accordion';
-import Alert from 'react-bootstrap/Alert';
-import ToggleButton from 'react-bootstrap/ToggleButton';
+import {Button, Modal, Form, Col, Row, Accordion, Alert, ToggleButton } from 'react-bootstrap/';
 import { FormWrapper } from './paymentForm.styles';
 import { MovieAPIContext } from '../../contexts/movie-api-provider';
-
-
-//TODO: MAKE THE BUTTON PAGE THE MAIN COMPONENT. SEND IN PROPS FOR SEAT_ID
 
 export default function RegisteredPaymentForm(props) {
     

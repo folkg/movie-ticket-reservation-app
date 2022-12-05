@@ -1,14 +1,12 @@
 import React from 'react'; 
-import MembershipPaymentForm from '../../components/memFeeForm/membershipPaymentForm.component';
-import MembershipExpiryForm from '../../components/memFeeForm/membershipExpiryForm.component';
+import ProfileForm from '../../components/profileForm/profileForm.component';
 
 
 const ProfilePage = () =>{
     return (
         <div>Profile page
-
-            <MembershipExpiryForm />
-            <MembershipPaymentForm />
+            <ProfileForm />
+            
         </div>
         
     )
