@@ -1,4 +1,3 @@
-
 DROP DATABASE IF EXISTS MOVIEAPP;
 CREATE DATABASE MOVIEAPP; 
 USE MOVIEAPP;
@@ -89,7 +88,7 @@ CREATE TABLE SEATS(
 
 INSERT INTO SEATS (seat_id, seat_label, showing_id, booked)
 VALUES
--- seat id follows pattern: S_MonthDayYear_Time_Theatre_Movie_Seat#
+-- seat id follows pattern: S_MonthDayYear_Time_Theatre_Movie_Seat#,,,,
 ('S_112622_9_001_001_01','S_A01','ST_001', true), 
 ('S_112622_9_001_001_02','S_A02','ST_001', false), 
 ('S_112622_9_001_001_03','S_A03','ST_001', false), 
@@ -109,7 +108,7 @@ VALUES
 ('S_112622_9_001_001_17','S_C03','ST_001', false), 
 ('S_112622_9_001_001_18','S_C04','ST_001', false), 
 ('S_112622_9_001_001_19','S_D01','ST_001', false), 
-('S_112622_9_001_001_20','S_D02','ST_001', false), 
+('S_112622_9_001_001_20','S_D02','ST_001', true), 
 ('S_112622_9_001_001_21','S_D03','ST_001', false), 
 ('S_112622_9_001_001_22','S_D04','ST_001', false), 
 ('S_112622_9_001_001_23','S_D05','ST_001', false), 
@@ -123,7 +122,7 @@ VALUES
 ('S_112622_11_002_002_2','S_A02','ST_002', false), 
 ('S_112622_11_002_002_3','S_A03','ST_002', false), 
 ('S_112622_11_002_002_4','S_A04','ST_002', false), 
-('S_112622_11_002_002_5','S_A05','ST_002', false), 
+('S_112622_11_002_002_5','S_A05','ST_002', true), 
 ('S_112622_11_002_002_6','S_A06','ST_002', false), 
 ('S_112622_11_002_002_7','S_A07','ST_002', false), 
 ('S_112622_11_002_002_8','S_A08','ST_002', false), 
@@ -174,8 +173,8 @@ VALUES
 ('S_112622_9_003_003_24','S_D06','ST_003', false), 
 ('S_112622_9_003_003_25','S_D07','ST_003', false), 
 ('S_112622_9_003_003_26','S_D08','ST_003', false), 
-('S_112622_9_003_003_27','S_D09','ST_003', false), 
-('S_112622_9_003_003_28','S_D10','ST_003', false), 
+('S_112622_9_003_003_27','S_D09','ST_003', true), 
+('S_112622_9_003_003_28','S_D10','ST_003', true), 
 -- Fourth Showing,,,, 
 ('S_112622_13_003_002_1','S_A01','ST_004', false), 
 ('S_112622_13_003_002_2','S_A02','ST_004', false), 
@@ -233,38 +232,36 @@ VALUES
 ('S_121022_9_002_004_25','S_D07','ST_005', false), 
 ('S_121022_9_002_004_26','S_D08','ST_005', true), 
 ('S_121022_9_002_004_27','S_D09','ST_005', false), 
-('S_121022_9_002_004_28','S_D10','ST_005', false);
-
-INSERT INTO SEATS (seat_label, showing_id, booked)
-VALUES
-('S_A01','ST_006', true), 
-('S_A02','ST_006', false), 
-('S_A03','ST_006', false), 
-('S_A04','ST_006', false), 
-('S_A05','ST_006', false), 
-('S_A06','ST_006', false), 
-('S_A07','ST_006', true), 
-('S_A08','ST_006', false), 
-('S_A09','ST_006', false), 
-('S_A10','ST_006', false), 
-('S_B01','ST_006', false), 
-('S_B02','ST_006', false), 
-('S_B03','ST_006', false), 
-('S_B04','ST_006', false), 
-('S_C01','ST_006', false), 
-('S_C02','ST_006', false), 
-('S_C03','ST_006', false), 
-('S_C04','ST_006', false), 
-('S_D01','ST_006', false), 
-('S_D02','ST_006', false), 
-('S_D03','ST_006', false), 
-('S_D04','ST_006', false), 
-('S_D05','ST_006', false), 
-('S_D06','ST_006', false), 
-('S_D07','ST_006', false), 
-('S_D08','ST_006', false), 
-('S_D09','ST_006', false), 
-('S_D10','ST_006', false);
+('S_121022_9_002_004_28','S_D10','ST_005', false),
+-- Sixth Showing,,,,
+('S_112622_9_001_002_01','S_A01','ST_006', true), 
+('S_112622_9_001_002_02','S_A02','ST_006', false), 
+('S_112622_9_001_002_03','S_A03','ST_006', false), 
+('S_112622_9_001_002_04','S_A04','ST_006', false), 
+('S_112622_9_001_002_05','S_A05','ST_006', false), 
+('S_112622_9_001_002_06','S_A06','ST_006', false), 
+('S_112622_9_001_002_07','S_A07','ST_006', true), 
+('S_112622_9_001_002_08','S_A08','ST_006', false), 
+('S_112622_9_001_002_09','S_A09','ST_006', false), 
+('S_112622_9_001_002_10','S_A10','ST_006', false), 
+('S_112622_9_001_002_11','S_B01','ST_006', false), 
+('S_112622_9_001_002_12','S_B02','ST_006', false), 
+('S_112622_9_001_002_13','S_B03','ST_006', false), 
+('S_112622_9_001_002_14','S_B04','ST_006', false), 
+('S_112622_9_001_002_15','S_C01','ST_006', false), 
+('S_112622_9_001_002_16','S_C02','ST_006', false), 
+('S_112622_9_001_002_17','S_C03','ST_006', false), 
+('S_112622_9_001_002_18','S_C04','ST_006', false), 
+('S_112622_9_001_002_19','S_D01','ST_006', false), 
+('S_112622_9_001_002_20','S_D02','ST_006', true), 
+('S_112622_9_001_002_21','S_D03','ST_006', false), 
+('S_112622_9_001_002_22','S_D04','ST_006', false), 
+('S_112622_9_001_002_23','S_D05','ST_006', false), 
+('S_112622_9_001_002_24','S_D06','ST_006', false), 
+('S_112622_9_001_002_25','S_D07','ST_006', false), 
+('S_112622_9_001_002_26','S_D08','ST_006', false), 
+('S_112622_9_001_002_27','S_D09','ST_006', false), 
+('S_112622_9_001_002_28','S_D10','ST_006', false);
 -- Look into this if we have time- Loading data drom csv
 -- LOAD DATA INFILE 'C:\Users\AlexTheGr8\Desktop\MEng\Fall\ENSF614(Advanced_System_Analysis_and_Software_Design)\Project\movie-ticket-reservation-app\database\Seats.csv'
 -- INTO TABLE SEATS
