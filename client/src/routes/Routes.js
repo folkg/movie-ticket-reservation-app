@@ -15,7 +15,7 @@ export function AnyonymousRoute({ children }) {
   const { isLoggedIn } = useContext(MovieAPIContext);
   if (isLoggedIn) {
     // user is not authenticated
-    return <Redirect to="/" />;
+    return <Redirect to="/profile" />;
   }
   return children;
 }
