@@ -7,18 +7,20 @@ A sample .env file with environment variables necessary for running the server h
 
 ### Backend:
 1. cd server
-2. node server.js
+1. npm install
+1. node server.js
 
 The server will now be running on http://localhost:5000. No manual interaction with the server is required.
 
 ### Database:
 1. Load your MySQL server as per your individual machine settings
-2. Run the 'MovieTheatre_DB.sql' script with your preferred method to construct the database schema and load sample data
+1. Run the 'MovieTheatre_DB.sql' script with your preferred method to construct the database schema and load sample data
 
 ### Frontend:
 1. cd client
-2. npm run build
-3. npm install -g serve
-4. serve -s build
+1. npm install
+1. npm run build
+1. npm install -g serve
+1. serve -s build
 
 The client will now be running on http://localhost:3000. Visit the address in a web browser to navigate and use the app.
